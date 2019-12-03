@@ -17,17 +17,12 @@
 	</style>	
 	<head>
         <script src="Charm.js"></script>
-        <script src="app.js"></script>
-
         <script type="text/javascript">
             var charm   = new Charm();
             window.addEventListener ("load", function () {
-                charm.userGestureStarter("content0", function(){
-                    app = new App(charm);
-                    app.setLanguage("id");
-                    app.start ("content0","auto");         
-                });
-
+                app = new App(charm);
+                app.setLanguage("id");
+                app.start ("content0","auto");         
                 window.oncontextmenu    = function (event) {
                         event.preventDefault ();
                         event.stopPropagation ();
