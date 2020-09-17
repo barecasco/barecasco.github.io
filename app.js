@@ -68,7 +68,7 @@ function App (charm) {
         var match = cm.createNativeSound("correct");
 		var wrong = cm.createNativeSound("wrong");
 		var press = cm.createNativeSound("press");
-		var erase = cm.createNativeSound("erase");
+		var block = cm.createNativeSound("block");
 
 		app.play_correct_sound 	= function() {
 			match.volume(0.5);
@@ -83,9 +83,9 @@ function App (charm) {
 			press.play();
 		};
 
-		app.play_erase_sound  = function() {
-			erase.volume(0.5);
-			erase.play();
+		app.play_block_sound  = function() {
+			block.volume(0.5);
+			block.play();
 		};
 	}
 
@@ -94,26 +94,26 @@ function App (charm) {
 		var tit_text_specs = {
 			x : cf.canvasWidth/2, // the number is obtained from q.centerize()
 			y : 50,
-			fonts : ["30pt Calibri Light"],
+			fonts : ["30pt Times New Roman"],
 			colors : ['#000000'],
 			lines : [0],
 			linesWidth : 30,
 			textAlign : "center",
-			fills : ["Test 1"]
+			fills : ["Quiz 1"]
 		}
 
 		var exp_text_specs = {
 			x       	: 83, // the number is obtained from q.centerize()
 			y       	: cf.canvasHeight - 120,
-			fonts		: ["16pt Calibri"],
+			fonts		: ["15pt Arial"],
 			colors		: ['#000000'],
 			lines		: [0, 1, 2, 3],
 			linesWidth 	: 30,
 			textAlign : "left",
 			fills		: [
 			"Gunakan tombol di samping untuk",
-			"menyusun goresan pensil hingga sesuai",
-			"dengan contoh bangun di sebelah kiri."]
+			"menyusun arah goresan pensil hingga",
+			"sesuai dengan contoh di sebelah kiri."]
 		}
 
 		var tit_text = cm.createNativeText(tit_text_specs);
@@ -176,9 +176,9 @@ function App (charm) {
 		img.image.disable();
 
 		app.show_pencil = function () {
-			img.transform.alpha = 0;
+			//img.transform.alpha = 0;
 			img.image.enable();
-			animator.fadeIn(img.transform, 0.3);
+			//animator.fadeIn(img.transform, 0.3);
 			propagator.riseSubscriber(img.image);
 		};
 
@@ -224,6 +224,7 @@ function App (charm) {
 		var quiz_ncol = 0;
 		var quiz_stroke;
 		var pencil_stroke;
+		var is_animating = false;
 
 		function create_dot(x, y) {
 			var tf 	= cm.createTransform();
@@ -332,9 +333,12 @@ function App (charm) {
 		};
 
 		app.destroy_snapdot_path = function() {
+			if (is_animating) return;
 			if (pencil_stroke) {
+				is_animating = true;
 				animator.fadeOut(pencil_stroke.transform, 0.3, function() {
 					pencil_stroke.destroy();
+					is_animating = false;
 					pencil_stroke = undefined;
 				});
 			}
@@ -347,17 +351,18 @@ function App (charm) {
 			}
 			var callback;
 			if (cback) callback = cback;
-			var draw_time = directions.length * 0.25;
+			var draw_time = 1;
 			let verticesX = [];
 			let verticesY = [];
 			let index_array = [pen_index];
-			console.log('current pen index', pen_index);
+			//console.log('current pen index', pen_index);
 			let rowcol 	  = app.get_snapdot_rowcol(pen_index);
 			let curr_row  = rowcol.row;
 			let curr_col  = rowcol.col;
+			let dirlength = directions.length;
 
-			directions.forEach(function(direction_index) {
-
+			for (var i = 0; i < dirlength; i++) {
+				direction_index = directions[i];
 				switch(direction_index) {
 					case 0:
 						curr_col += 1;
@@ -388,14 +393,19 @@ function App (charm) {
 						curr_row -= 1;
 						break;
 				}
-
-				if (curr_row < 1 || curr_row > snapdot_nrow) return;
-				if (curr_col < 1 || curr_col > snapdot_ncol) return;
-
+				if (curr_row < 1 || curr_row > snapdot_nrow){
+					//console.log("error row, ", curr_row);
+					break;
+				}
+				if (curr_col < 1 || curr_col > snapdot_ncol) {
+					//console.log("error col, ", curr_col);
+					break;
+				}
 				pen_index = app.get_snapdot_index(curr_row, curr_col);
-				//console.log(curr_row, curr_col, pen_index);
 				index_array.push(pen_index);
-			});
+			}
+
+			draw_time = (index_array.length - 1)*0.25;
 
 			for (var i = 0; i<index_array.length; i++) {
 				let dot = snapdots[index_array[i]];
@@ -468,7 +478,6 @@ function App (charm) {
 			let curr_col  = rowcol.col;
 
 			directions.forEach(function(direction_index) {
-
 				switch(direction_index) {
 					case 0:
 						curr_col += 1;
@@ -507,7 +516,6 @@ function App (charm) {
 				//console.log(curr_row, curr_col, pen_index);
 				index_array.push(quiz_pen_index);
 			});
-
 
 			for (var i = 0; i<index_array.length; i++) {
 				let dot = quizdots[index_array[i]];
@@ -639,7 +647,7 @@ function App (charm) {
 
 			let level_name = level_names[current_level];
 			generate_quiz(level_names[current_level]);
-			app.set_title_text("Test " + (current_level+1));
+			app.set_title_text("Quiz " + (current_level+1));
 		};
 
 		app.start_quiz = function () {
@@ -647,7 +655,6 @@ function App (charm) {
 		}
 
 		function generate_quiz (name) {
-
 			for (var i = 0; i < tests.length; i++) {
 				let test = tests[i];
 
@@ -668,7 +675,7 @@ function App (charm) {
 
 	function create_arrow_slots() {
 		var spacing = 70;
-		var amount = 12;
+		var amount = 13;
 		var slots = [];
 		var arrows = [];
 		var directions = [];
@@ -737,6 +744,11 @@ function App (charm) {
 		};
 
 		app.fill_arrow_slot = function (direction_index) {
+			if (current_slot_index == amount) {
+				app.play_block_sound();
+				return;
+			}
+			app.play_press_sound();
 			let arrow = arrows[current_slot_index];
 			directions.push(direction_index);
 			current_slot_index++;
@@ -786,7 +798,7 @@ function App (charm) {
 		function start_mouse_up(x, y) {
 			sp.goTo(0);
 			let directions = app.get_filled_slot_directions();
-			console.log(directions);
+			//console.log(directions);
 			app.create_snapdot_path(directions, function(){
 				let result = app.check_answer(directions);
 				if (result) {
@@ -867,7 +879,6 @@ function App (charm) {
 				sp.goTo(0);
 				//console.log("arrow", direction_index, "pressed");
 				app.fill_arrow_slot(direction_index);
-				app.play_press_sound();
 				canvas.removeEventListener("MOUSE_UP", start_mouse_up);
 			}
 
@@ -953,7 +964,7 @@ function App (charm) {
 				//sp.goTo(0);
 				//console.log("arrow", direction_index, "pressed");
 				app.clear_arrow_slot(true);
-				app.play_erase_sound();
+				app.play_press_sound();
 				canvas.removeEventListener("MOUSE_UP", start_mouse_up);
 			}
 
@@ -1005,6 +1016,8 @@ function App (charm) {
 	}
 
 	function create_check_flag () {
+		var is_animating = false;
+
 		var correct_flag = cm.createImage ({
 			path : "images/correct.png",
 			x : cf.canvasWidth/2 + 350,
@@ -1027,6 +1040,8 @@ function App (charm) {
 		false_flag.image.disable();
 
 		app.show_correct_flag = function () {
+			if (is_animating) return;
+			is_animating = true;
 			correct_flag.image.enable();
 			correct_flag.transform.alpha = 1;
 			let pencil_pos = app.get_pencil_pos();
@@ -1036,12 +1051,16 @@ function App (charm) {
 			correct_flag.transform.alpha = 1;
 			animator.zoomOut(correct_flag.transform, 0.2, function() {
 				setTimeout(function(){
-					animator.fadeOut(correct_flag.transform, 0.5);
+					animator.fadeOut(correct_flag.transform, 0.5, function(){
+						is_animating = false;
+					});
 				}, 500);
 			});
 		};
 
 		app.show_false_flag = function () {
+			if (is_animating) return;
+			is_animating = true;
 			false_flag.image.enable();
 			false_flag.transform.alpha = 1;
 			let pencil_pos = app.get_pencil_pos();
@@ -1050,7 +1069,9 @@ function App (charm) {
 			propagator.riseSubscriber(false_flag.image, true);
 			animator.zoomOut (false_flag.transform, 0.2, function(){
 				setTimeout(function(){
-					animator.fadeOut(false_flag.transform, 0.5);
+					animator.fadeOut(false_flag.transform, 0.5, function(){
+						is_animating = false;
+					});
 				}, 500);
 			});
 		};
@@ -1091,7 +1112,7 @@ function App (charm) {
 
 	function get_rev_indexed_directions (wind_directions) {
 		let dirs = [];
-		let rev_wind_directions = wind_directions.reverse();
+		let rev_wind_directions = wind_directions.slice().reverse();
 		rev_wind_directions.forEach (function (wind) {
 			switch (wind) {
 				case "w":

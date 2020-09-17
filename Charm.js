@@ -596,7 +596,7 @@ var Charm    			= function (new_config) {
 		};
 
 		self.riseSubscriber		= function (obj, is_second) {
-			console.log("599 rising subscriber");
+			//console.log("599 rising subscriber");
 			self.paused = true;
 			// console.log("rise subscriber");
 			var res = [];
@@ -766,6 +766,7 @@ var Charm    			= function (new_config) {
 			return naudio;
 		}
 		self.play				= function () {
+			naudio.currentTime = 0;
 			naudio.play();
 		};
 		self.stop 				= function () {
@@ -2020,7 +2021,7 @@ var Charm    			= function (new_config) {
 			activePropagator.addSubscriber(path.path);
 		}
 		path.destroy = function () {
-			console.log("destroying path");
+			//console.log("destroying path");
 			if (activePropagator) {
 				activePropagator.removeSubscriber(path.path);
 			}
