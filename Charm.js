@@ -1,8 +1,8 @@
 
 var Charm    			= function (new_config) {
-	var self            = this;	
+	var self            = this;
 	var pi				= Math.PI;
-	
+
 	var config			= {
 		canvasPosType	: "absolute",
 		containerSize	: "auto",
@@ -11,10 +11,10 @@ var Charm    			= function (new_config) {
 		canvasLeft		: "0px",
 		canvasTop		: "0px",
 		canvasZindex	: 0,
-		canvasBgColor	: '#eeeeeeee',
+		canvasBgColor	: '#ffffff',
 		assetTargetCount: 25
 	};
-	
+
 	if (new_config) {
 		for (param in new_config) {
 			if (new_config.hasOwnProperty(param)) {
@@ -23,9 +23,9 @@ var Charm    			= function (new_config) {
 			}
 		}
 	}
-	
+
 	self.config				= config;
-	
+
 	var drawFunctions		= [];
 	var activeContext;
     var canvasIterator  	= 0;
@@ -62,15 +62,12 @@ var Charm    			= function (new_config) {
 	}) ();
 
 	var activePropagator		= undefined;
-	
 	self.setActivePropagator	= function (inputPropagator) {
 		activePropagator 		= inputPropagator;
 	};
-	
 	self.getActivePropagator	= function () {
 		return activePropagator;
 	};
-	
 	var Canvas2d 				= function (inputContainer, dynamicState) {
         var self 				= this;
 
@@ -81,7 +78,6 @@ var Charm    			= function (new_config) {
 		var xScale				= 1.0;
 		var yScale				= 1.0;
         var touchable			= true;
-        
         self.index              = canvasIterator;
         canvasIterator++;
 
@@ -92,15 +88,13 @@ var Charm    			= function (new_config) {
 		dom.position				= config.canvasPosType;
 		dom.width					= config.canvasWidth;
 		dom.height					= config.canvasHeight;
-		dom.style.position 			= config.canvasPosType;	
-		dom.style.left 				= config.canvasLeft;	
-		dom.style.top 				= config.canvasTop;		
-		dom.style.zIndex 			= config.canvasZindex;	
-		// dom.style.backgroundColor 	= "#bbbbbbbb";
-		// console.log("creating canvas", dom.width, dom.height);
+		dom.style.position 			= config.canvasPosType;
+		dom.style.left 				= config.canvasLeft;
+		dom.style.top 				= config.canvasTop;
+		dom.style.zIndex 			= config.canvasZindex;
+		dom.style.backgroundColor 	= config.canvasBgColor;
 		context						= dom.getContext("2d");
         container.appendChild (dom);
-
         var onResizeSubscribers     = [];
 
 		self.getScaleX			= function() {
@@ -124,7 +118,7 @@ var Charm    			= function (new_config) {
 				case "default"		:
 					container.style.width 	= canvasWidth + "px";
 					container.style.height 	= canvasHeight + "px";
-					xScale 					= 1.0; 
+					xScale 					= 1.0;
 					yScale 					= 1.0;
 					dom.width			= canvasWidth;
 					dom.height			= canvasHeight;
@@ -175,7 +169,6 @@ var Charm    			= function (new_config) {
 					dom.style.top 			= ((container.offsetHeight-canvasHeight*yScale)/2)+"px";
 					break;
             }
-            
             self.onResize();
 		};
 		self.setAbsolutePos		= function () {
@@ -197,7 +190,6 @@ var Charm    			= function (new_config) {
 		self.getCanvas			= function () {
 			return dom;
         };
-        
         if(dynamicState && dynamicState == 'static') return;
 
 		// interaction routine
@@ -213,12 +205,12 @@ var Charm    			= function (new_config) {
 		var mouseMoveLength		= 0;
 		var removedEvents		= [];
         var isInteracting       = false;
-		
+
 		self.addEventListener		= function (sceneNumber, eventType, listener) {
 			if (eventType == 'KEY_SPACE_DOWN') {
 				document.addEventListener ('keyup', function (event) {
 					var keyCode		= event.keyCode;
-					if (keyCode == '32') listener();					
+					if (keyCode == '32') listener();
 				}, false);
 				return;
 			}
@@ -248,9 +240,8 @@ var Charm    			= function (new_config) {
 				// moveIndices[keyString] = mouseMoveLength - 1;
 				// return keyString;
             }
-            
 		};
-		
+
 		self.removeEventListener	= function (eventType, listener) {
 			// console.log("removing event listener", eventType);
 			if (eventType == 'MOUSE_DOWN') {
@@ -260,13 +251,12 @@ var Charm    			= function (new_config) {
 					if(index < 0) {
 						// console.log("event has already erased:", eventType);
 						return;
-					} 
+					}
 					onMouseDowns.splice(index, 1);
 
 					mouseDownLength--;
 					// console.log("remaining mouse down event:", onMouseDowns.length);
 				});
-	
 				return;
 			}
 
@@ -274,8 +264,8 @@ var Charm    			= function (new_config) {
 				removedEvents.push(function() {
 					let index	= onMouseUps.indexOf(listener);
 					if(index < 0) {
-						// console.log("fail to remove event listener", eventType);
-						return; 
+						console.log("fail to remove event listener", eventType);
+						return;
 					}
 					onMouseUps.splice(index, 1);
 					mouseUpLength--;
@@ -287,10 +277,7 @@ var Charm    			= function (new_config) {
 			if (eventType == 'MOUSE_MOVE') {
 				removedEvents.push(function(){
 					let index	= onMouseMoves.indexOf(listener);
-					if(index < 0) {
-						// console.log("index is", index);
-						return; 
-					}
+					if(index < 0) return;
 					onMouseMoves.splice(index, 1);
 					mouseMoveLength--;
 				});
@@ -307,7 +294,7 @@ var Charm    			= function (new_config) {
 		self.clearMouseDownMask 	= function() {
 			mouseDownMasks			= [];
 		};
-		
+
 		var flushEventRemoval		= function () {
 			// console.log("flush event removal");
 			for (var i = 0; i < removedEvents.length; i++) {
@@ -354,11 +341,11 @@ var Charm    			= function (new_config) {
 			onTouchMoves			= [];
 			onTouchUps				= [];
 		};
-		
+
 		function mouseDown(e) {
             if(isInteracting) return;
 			isInteracting   = true;
-			if (!e) var e 	= window.event;	
+			if (!e) var e 	= window.event;
 
 			let ex, ey;
 			if (e.touches) {
@@ -389,13 +376,13 @@ var Charm    			= function (new_config) {
 			// console.log("current onmousedowns:", onMouseDowns.length);
 			flushEventRemoval ();
 			e.preventDefault();
-			e.stopPropagation();				
+			e.stopPropagation();
 		}
 
 		function mouseUp (e) {
-			if (!e) var e = window.event;	
+			if (!e) var e = window.event;
 			if(e.touches) {
-				if(e.touches.length > 0) return;	
+				if(e.touches.length > 0) return;
 			}
 			let ex, ey, tx, ty;
 			for (var i = 0; i < mouseUpLength; i++) {
@@ -404,12 +391,12 @@ var Charm    			= function (new_config) {
 
 			flushEventRemoval ();
 			e.preventDefault();
-			e.stopPropagation();		
+			e.stopPropagation();
             isInteracting = false;
         }
 
 		function mouseMove (e) {
-			if (!e) var e = window.event;	
+			if (!e) var e = window.event;
 
 			let ex, ey;
 			if (e.touches) {
@@ -429,27 +416,24 @@ var Charm    			= function (new_config) {
 				onMouseMoves[i](tx, ty);
 			}
 			e.preventDefault();
-			e.stopPropagation();	
+			e.stopPropagation();
         }
-        
-        dom.addEventListener('touchstart', mouseDown,false);	
-        document.addEventListener('touchmove', mouseMove,false);	
-		document.addEventListener('touchend', mouseUp,false);	
-		// document.addEventListener('touchout', mouseUp, false);
-        dom.addEventListener('mousedown', mouseDown,false);	
-		document.addEventListener('mousemove', mouseMove,false);	
-		document.addEventListener('mouseup', mouseUp,false);	
-		// document.addEventListener('mouseout', mouseUp, false);
+
+        dom.addEventListener('touchstart', mouseDown,false);
+        document.addEventListener('touchmove', mouseMove,false);
+		document.addEventListener('touchend', mouseUp,false);
+		document.addEventListener('touchout', mouseUp, false);
+        dom.addEventListener('mousedown', mouseDown,false);
+		document.addEventListener('mousemove', mouseMove,false);
+		document.addEventListener('mouseup', mouseUp,false);
+		document.addEventListener('mouseout', mouseUp, false);
 	};
-	
+
 	// BM propagator
 	var Propagator				= function (inputContext) {
 		var self				= this;
-		var frameStep 			= 0.0;
-		var frameStart 			= 0.0;
 		var context = activeContext	= inputContext;
 		var dom					= context.canvas;
-		var timeStart			= Date.now ();
 		var subscribers			= [];
 		var dynscribers			= [];
 		var it 					= 0;
@@ -458,17 +442,19 @@ var Charm    			= function (new_config) {
 		var sceneNumber			= 0;
 		var lateUpdates 		= [];
 		var latelength 			= 0;
-	
+		var frameStep 			= 0.0;
+		var frameStart 			= undefined;
+
 		self.paused 			= false;
 		self.setScene			= function (inputNumber) {
 			sceneNumber 		= inputNumber;
 		};
 		self.start 				= function () {
-			requestAnimFrame ( function(){
-				animationLoopFix ();
+			requestAnimFrame ( function(hrtime){
+				animationUpdate (hrtime);
 			});
 		};
-		
+
 		self.purgeDynamicSubscribers = function () {
 			dynscribers.forEach(function(dyn){
 				let index = subscribers.indexOf(dyn);
@@ -482,7 +468,7 @@ var Charm    			= function (new_config) {
 			// if(en.type) console.log(en.type);
 			subscribers.push (en);
 			subsLength	= subscribers.length;
-		}; 
+		};
 
 		self.addActionSubscriber = function(en) {
 			dynscribers.push(en);
@@ -516,7 +502,7 @@ var Charm    			= function (new_config) {
 				let source_index = subscribers.indexOf(source_sub);
 				if (target_index < 0 || source_index < 0) return;
 				if(source_index == target_index) return;
-				
+
 				// console.log("doing postfix", source_index, target_index);
 				// if(target_index+1 > subscribers.length-1) {
 				// 	subscribers.splice (source_index, 1);
@@ -610,18 +596,19 @@ var Charm    			= function (new_config) {
 		};
 
 		self.riseSubscriber		= function (obj, is_second) {
+			console.log("599 rising subscriber");
+			self.paused = true;
 			// console.log("rise subscriber");
-			var res 	= [];
-			var index 	= subscribers.indexOf(obj);
-			// console.log("current target index", index);
+			var res = [];
+			var index = subscribers.indexOf(obj);
 			let slength = subscribers.length;
 			var top = subscribers[slength-1];
 			for (var i = 0; i < slength-1; i++) {
-				if(i != index) {
+				if (i != index) {
 					res.push(subscribers[i]);
 				}
 			}
-			if(is_second) {
+			if (is_second) {
 				res.push(obj);
 				res.push(top);
 			}
@@ -629,10 +616,42 @@ var Charm    			= function (new_config) {
 				res.push(top);
 				res.push(obj);
 			}
+			subscribers = res.slice();
+			self.paused = false;
+			// console.log("current target index", subscribers.indexOf(obj));
+		};
 
+		self.riseSubscriberDebug		= function (obj, is_second) {
+			console.log("debug rising subscriber");
+			self.paused = true;
+			// console.log("rise subscriber");
+			// var res = [];
+			// var index = subscribers.indexOf(obj);
+			// let slength = subscribers.length;
+			// var top = subscribers[slength-1];
+			// for (var i = 0; i < slength-1; i++) {
+			// 	if (i != index) {
+			// 		res.push(subscribers[i]);
+			// 	}
+			// }
+			// if (is_second) {
+			// 	res.push(obj);
+			// 	res.push(top);
+			// }
+			// else {
+			// 	res.push(top);
+			// 	res.push(obj);
+			// }
 
-			subscribers = res;
-			// console.log("current target index", subscribers.indexOf(obj));			
+			var index = subscribers.indexOf(obj);
+			let slength = subscribers.length;
+			for (var i = index; i < slength-2; i++){
+				subscribers[i] = subscribers[i+1]
+			}
+			subscribers[slength - 2] = obj;
+			console.log(subscribers.length);
+			self.paused = false;
+			// console.log("current target index", subscribers.indexOf(obj));
 		};
 
 		self.swapSubscriber		= function (obj, target_index) {
@@ -681,25 +700,32 @@ var Charm    			= function (new_config) {
 			self.addSubscriber(pod);
 		};
 
-		var animationLoopFix	= function() {
-			frameStep 			= (Date.now () - frameStart)/(1000.0);
+		var animationUpdate	= function(hrtime) {
+			if (frameStart == undefined) frameStart = hrtime;
+			frameStep 			= (hrtime - frameStart)/1000.0;
+
+			frameStart = hrtime;
 			if (frameStep > 0.1) frameStep = 0.1;
-			frameStart  		= Date.now ();
-			
-			context.clearRect	(0, 0, config.canvasWidth, config.canvasHeight);
-			for (it = 0; it < dynsLength; it++) {
-				dynscribers[it].update (context, frameStep, sceneNumber);
+			if (!self.paused) {
+				context.clearRect	(0, 0, config.canvasWidth, config.canvasHeight);
+				for (it = 0; it < dynsLength; it++) {
+					dynscribers[it].update (context, frameStep, sceneNumber);
+				}
+				for (it = 0; it < subsLength; it++) {
+					subscribers[it].update (context, frameStep, sceneNumber);
+				}
+				for(it = 0; it < latelength; it++) {
+					lateUpdates[it]();
+				}
+				lateUpdates 	= [];
+				latelength 		= 0;
+				subsLength 		= subscribers.length;
 			}
-			for (it = 0; it < subsLength; it++) {
-				subscribers[it].update (context, frameStep, sceneNumber);
-			}
-			for(it = 0; it < latelength; it++) {
-				lateUpdates[it]();
-			}
-			lateUpdates 	= [];
-			latelength 		= 0;
-			subsLength 		= subscribers.length;
-			requestAnimFrame(animationLoopFix);
+			else {
+				console.log("pause detected");
+""			}
+
+			requestAnimFrame(animationUpdate);
 		};
 	};
 
@@ -734,7 +760,7 @@ var Charm    			= function (new_config) {
 			console.log("browser supports aac");
 			tag 	= '.aac';
 		}
-		// console.log('created sound tag is ', tag);	
+		// console.log('created sound tag is ', tag);
 		var naudio 				= new Audio ('sounds/'+title+tag);
 		self.getAudio			= function(){
 			return naudio;
@@ -804,7 +830,7 @@ var Charm    			= function (new_config) {
 			audio.play();
 		};
 	};
-	
+
 	var NativeVideo				= function (title) {
 		var self				= this;
 		let tag					= '.mp4';
@@ -814,31 +840,31 @@ var Charm    			= function (new_config) {
 		var canplays 			= [];
 
 		var playformats			= ['mp4', 'webm', 'ogv'];
-		canplays.push(nvideo.canPlayType("video/mp4"));		
+		canplays.push(nvideo.canPlayType("video/mp4"));
 		canplays.push(nvideo.canPlayType("video/webm"));
 		canplays.push(nvideo.canPlayType("video/ogg"));
-		
+
 		for (var index = 0; index < canplays.length; index++) {
 			if (canplays[index] == 'maybe') {
-				let format = playformats[index];		
-				gapp.set_debug_text('running ' + format + ' with maybe capability');	
+				let format = playformats[index];
+				gapp.set_debug_text('running ' + format + ' with maybe capability');
 				tag = '.' + format;
 				nvideo.setAttribute("src",'videos/'+title+tag);
 				available = true;
 				break;
-			}			
+			}
 		}
-		
+
 		for (var index = 0; index < canplays.length; index++) {
 			if (canplays[index] == 'probably') {
 				let format = playformats[index];
-				gapp.set_debug_text('running ' + format + ' with probable capability');	
+				gapp.set_debug_text('running ' + format + ' with probable capability');
 				tag = '.' + format;
 				nvideo.setAttribute("src",'videos/'+title+tag);
 				available = true;
 				break;
-			}			
-		}		
+			}
+		}
 
 		if(!available) {
 			console.log("video cant be played");
@@ -853,39 +879,39 @@ var Charm    			= function (new_config) {
 			console.log("NATIVE ONLOAD");
 		};
 
-		self.type 				= "video";		
+		self.type 				= "video";
 		self.transform  		= new Transform(0, 0);
 		var tf 					= self.transform;
-		
+
 		self.getVideo			= function(){
 			return nvideo;
 		}
-		
+
 		self.play				= function () {
 			nvideo.play();
 		};
-		
+
 		self.pause				= function() {
 			nvideo.pause();
 		};
-		
+
 		self.stop 				= function () {
 			nvideo.pause();
 			nvideo.currentTime = 0;
 		};
-		
+
 		self.setVolume			= function(vol) {
 			nvideo.volume 		= vol;
 		};
-		
+
 		self.setCurrentTime 		= function (current_time) {
 			nvideo.currentTime 		= current_time;
 		};
-		
+
 		self.getCurrentTime 		= function() {
 			return nvideo.currentTime;
 		};
-		
+
 		nvideo.onended 				= function() {
 			self.onended();
 		};
@@ -903,15 +929,15 @@ var Charm    			= function (new_config) {
 			self.width 			= nvideo.videoWidth;
 			self.height 		= nvideo.videoHeight;
 			ready				= true;
-			
+
 			self.onload();
 			readyImage();
 			is_loaded = true;
 			console.log('onloadeddata fired');
-			
+
 			// console.log("video height:", self.height);
 		};
-		
+
 		nvideo.onloadedmetadata			= function () {
 			if(is_loaded) return;
 			if (activePropagator) {
@@ -925,7 +951,7 @@ var Charm    			= function (new_config) {
 			self.width 			= nvideo.videoWidth;
 			self.height 		= nvideo.videoHeight;
 			ready				= true;
-			
+
 			self.onload();
 			readyImage();
 			is_loaded = true;
@@ -936,26 +962,26 @@ var Charm    			= function (new_config) {
 		self.disable 			= function() {
 			isDisabled			= true;
 		};
-		
+
 		self.enable				= function() {
 			isDisabled			= false;
 		};
-		
+
 		self.setVideoScale	  	= function (new_scale){
 			self.width 			= new_scale * nvideo.videoWidth;
 			self.height			= new_scale * nvideo.videoHeight;
 		};
-		
+
 		self.setAnchorPos		= function(ax, ay) {
 			// anchor type wont work on periodic image
 			anchorX = ax;
 		 	anchorY = ay;
 		};
-		
+
 		// self.captureFrame 		= function (activeCanvas) {
 			// img.src = activeCanvas.toDataURL();
 		// }
-		
+
 		self.update 			= function (cx, frameStep, sceneNumber) {
 			if (isDisabled) return;
 			if (!ready) {
@@ -971,22 +997,22 @@ var Charm    			= function (new_config) {
 				// cx.save ();
 				// cx.translate (tf.x, tf.y);
 				// cx.drawImage (nvideo, 0, 0, self.width, self.height);
-				// cx.restore ();				
+				// cx.restore ();
 			// }
 
 			cx.save ();
 			cx.translate (tf.x, tf.y);
 			cx.drawImage (nvideo, 0, 0, self.width, self.height);
-			cx.restore ();				
+			cx.restore ();
 
 		};
 	};
-	
-	
+
+
 	self.createNativeVideo		= function(title) {
 		return new NativeVideo(title);
 	};
-	
+
 	var Animator2d 				= function (propagator) {
 		/*
 		This class is to animate within allocated time.
@@ -1006,14 +1032,14 @@ var Charm    			= function (new_config) {
 				if (time > phaseTime) {
 					time 	= phaseTime;
 					transform.x		= currentX + deltaX;
-					transform.y		= currentY + deltaY;	
+					transform.y		= currentY + deltaY;
 					// self.propagator.removeSubscriber (pod, true);
 					self.propagator.removeActionSubscriber (pod);
 					if(callback) callback();
 					return;
 				}
 				transform.x		= currentX + time/phaseTime * deltaX;
-				transform.y		= currentY + time/phaseTime * deltaY;	
+				transform.y		= currentY + time/phaseTime * deltaY;
 			};
 			// pod.propagateKey 	= self.propagator.addSubscriber (pod, true);
 			pod.propagateKey 	= self.propagator.addActionSubscriber (pod);
@@ -1045,18 +1071,18 @@ var Charm    			= function (new_config) {
 				frac 			= time / phaseTime;
 				val				= Math.sin(frac * Math.PI/2);
 				entity.x		= currentX + val * deltaX;
-				entity.y		= currentY + val * deltaY;	
+				entity.y		= currentY + val * deltaY;
 
 			};
 			pod.propagateKey 	= self.propagator.addActionSubscriber (pod);
 		};
-		
+
 		self.cancelAnimation	= function(transform, callback) {
 			if (transform.anipod)	{
 				self.propagator.removeSubscriber (transform.anipod, true, callback);
 			}
 			else {
-				if(callback) callback(); 
+				if(callback) callback();
 			}
 		};
 		self.zoomOut 			= function (transform, phaseTime, callback) {
@@ -1089,7 +1115,7 @@ var Charm    			= function (new_config) {
 				transform.scaleY	= val * initScaleY;
 				// entity.x		= startX - val * w/2;
 				// entity.y		= startY - val * h/2;
-	
+
 			};
 			// pod.propagateKey 	= self.propagator.addSubscriber (pod, true);
 			pod.propagateKey 	= self.propagator.addActionSubscriber (pod);
@@ -1124,7 +1150,7 @@ var Charm    			= function (new_config) {
 				transform.scaleY	= val * initScaleY;
 				// entity.x		= startX - val * w/2;
 				// entity.y		= startY - val * h/2;
-	
+
 			};
 			// pod.propagateKey 	= self.propagator.addSubscriber (pod, true);
 			pod.propagateKey 	= self.propagator.addActionSubscriber (pod);
@@ -1144,7 +1170,7 @@ var Charm    			= function (new_config) {
 				entity.alpha	= frac;
 			};
 			pod.propagateKey 	= self.propagator.addActionSubscriber (pod);
-	
+
 		};
 		self.fadeOut			= function(entity, phaseTime, callback) {
 			// console.log('entity:', entity);
@@ -1173,7 +1199,7 @@ var Charm    			= function (new_config) {
 			transform.scaleY	= 0;
 			var pod 			= {};
 			transform.x 		= targetX;
-			transform.y			= targetY;	
+			transform.y			= targetY;
 			let startX			= transform.x;
 			let startY			= transform.y;
 			let moveX			= 0;
@@ -1210,7 +1236,7 @@ var Charm    			= function (new_config) {
 			transform.scaleY	= 0;
 			var pod 			= {};
 			transform.x 		= targetX;
-			transform.y			= targetY;	
+			transform.y			= targetY;
 			pod.update			= function (context, frameStep, sceneNumber) {
 				time			+= frameStep;
 				// console.log("sparking");
@@ -1228,7 +1254,7 @@ var Charm    			= function (new_config) {
 			// pod.propagateKey 	= self.propagator.addSubscriber (pod, true);
 			pod.propagateKey 	= self.propagator.addActionSubscriber (pod);
 		};
-		
+
 		self.rotateForever 		= function (transform, frequency) {
 			var time 			= 0;
 			var period 			= 1/frequency;
@@ -1242,7 +1268,7 @@ var Charm    			= function (new_config) {
 				transform.rotation 	= Math.floor(time/segPhase)/seg * 360;
 				// console.log(transform.rotation);
 			};
-			pod.propagateKey 	= self.propagator.addActionSubscriber (pod);	
+			pod.propagateKey 	= self.propagator.addActionSubscriber (pod);
 		};
 
 		self.moveToValue		= function (startVal, endVal, phaseTime, listener, callback) {
@@ -1294,14 +1320,14 @@ var Charm    			= function (new_config) {
 			}
 		}
 		// -----------------------------------------------------
-	
+
 		self.update				= function (context, frameStep, sceneNumber) {};
 
 		function createAnimaton (en, specs) {
 			var animaton		= new Animaton ();
 			var sprites			= specs.sprites;
 			for (var i=0; i < sprites.length; i++) {
-				
+
 				var sprite		= new Sprite (en, {
 					path					: specs.sprites[i].path,
 					sprite_array 			: specs.sprites[i].array,
@@ -1320,12 +1346,12 @@ var Charm    			= function (new_config) {
 		/*
 			sprite array is the segments that is going to be used
 			sprite number indicates how many segments exists
-		
+
 			spritePath, spriteArray, colnumber, rownumber
 		*/
 		var spritePath  	= specs.path;
 		var spriteArray 	= specs.sprite_array;
-		var colnumber		= specs.sprite_column_number;	
+		var colnumber		= specs.sprite_column_number;
 		var rownumber 		= specs.sprite_row_number;
 
 		var self			= this;
@@ -1401,7 +1427,7 @@ var Charm    			= function (new_config) {
 				console.log("sprite not ready");
 				return;
 			}
-			// console.log('drawing');			
+			// console.log('drawing');
 			cx.save ();
 			cx.translate (en.x, en.y);
 			cx.scale (en.scaleX, en.scaleY);
@@ -1409,14 +1435,14 @@ var Charm    			= function (new_config) {
 			cx.globalAlpha	= en.alpha;
 
 			if (!isPlaying) {
-				cx.drawImage (image, x*w, y*h, w, h, -anchorX, -anchorY, w, h); 
+				cx.drawImage (image, x*w, y*h, w, h, -anchorX, -anchorY, w, h);
 				cx.restore();
 				return;
 			};
 
-			cx.drawImage (image, x*w, y*h, w, h, -anchorX, -anchorY, w, h); 
+			cx.drawImage (image, x*w, y*h, w, h, -anchorX, -anchorY, w, h);
 			cx.restore();
-		
+
 			fpsGate += frameStep;
 			if ((counter == arrayLength-1) && isPlayingOnce) {
 				isPlayingOnce 	= false;
@@ -1430,9 +1456,9 @@ var Charm    			= function (new_config) {
 				x	= spriteIndex%colnumber;
 				y	= Math.floor(spriteIndex/colnumber);
 				if (counter > arrayLength-1) counter = 0;
-				fpsGate = 0.0;		
+				fpsGate = 0.0;
 			}
-		};	
+		};
 		self.disable		= function () {
 			isDisabled		= true;
 			self.isDisabled = true;
@@ -1444,16 +1470,16 @@ var Charm    			= function (new_config) {
 
 		if (activePropagator) {
 			if(specs.layerIndex) {
-				activePropagator.insertSubscriber(self, specs.layerIndex);	
+				activePropagator.insertSubscriber(self, specs.layerIndex);
 			}
 			else {
-				activePropagator.addSubscriber(self);	
+				activePropagator.addSubscriber(self);
 			}
 
-		} 
-		
+		}
+
 	};
-	
+
 	var Animaton 				= function () {
 		var self				= this;
 		var moves				= {};
@@ -1583,32 +1609,32 @@ var Charm    			= function (new_config) {
 			cx.rotate (en.rotation * pi/180.0);
 			if (isPeriodic) {
 				let domain	= -Math.floor(en.x/self.imageWidth);
-				cx.drawImage (image, self.cx, self.cy, self.dx, self.dy, 
+				cx.drawImage (image, self.cx, self.cy, self.dx, self.dy,
 					(domain - 1) * self.imageWidth + self.offsetX, self.offsetY, self.sx, self.sy);
-				cx.drawImage (image, self.cx, self.cy, self.dx, self.dy, 
+				cx.drawImage (image, self.cx, self.cy, self.dx, self.dy,
 					domain * self.imageWidth + self.offsetX, self.offsetY, self.sx, self.sy);
-				cx.drawImage (image, self.cx, self.cy, self.dx, self.dy, 
+				cx.drawImage (image, self.cx, self.cy, self.dx, self.dy,
 					(domain + 1) * self.imageWidth+ self.offsetX, self.offsetY, self.sx, self.sy);
 			}
 			else {
 
-				cx.drawImage (image, self.cx, self.cy, self.dx, self.dy, 
-					// (self.offsetX - anchorX) - self.dx * (ss - 1)/2., 
-					// (self.offsetY - anchorY) - self.dy * (ss - 1)/2., 
-					(self.offsetX - anchorX), 
-					(self.offsetY - anchorY), 
+				cx.drawImage (image, self.cx, self.cy, self.dx, self.dy,
+					// (self.offsetX - anchorX) - self.dx * (ss - 1)/2.,
+					// (self.offsetY - anchorY) - self.dy * (ss - 1)/2.,
+					(self.offsetX - anchorX),
+					(self.offsetY - anchorY),
 					self.sx * ss, self.sy * ss);
 
 				cx.globalCompositeOperation='source-atop';
 				cx.fillStyle = "yellow";
 				cx.fillRect(
-					(self.offsetX - anchorX) - sw/2, 
-					(self.offsetY - anchorY) - sw/2, 
+					(self.offsetX - anchorX) - sw/2,
+					(self.offsetY - anchorY) - sw/2,
 					self.dx, self.dy);
 
-				cx.drawImage (image, self.cx, self.cy, self.dx, self.dy, 
-					self.offsetX - anchorX, 
-					self.offsetY - anchorY, 
+				cx.drawImage (image, self.cx, self.cy, self.dx, self.dy,
+					self.offsetX - anchorX,
+					self.offsetY - anchorY,
 					self.sx, self.sy);
 
 			}
@@ -1626,14 +1652,14 @@ var Charm    			= function (new_config) {
 		self.type 				= "Image";
 		self.sx					= 1.0;
 		self.sy					= 1.0;
-		self.glow				= false; 
+		self.glow				= false;
 		if(specs.name) {
 			self.name = specs.name;
 		}
 		var image				= new Image();
 		image.src				= specs.path;
 		// console.log("creating image", image.src);
-		
+
 		self.width, self.height;
 		self.onload 			= function(){};
 		image.onload			= function () {
@@ -1700,8 +1726,8 @@ var Charm    			= function (new_config) {
 				cx.shadowOffsetY 	= 0;
 		  	}
 
-			cx.drawImage (image, self.cx, self.cy, self.dx, self.dy, 
-				-anchorX, -anchorY, 
+			cx.drawImage (image, self.cx, self.cy, self.dx, self.dy,
+				-anchorX, -anchorY,
 				self.sx, self.sy);
 
 			cx.restore ();
@@ -1710,11 +1736,11 @@ var Charm    			= function (new_config) {
 			image.src			= path;
 		};
 	};
-	
+
     var CmShape                 = function (entity, specs) {
 		var self			= this;
 
-		var kind 			= specs.kind ? specs.kind : 'polygon';			
+		var kind 			= specs.kind ? specs.kind : 'polygon';
 		var verticesX 		= specs.verticesX ? specs.verticesX : [];
 		var verticesY 		= specs.verticesY ? specs.verticesY : [];
 		var radius 			= specs.radius ? specs.radius : 10;
@@ -1742,7 +1768,7 @@ var Charm    			= function (new_config) {
 		shapefy();
 
 		self.setFillColor 	= function(new_color) {
-			fillColor 		= new_color; 
+			fillColor 		= new_color;
 		};
 
 		self.updateVertices = function(in_x, in_y) {
@@ -1771,8 +1797,8 @@ var Charm    			= function (new_config) {
 		}
 
 		function update_circle (cx, frameStep, sceneNumber) {
-			if (isDisabled) return;			
-			cx.save ();           
+			if (isDisabled) return;
+			cx.save ();
 			cx.translate (en.x - anchorX, en.y - anchorY);
 			// console.log (anchorX, anchorY);
 
@@ -1787,7 +1813,7 @@ var Charm    			= function (new_config) {
             cx.fillStyle   = fillColor;
             cx.fill();
             if (outline) {
-				cx.strokeStyle = '#444444';  
+				cx.strokeStyle = '#444444';
 				cx.stroke();
 			}
 
@@ -1795,8 +1821,8 @@ var Charm    			= function (new_config) {
 		}
 
 		function update_polygon(cx, frameStep, sceneNumber) {
-			if (isDisabled) return;			
-			cx.save ();           
+			if (isDisabled) return;
+			cx.save ();
 			cx.translate (en.x - anchorX, en.y - anchorY);
 			// console.log (anchorX, anchorY);
 			cx.scale (en.scaleX, en.scaleY);
@@ -1814,7 +1840,7 @@ var Charm    			= function (new_config) {
             cx.fillStyle   = fillColor;
             cx.fill();
             if (outline) {
-				cx.strokeStyle = '#444444';  
+				cx.strokeStyle = '#444444';
 				cx.stroke();
 			}
 
@@ -1831,37 +1857,37 @@ var Charm    			= function (new_config) {
 
 		function shapefy() {
 			verticesLength  = verticesX.length;
-       
+
 			for (var i = 0; i < verticesLength; i++) {
 				let iprev  	= (i-1) < 0 ? verticesLength-1 : (i-1);
 				let inext 	= (i+1) > verticesLength-1 ? 0 : i+1;
 				let px 		= verticesX[i];
 				let py 		= verticesY[i];
-				
+
 				let vxprev = verticesX[iprev] - verticesX[i];
 				let vyprev = verticesY[iprev] - verticesY[i];
 				let vxnext = verticesX[inext] - verticesX[i];
 				let vynext = verticesY[inext] - verticesY[i];
-	
-				let vprevlength = Math.sqrt (vxprev*vxprev + vyprev*vyprev); 
-				let vnextlength = Math.sqrt (vxnext*vxnext + vynext*vynext); 
-	
+
+				let vprevlength = Math.sqrt (vxprev*vxprev + vyprev*vyprev);
+				let vnextlength = Math.sqrt (vxnext*vxnext + vynext*vynext);
+
 				let leftshiftx 	= crad/vprevlength * vxprev;
 				let leftshifty	= crad/vprevlength * vyprev;
-	
+
 				let rightshiftx = crad/vnextlength * vxnext;
 				let rightshifty = crad/vnextlength * vynext;
-	
+
 				if(i == 0) {
 					arcsX.push(px + 0.5*vxnext);
-					arcsY.push(py + 0.5*vynext);			
+					arcsY.push(py + 0.5*vynext);
 				}
 				else {
 					arcsX.push( px + rightshiftx);
-					arcsY.push( py + rightshifty);	
+					arcsY.push( py + rightshifty);
 				}
-			}      
-	
+			}
+
 		}
 	};
 
@@ -1871,20 +1897,20 @@ var Charm    			= function (new_config) {
 		var strokeStyle 	= specs.color;
 		var lineWidth 		= specs.thickness;
 		var verticesLength 	= verticesX.length;
-		
+
 		if (verticesX.length != verticesY.length) {
 			console.log("error on creating path");
             return undefined;
         }
-		
+
 		var self			= this;
 		self.type 			= "Path";
 		var isDisabled		= false;
 		var en              = transform;
-		
+
 		self.update 		= function (cx, frameStep, sceneNumber) {
-			if (isDisabled) return;			          
-            cx.save ();           
+			if (isDisabled) return;
+            cx.save ();
 			cx.lineJoin = 'round';
 			cx.lineCap = 'round';
             cx.translate (en.x, en.y);
@@ -1896,25 +1922,25 @@ var Charm    			= function (new_config) {
 				cx.lineTo(verticesX[i], verticesY[i]);
 			}
 			cx.lineWidth  = lineWidth;
-			cx.strokeStyle = strokeStyle;  
+			cx.strokeStyle = strokeStyle;
 			cx.stroke();
             cx.restore();
-		};	
-		
+		};
+
 		self.updateVertices = function (vertices_x, vertices_y) {
 			verticesX = vertices_x;
 			verticesY = vertices_y;
 			verticesLength = verticesX.length;
 		}
-		
+
 		self.setFillColor 	= function(color) {
 			strokeStyle 	= color;
 		};
-		
+
 		self.disable		= function () {
 			isDisabled		= true;
 		};
-		
+
 		self.enable			= function () {
 			isDisabled		= false;
 		};
@@ -1931,44 +1957,44 @@ var Charm    			= function (new_config) {
 		var waveAmount 		= Math.floor(waveRadius/waveLength);
 		var maxWaveAmount 	= waveAmount;
 		var halfFov			= specs.waveFov * Math.PI/ 360;
-		
+
 		var self			= this;
 		self.type 			= "Wave Path";
 		var isDisabled		= false;
 		var en              = transform;
-		
+
 		self.update 		= function (cx, frameStep, sceneNumber) {
-			if (isDisabled) return;			          
-            cx.save ();           
+			if (isDisabled) return;
+            cx.save ();
             cx.translate (en.x, en.y);
 			cx.scale (en.scaleX, en.scaleY);
 			cx.globalAlpha	= en.alpha;
-			
+
 			cx.lineWidth  	= lineWidth;
-			cx.strokeStyle 	= strokeStyle;  		
-		
+			cx.strokeStyle 	= strokeStyle;
+
 			for (var i = 1; i <= waveAmount; i++) {
 				cx.beginPath();
 				cx.arc(0, 0, i * waveLength, -halfFov, halfFov);
 				cx.stroke();
 			}
-					     			
+
             cx.restore();
-		};	
-		
+		};
+
 		self.updateWaveAmount = function (newRatio) {
 			let newAmount 	= Math.floor(newRatio * maxWaveAmount);
 			waveAmount 		= newAmount;
 		};
-		
+
 		self.setFillColor 	= function(color) {
 			strokeStyle 	= color;
 		};
-		
+
 		self.disable		= function () {
 			isDisabled		= true;
 		};
-		
+
 		self.enable			= function () {
 			isDisabled		= false;
 		};
@@ -2002,13 +2028,13 @@ var Charm    			= function (new_config) {
 		}
 		return path;
 	};
-	
+
 	self.destroyPath  		= function (path) {
 		if (activePropagator) {
 			activePropagator.removeSubscriber(path);
 		}
 	}
-	
+
 	self.createWavePath		= function (specs) {
 		var wavePath 	= {};
 		wavePath.transform 	= new Transform(specs.x, specs.y);
@@ -2021,7 +2047,7 @@ var Charm    			= function (new_config) {
 
 	self.userGestureStarter		= function (containerId, callback) {
 		var autoplaySolved 	= false;
-		var dom          	= document.getElementById(containerId); 
+		var dom          	= document.getElementById(containerId);
 		var btnHeight       = 70;
 		var btnWidth        = 70;
 		var btnLineHeight   = 50;
@@ -2033,33 +2059,33 @@ var Charm    			= function (new_config) {
 		var titleSize       = 35;
 		var silentFile      = "silent";
 		var img				= undefined;
-	
+
 		var sound = new NativeSound(silentFile);
 		checkPolicy();
-	
+
 		function fileFailed() {
 			// file failed to load, attempting to run callback
 			// callback();
 		}
-	
+
 		function checkPolicy () {
 			console.log("checkAutoPolicy called");
 			let audio 	= sound.getAudio();
-			
+
 			var autoPlayPromise = audio.play();
-			if (autoPlayPromise !== undefined) {				
-				prompt_user_input();  
+			if (autoPlayPromise !== undefined) {
+				prompt_user_input();
 			}
 			else {
 				console.log("autoplay promise undefined, proceed to run the app.");
 				create_clickme_image(proceeed_without_policy);
 			}
-			
+
 			if(!autoplaySolved){
-				document.addEventListener("mousedown", clicked); 
+				document.addEventListener("mousedown", clicked);
 				window.addEventListener("resize",updateSize);
 			}
-			
+
 			function prompt_user_input() {
 				console.log("promise defined.");
 
@@ -2074,7 +2100,7 @@ var Charm    			= function (new_config) {
 					create_clickme_image();
 				});
 			}
-			
+
 			function proceeed_without_policy() {
 				autoplaySolved = true;
 				document.removeEventListener("mousedown", clicked);
@@ -2082,14 +2108,14 @@ var Charm    			= function (new_config) {
 				callback();
 			}
 		}
-	
+
 		function clearCover() {
 			while (dom.firstChild) {
 				// console.log("clearing cover :", dom.firstChild);
 				dom.removeChild(dom.firstChild);
 			}
 		}
-	
+
 		function create_clickme_image(callback) {
 			img	= document.createElement('img');
 			img.src	= "images/clickme.png";
@@ -2100,21 +2126,21 @@ var Charm    			= function (new_config) {
 			img.style.height            = btnHeight * yScale + "px";
 			dom.appendChild(img);
 			if(callback) img.onload = callback;
-			
-			
+
+
 		}
-	
+
 		function createNextBtn() {
 			btn.className="button";
 			btn.style.position="absolute";
-	
+
 			btn.style.textAlign     = "center";
 			btn.style.fontWeight    = "bold";
 			btn.style.color         = "#0099cc";
 			btn.innerText           = "\u261D";
-			btn.style.outline       = "none"; 
+			btn.style.outline       = "none";
 			btn.style.border        = "none";
-	
+
 			//btn.style.textAlign="center";
 			// btn.style.background="#0099cc";
 			// btn.style.boxShadow="0 0 3px gray";
@@ -2123,21 +2149,21 @@ var Charm    			= function (new_config) {
 			// btn.style.border="2px solid #0099cc";
 			// btn.style.color="#ffffff";
 			// btn.innerText="\u2192";
-			// btn.style.outline="none"; 
-	
+			// btn.style.outline="none";
+
 			btn.style.fontSize          = fontSize*xScale + "px";
 			btn.style.top               = dom.offsetHeight/2 - btnHeight/2 * yScale + "px";
 			btn.style.left              = dom.offsetWidth/2 - btnWidth/2 * xScale + "px";
 			btn.style.width             = btnWidth * xScale + "px";
 			btn.style.height            = btnHeight * yScale + "px";
 			//btn.style.lineHeight        = btnLineHeight * yScale + "px";
-			dom.appendChild(btn);  
+			dom.appendChild(btn);
 		}
-	
+
 		function clicked(ev) {
 			checkPolicy();
 		}
-	
+
 		function updateSize() {
 			var size = "auto";
 			var ws = dom.offsetWidth/canvasWidth;
@@ -2148,19 +2174,19 @@ var Charm    			= function (new_config) {
 			img.style.left              = dom.offsetWidth/2  - btnWidth/2 * xScale + "px";
 			img.style.width             = btnWidth * xScale + "px";
 			img.style.height            = btnHeight * yScale + "px";
-	
-		}	
+
+		}
 	};
 
 	self.createCanvas			= function (inputContainer, propagationMode) {
 		var canvas2d			= new Canvas2d (inputContainer, propagationMode);
-		canvas2d.updateSize();	
+		canvas2d.updateSize();
 		canvas2d.setAbsolutePos ();
 		window.addEventListener("resize",function(){
 			canvas2d.updateSize ();
 			canvas2d.setAbsolutePos ();
 		},false);
-		
+
 		return canvas2d;
 	};
 
@@ -2185,10 +2211,10 @@ var Charm    			= function (new_config) {
 		tr.scaleX	= specs.scaleX ? specs.scaleX : 1.0;
 		tr.scaleY 	= specs.scaleY ? specs.scaleY : 1.0;
 		tr.rotation = specs.rotation || 0;
-		q.image 	= new CmImage(tr, specs);	
-		return q;  
+		q.image 	= new CmImage(tr, specs);
+		return q;
 	};
-	
+
 	self.createSprite 			= function(specs) {
 		var q = {};
 		var tf, sp;
@@ -2250,7 +2276,7 @@ var Charm    			= function (new_config) {
 		if (activePropagator) {
 			q.propagateKey = activePropagator.addSubscriber(q);
 		}
-		
+
 		q.update 			= function (cx, frameStep, sceneNumber) {
 			if (isDisabled) return;
 			if (!ready || !cx) {
@@ -2263,13 +2289,13 @@ var Charm    			= function (new_config) {
 			cx.textAlign 	= textAlign;
 			shift_x 			= 0;
 			shift_y 			= 0;
-			
+
 			// set white stroke
 			if(isOutlined) {
 				cx.miterLimit 	= 2;
 				cx.lineJoin 	= 'circle';
 				cx.strokeStyle 	= strokeStyle;
-				cx.lineWidth 	= strokeWidth;	
+				cx.lineWidth 	= strokeWidth;
 			}
 
 			for (var i = 0; i < lengthFill; i++) {
@@ -2283,12 +2309,12 @@ var Charm    			= function (new_config) {
 				if(isOutlined) cx.strokeText(fills[i], shift_x, shift_y);
 				cx.fillText(fills[i], shift_x, shift_y);
 				shift_x 		+= cx.measureText(fills[i]).width;
-			}				
+			}
 			textLength = shift_x;
-	
+
 			cx.restore();
-		};	
-		
+		};
+
 		q.getLengthTo		= function(c, isAfter) {
 			let cx 		= activeContext;
 			let res  	= 0;
@@ -2315,7 +2341,7 @@ var Charm    			= function (new_config) {
 
 			return res;
 		};
-		
+
 		q.getLengthToIndex 	= function(index) {
 			let cx 	= activeContext;
 			let res	= 0;
@@ -2335,7 +2361,7 @@ var Charm    			= function (new_config) {
 
 			return res;
 		};
-		
+
 		q.getClosestIndex 	= function (distance, alignMode) {
 			let cx 	= activeContext;
 			let res	= 0;
@@ -2355,9 +2381,9 @@ var Charm    			= function (new_config) {
 				}
 				it++;
 			}
-		}; 
+		};
 		// BM centerize with frame timer
-		
+
 		q.centerize			= function(callback) {
 			if(activePropagator) {
 				let init_alpha 		= q.transform.alpha;
@@ -2402,7 +2428,7 @@ var Charm    			= function (new_config) {
 		splash.style.margin		= "auto";
 		splash.style.width 		= "100%";
 		splash.style.top		= domcanvas.style.top;
-		
+
 		splasher.start			= function (duration) {
 			container.appendChild(splash);
 			setTimeout(function(){
@@ -2441,7 +2467,7 @@ var Charm    			= function (new_config) {
 	};
 
 	var ut;
-	
+
 	self.utils				= ut = {
 		// getCombination		: function (sourceSet, nTaken) {
 		// 	var result  = [];
@@ -2463,13 +2489,13 @@ var Charm    			= function (new_config) {
 			pi : Math.PI,
 			twopi: 2*Math.PI
 		},
-		
+
 		isAboveRectangle 	: function (x, y, cx, cy, rx, ry) {
 			// console.log(x-cx, y-cy);
 			if (Math.abs(x - cx) <= rx && Math.abs(y-cy) <= ry) return true;
 			return false;
 		},
-		
+
 		getRange			: function (start, end, step) {
 			let result		= [];
 			for (var i = start; i < end; i += step) {
@@ -2477,7 +2503,7 @@ var Charm    			= function (new_config) {
 			}
 			return result;
 		},
-		
+
 		getRandomSet		: function (sourceSet, nTaken) {
 			let sourceLength	= sourceSet.length;
 			let set				= sourceSet.slice(0);
@@ -2490,7 +2516,7 @@ var Charm    			= function (new_config) {
 			// console.log(result);
 			return result;
 		},
-		
+
 		makeArrayOf			: function (value, length) {
 			let arr = [], i = length;
 			while (i--) {
@@ -2498,7 +2524,7 @@ var Charm    			= function (new_config) {
 			}
 			return arr;
 		},
-		
+
 		spliceRandomSet		: function (sourceSet, nTaken) {
 			let sourceLength	= sourceSet.length;
 			let set				= sourceSet;
@@ -2510,7 +2536,7 @@ var Charm    			= function (new_config) {
 			}
 			return result;
 		},
-		
+
 		sliceRandomSet 		: function (sourceSet, nTaken, exceptionSet) {
 			let set				= sourceSet.slice(0);
 
@@ -2518,8 +2544,8 @@ var Charm    			= function (new_config) {
 				for (var i = 0; i < exceptionSet.length; i++) {
 					let exIndex = set.indexOf(exceptionSet[i]);
 					if (exIndex < 0) continue;
-					set.splice(exIndex, 1);			
-				}				
+					set.splice(exIndex, 1);
+				}
 			}
 
 			let length			= set.length;
@@ -2532,28 +2558,28 @@ var Charm    			= function (new_config) {
 			}
 			return result;
 		},
-		
+
 		getRandomInteger	: function(start, end) {
 			return start + Math.floor(Math.random () * (end+1 - start));
 		},
-		
+
 		getRandomFloat		: function(start, end) {
 			return start + (Math.random () * (end - start));
 		},
-		
+
 		getRandomBool		: function(trueProb) {
 			let prob = trueProb || 0.5;
 			return Math.random() < prob ? true: false;
 		},
-		
+
 		getRandomIntegerFromArray: function(arr) {
 			let index = Math.floor(Math.random () * arr.length);
 			return arr[index];
 		},
-		
+
 		createPolygonVertices: function(num_of_corners, radius) {
 			var verticesX 		= [];
-			var verticesY 		= []; 
+			var verticesY 		= [];
 			var radius 			= radius;
 			var pi 				= Math.PI;
 			let n 				= num_of_corners < 3 ? 3:num_of_corners;
@@ -2569,27 +2595,27 @@ var Charm    			= function (new_config) {
 			return {
 				x : verticesX,
 				y : verticesY
-			}	
+			}
 		},
-		
+
 		distance2d			: function(x1, y1, x2, y2) {
 			return Math.sqrt ((x1-x2)*(x1-x2) + (y1-y2)*(y1-y2));
 		},
-		
+
 		rectdist2d			: function(x1, y1, x2, y2) {
 			return Math.max(Math.abs(x1-x2), Math.abs(y1-y2));
 		},
-		
+
 		isArrayMember		: function(n, array) {
 			if(array.indexOf(n) >= 0) return true;
 			return false;
 		},
-		
+
 		isInsideRectangle	: function(x, y, cx, cy, rx, ry) {
 			if (Math.abs(x - cx) <= rx && Math.abs(y-cy) <= ry) return true;
 			return false;
 		},
-		
+
 		isInsideEllipse : function(x, y, h, k, rx, ry) {
 			// I WAS BORN
 			let term1 	= (x-h)*(x-h)/(rx*rx);
@@ -2600,7 +2626,7 @@ var Charm    			= function (new_config) {
 			}
 			else return false;
 		},
-		
+
 		ellipseCarlo : function(centerX, centerY, rx, ry, N) {
 			isShooting 	= true;
 			nCount		= 0;
@@ -2617,7 +2643,7 @@ var Charm    			= function (new_config) {
 			}
 			return carlos;
 		},
-		
+
 		isNeighbor				: function(pos, neighbors, nearDist) {
 			let length			= neighbors.length;
 			for (var i = 0; i < length; i++) {
@@ -2628,7 +2654,7 @@ var Charm    			= function (new_config) {
 			}
 			return false;
 		},
-		
+
 		ellipseIntersectCarlo	: function(center1x, center1y, r1x, r1y, center2x, center2y, r2x, r2y, N, offset) {
 			isShooting 	= true;
 			nCount		= 0;
@@ -2638,8 +2664,8 @@ var Charm    			= function (new_config) {
 			while (isShooting && N > 0) {
 				let x 	= -mainRadius1 + 2 * Math.random() * mainRadius1 + center1x;
 				let y 	= -mainRadius1 + 2 * Math.random() * mainRadius1 + center1y;
-				
-				if (	self.utils.isInsideEllipse(x, y, center1x, center1y, r1x-offset, r1y-offset) && 
+
+				if (	self.utils.isInsideEllipse(x, y, center1x, center1y, r1x-offset, r1y-offset) &&
 						self.utils.isInsideEllipse(x, y, center2x, center2y, r2x - offset, r2y - offset) &&
 						!ut.isNeighbor ([x, y], carlos, 80) ) {
 					carlos.push([x, y]);
@@ -2652,10 +2678,10 @@ var Charm    			= function (new_config) {
 
 				x 	= -mainRadius2 + 2 * Math.random() * mainRadius2 + center2x;
 				y 	= -mainRadius2 + 2 * Math.random() * mainRadius2 + center2y;
-				
-				if (	self.utils.isInsideEllipse(x, y, center1x, center1y, r1x - offset, r1y - offset) && 
+
+				if (	self.utils.isInsideEllipse(x, y, center1x, center1y, r1x - offset, r1y - offset) &&
 						self.utils.isInsideEllipse(x, y, center2x, center2y, r2x - offset, r2y - offset) &&
-						!ut.isNeighbor ([x, y], carlos, 80) ) {	
+						!ut.isNeighbor ([x, y], carlos, 80) ) {
 					carlos.push([x, y]);
 					nCount++;
 					if (nCount >= N) {
@@ -2666,7 +2692,7 @@ var Charm    			= function (new_config) {
 			}
 			return carlos;
 		},
-		
+
 		ellipseExcludeCarlo : function(center1x, center1y, r1x, r1y, center2x, center2y, r2x, r2y, N, offset) {
 			isShooting 	= true;
 			nCount		= 0;
@@ -2675,8 +2701,8 @@ var Charm    			= function (new_config) {
 			while (isShooting && N > 0) {
 				let x 	= -mainRadius1 + 2 * Math.random() * mainRadius1 + center1x;
 				let y 	= -mainRadius1 + 2 * Math.random() * mainRadius1 + center1y;
-				
-				if (	self.utils.isInsideEllipse(x, y, center1x, center1y, r1x - offset, r1y - offset) && 
+
+				if (	self.utils.isInsideEllipse(x, y, center1x, center1y, r1x - offset, r1y - offset) &&
 						!self.utils.isInsideEllipse(x, y, center2x, center2y, r2x + offset, r2y + offset) &&
 						!ut.isNeighbor ([x, y], carlos, 80) ) {
 					carlos.push([x, y]);
@@ -2689,13 +2715,13 @@ var Charm    			= function (new_config) {
 			}
 			return carlos;
 		},
-		
+
 		getRandomMultiple	: function(n, startRange, endRange) {
 			let multiplier 	= self.utils.getRandomInteger(startRange, endRange);
 			return n*multiplier;
 		},
-		
-		rgbToHex : function (r,g, b) { 
+
+		rgbToHex : function (r,g, b) {
 			var red = toHex(r);
 			var green = toHex(g);
 			var blue = toHex(b);
@@ -2709,7 +2735,7 @@ var Charm    			= function (new_config) {
 				return hex;
 			}
 		  },
-		
+
 		intersectSet	: function(set1, set2){
 			let intersection  	= [];
 			let length1 		= set1.length;
@@ -2726,7 +2752,7 @@ var Charm    			= function (new_config) {
 			}
 			return intersection;
 		},
-		
+
 		sliceSet		: function(mainSet, slicingSet) {
 			let sliced 			= [];
 			let mainLength 		= mainSet.length;
@@ -2738,22 +2764,22 @@ var Charm    			= function (new_config) {
 				ismember 	= true;
 				for (var j = 0; j < slicingLength; j++) {
 					let n2	= slicingSet[j];
-					if (n1 == n2) ismember = false; 
+					if (n1 == n2) ismember = false;
 				}
 				if(ismember) sliced.push(n1);
 			}
 
 			return sliced;
 		},
-		
+
 		radian 		: function(deg) {
 			return pi/180 * deg;
 		},
-		
+
 		degree		: function(rad) {
 			return 180/pi * rad;
 		},
-		
+
 		joinSet			: function(setArray) {
 			let sumset = [];
 			setArray.forEach(function(set){
@@ -2761,7 +2787,7 @@ var Charm    			= function (new_config) {
 			})
 			return sumset;
 		},
-		
+
 		set_interval : function(callback, periode) {
 			var pod 	= {};
 			var timer  	= 0;
@@ -2777,13 +2803,13 @@ var Charm    			= function (new_config) {
 				return pod;
 			}
 		},
-		
+
 		clear_interval : function(pod) {
 			if(activePropagator) {
 				activePropagator.removeActionSubscriber(pod);
 			}
 		},
-		
+
 		get_user_agent : function() {
 			var user_agent = "non-mobile";
 			if(/Android/i.test(navigator.userAgent) ) {
@@ -2796,7 +2822,7 @@ var Charm    			= function (new_config) {
 				user_agent = "iphone";
 			}
 			else {
-			}		
+			}
 			return user_agent;
 		},
 		get_user_browser : function() {
@@ -2820,11 +2846,11 @@ var Charm    			= function (new_config) {
 			{
 				browser_name = 'edge';
 			}
-			else 
+			else
 			{
 			   browser_name = 'other-browser';
 			}
-			
+
 			return browser_name;
 		}
 	};

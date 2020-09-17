@@ -1,20 +1,20 @@
 <!DOCTYPE html>
 <html>
-	<title>Pencil Command</title>
+	<title>A Simple Demo</title>
 
 	<meta charset="UTF-8" name="viewport" content="width=device-width, initial-scale=1" />
-	 
+
     <style type="text/css">
         html, body {
-            height:100%; 
-            width:100%; 
-            margin:0; 
+            height:100%;
+            width:100%;
+            margin:0;
             touch-action:none;
         }
 		canvas {
             touch-action:none;
         }
-	</style>	
+	</style>
 	<head>
         <script src="Charm.js"></script>
         <script src="app.js"></script>
@@ -25,7 +25,7 @@
                 charm.userGestureStarter("content0", function(){
                     app = new App(charm);
                     app.setLanguage("id");
-                    app.start ("content0","auto");         
+                    app.start ("content0","auto");
                 });
 
                 window.oncontextmenu    = function (event) {
@@ -35,17 +35,17 @@
                 };
             });
 
-        </script> 
-	</head>	
-  
+        </script>
+	</head>
+
 	<body>
-        <div id="content0" unselectable="on" 
+        <div id="content0" unselectable="on"
         style="
-            background-color:#ffffff; 
-            position:relative; 
-            width: 100%; 
-            height:100%; 
-            margin-right: auto; 
+            background-color:#ffffff;
+            position:relative;
+            width: 100%;
+            height:100%;
+            margin-right: auto;
             margin-left: auto;">
         </div>
     </body>
