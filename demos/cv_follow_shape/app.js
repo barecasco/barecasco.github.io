@@ -111,11 +111,10 @@ function App (charm) {
 			linesWidth 	: 30,
 			textAlign : "left",
 			fills		: [
-			"Gunakan tombol di samping untuk",
-			"menyusun arah goresan pensil hingga",
-			"sesuai dengan contoh di sebelah kiri."]
+			"Use the buttons to arrange",
+			"the pencil strokes so they match",
+			"the example shape on the left!"]
 		}
-
 		var tit_text = cm.createNativeText(tit_text_specs);
 		var exp_text = cm.createNativeText(exp_text_specs);
 

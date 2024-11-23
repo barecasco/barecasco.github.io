@@ -3,54 +3,76 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Profile Website</title>
+<title>Agra's Trinkets</title>
 <style>
-  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #f4f4f4; }
+  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #F8F5EC; }
   .container { max-width: 800px; margin: auto; overflow: hidden; }
-  header { background: #797979; color: white; padding-top: 30px; min-height: 70px; border-bottom: #cfcfcf 3px solid; }
-  header a { color: #ffffff; text-decoration: none; text-transform: uppercase; font-size: 16px; }
+  header { background: #F8F5EC; color: #402600; padding-top: 30px; min-height: 70px; border-bottom: #e2ded2 3px solid; }
+  header a { color: #F8F5EC; text-decoration: none; text-transform: uppercase; font-size: 16px; }
   header ul { padding: 0; list-style: none; }
   header li { display: inline; padding: 0 20px 0 20px; }
   header #branding { float: left; }
   header #branding h1 { margin: 0; }
   header nav { float: right; margin-top: 10px; }
   header .highlight, header .current a {font-weight: bold; padding: 0.5em;}
-  header a:hover { color: #ffffff; font-weight: bold; }
-  .profile { padding: 30px; background: #ffffff; }
+  header a:hover { color: #F8F5EC; font-weight: bold; }
+  .profile { padding: 30px; background: #F8F5EC; }
   .profile img { max-width: 150px; margin: 0 auto; display: block; }
-  .profile h2 { text-align: center; color: #333; }
-  .profile p { text-align: center; color: #666; }
-  footer { background: #797979; color: white; text-align: center; padding: 10px; position: fixed; left: 0; bottom: 0; width: 100%; }
+  .profile h2 { text-align: center; color: #222222; }
+  .profile p { text-align: left; color: #222222; }
+  footer { background: #FFF9C4; color: #008080; text-align: center; padding: 10px; position: fixed; left: 0; bottom: 0; width: 100%; }
+  ul li {
+  line-height: 1.5; /* Adjust this value to control spacing. 1.5 is 150% of the font size */
+  margin-bottom: 10px; /* Add margin to add space between list items themselves */
+}
 </style>
 </head>
 <body>
   <header>
     <div class="container">
       <div id="branding">
-        <h1><span class="highlight">Agra Barecasco</h1>
+        <h1><span class="highlight">Agra's Trinkets</h1>
       </div>
-      <nav>
+      <!-- <nav>
         <ul>
           <li class="current"><a href="index.html">Home</a></li>
-          <li><a href="index.html">About</a></li>
-          <li><a href="index.html">Contact</a></li>
-          <li><a href="demo_list.html">Demos</a></li>
         </ul>
-      </nav>
+      </nav> -->
     </div>
   </header>
 
   <section class="profile">
     <div class="container">
       <!-- <img src="images/agra.jpg" alt="Profile Picture"> -->
-      <div class="title">Simulation Engineer, Data Analyst, Educator</div>
+      <div class="title"><h3>HTML5 Canvas - JavaScript</h3></div>
       <div class="description">
-        <p>Currently under construction...</p>
+        <p>
+          HTML5 Canvas offers versatile capabilities for creating interactive content. 
+          You can draw various shapes and manipulate images to build user experiences or deliver insights through visualized simulations. 
+          Avoid server-side computational load by running scripts on the client.
+        </p>
+        <ul>
+          <li><a href="demos/cv_follow_shape/index.html">Follow the Shape</a></li>
+          <li>More to come!</a></li>
+        </ul>
       </div>
+
+      <div class="container">
+        <!-- <img src="images/agra.jpg" alt="Profile Picture"> -->
+        <div class="title"><h3>Plotly</h3></div>
+        <div class="description">
+          <p>
+            From simple line graphs to intricate 3D plots, Plotly's intuitive interface and extensive capabilities empower you 
+            to explore data insights with ease, share your findings effectively, and build engaging applications. 
+            Transform your complex datasets into stunning, interactive charts and dashboards that tell compelling stories. 
+          </p>
+          <ul>
+            <li><a href="demos/mc_circle/index.html">Estimating Circle Area</a></li>
+            <li>More to come!</a></li>
+          </ul>
+        </div>
   </section>
 
-  <footer>
-    <p>-</p>
-  </footer>
+
 </body>
 </html>
