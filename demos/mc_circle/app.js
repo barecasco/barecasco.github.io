@@ -16,24 +16,28 @@ const nshot_input   = document.getElementById('numberInput');
 let numPoints = 10;
 
 const displayConfig = {
-    displayModeBar: false
+    displayModeBar: false,
+    responsive: true
 };
 
 var layout   = {
+    autosize  : true,
     showlegend: false,
     dragmode: false,
-    aspectmode: 'manual',
-    title     : {
-        text    : "Estimating Circle Area using Monte Carlo Method"
+    title: {
+        text: "Area Estimation using Monte Carlo",
+        x: 0.5,
+        xanchor: 'center',
+        y: 0.95
     },
-    // autosize  : true,
-    width     : 600,
-    height    : 600,
+    // width    : 500,
+    // height    : 500,
     margin    : {
-        l : 50,
-        r : 50,
-        b : 50,
-        t : 50
+        l : 30,
+        r : 30,
+        b : 10,
+        t : 50,
+        pad:4
     },
     xaxis: {
         ticks: 'none',
@@ -41,7 +45,7 @@ var layout   = {
         range: [0, 1],
         autorange: false,
         showgrid: false,    // removes x-axis grid lines
-        zeroline: false     // removes x-axis zero line
+        zeroline: false,     // removes x-axis zero line
     },
     yaxis: {
         ticks: 'none',
@@ -49,7 +53,9 @@ var layout   = {
         range: [0, 1],
         autorange: false,
         showgrid: false,    // removes y-axis grid lines
-        zeroline: false     // removes y-axis zero line
+        zeroline: false,     // removes y-axis zero line
+        scaleanchor: "x",
+        scaleratio: 1  // 1:1 ratio, modify as needed
     },
 
     shapes: [
@@ -75,8 +81,8 @@ var layout   = {
             x1: 1,
             y1: 1,
             line: {
-                width: 5,
-                color: 'rgba(100, 100, 100, 1)'
+                width: 1.,
+                color: 'rgba(100, 100, 100, 0.4)'
             }
         }
       ]
@@ -131,49 +137,32 @@ function getInputNumber() {
 
 function update_layout(numPoints, numHits, estimated_area, true_area) {
     const annotations = [
+        // {
+        //     text: 'Shots:' + String(numPoints),
+        //     x: 1.2 - text_margin,
+        //     y: 1. - text_margin,
+        //     xanchor: 'right',
+        //     yref: 'paper',
+        //     align: 'right',
+        //     showarrow: false,
+        //     font: {
+        //         family: font_family,
+        //         color: "black",
+        //         size: 12
+        //     },
+        //     bgcolor: '#ffffff',
+        //     bordercolor: '#c7c7c7',
+        //     borderwidth: 2,
+        //     borderpad: 4,      
+        // },
         {
-            text: 'Shots:' + String(numPoints),
-            x: 1. - text_margin,
-            y: 1. - text_margin,
-            xanchor: 'right',
+            text: 'Est. area: ' + String(numHits) + "/" + String(numPoints) + " x " + String(true_area.toFixed(3)) + " = " + String(estimated_area.toFixed(3)),
+            x: 0.5,
+            y: 0.95,
+            xanchor: 'center',
             yref: 'paper',
-            align: 'right',
-            showarrow: false,
-            font: {
-                family: font_family,
-                color: "black",
-                size: 12
-            },
-            bgcolor: '#ffffff',
-            bordercolor: '#c7c7c7',
-            borderwidth: 2,
-            borderpad: 4,      
-        },
-        {
-            text: 'Hits:' + String(numHits),
-            x: 1. - text_margin,
-            y: (1 - text_ldiff*1) - text_margin,
-            xanchor: 'right',
-            yref: 'paper',
-            align: 'right',
-            showarrow: false,
-            font: {
-                family: font_family,
-                color: "black",
-                size: 12
-            },
-            bgcolor: '#ffffff',
-            bordercolor: '#c7c7c7',
-            borderwidth: 2,
-            borderpad: 4,     
-        },
-        {
-            text: 'Estimated area:' + String(estimated_area.toFixed(3)),
-            x: 1. - text_margin,
-            y: (1 - text_ldiff*2) - text_margin,
-            xanchor: 'right',
-            yref: 'paper',
-            align: 'right',
+            xref: 'paper',
+            align: 'center',
             showarrow: false,
             font: {
                 family: font_family,
@@ -184,24 +173,6 @@ function update_layout(numPoints, numHits, estimated_area, true_area) {
             bordercolor: '#c7c7c7',
             borderwidth: 2,
             borderpad: 4,     
-        },
-        {
-            text: 'True area:' + String(true_area.toFixed(3)),
-            x: 1. - text_margin,
-            y: (1 - text_ldiff*3) - text_margin,
-            xanchor: 'right',
-            yref: 'paper',
-            align: 'right',
-            showarrow: false,
-            font: {
-                family: font_family,
-                color: "black",
-                size: 12
-            },
-            bgcolor: '#ffffff',
-            bordercolor: '#c7c7c7',
-            borderwidth: 2,
-            borderpad: 4,      
         }
     ]
 
@@ -252,7 +223,6 @@ function init_plot() {
 
 function replot() {
     numPoints           = getInputNumber();
-    console.log(numPoints);
     const randomPoints = generateRandomPoints(numPoints);
 
     const inCircles     = [];
@@ -313,4 +283,8 @@ function replot() {
 init_plot();
 reshot_button.addEventListener('click', () => {
     replot();
+});
+window.addEventListener('resize', function() {
+    console.log("resizing");
+    // Plotly.Plots.resize('main-screen');
 });

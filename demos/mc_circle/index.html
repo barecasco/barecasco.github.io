@@ -3,73 +3,48 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
     <title>Agra's Trinkets</title>
 
     <style>
-        * {
-            margin: 0;
-            padding: 0;
-            box-sizing: border-box;
-        }
-
-        /* body {
-            min-height: 100vh;
-        } */
 
         .container {
             width: 100%;
-            padding: 20px;
+            height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(0, 0, 0);
+            flex-direction: column;
+            background-color: #f5f5f5; /* Added for visibility */
+        }
+
+        .plot-container {
+            width: 80%;
+            max-width: 800px;
+            margin: 0 auto;
+            /* Use aspect-ratio if you want a specific ratio */
+            aspect-ratio: 16/9;
         }
 
         .row-1 {
-            width: 100%;
-            height: 100%;
+            max-width: 600px;
+            padding-top:10px;
+            padding-bottom: 10px;
+            padding-left:20px;
+            padding-right:20px;
             background-color: #ffffff;
-            margin-bottom: 20px;
             display: flex;
             justify-content: center;
             align-items: center;
-            color: white;
-        }
-
-        .row-2 {
-            width: 100%;
-            display: flex;
-            gap: 20px;
-        }
-
-        .column {
-            flex: 1;
-            height: 150px;
-            /* background-color: #2ecc71; */
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            color: white;
-            background-color: #ffffff;
-            border: 1px solid #ccc;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            border-radius: 8px;
-            padding: 15px;
+            color: rgb(0, 0, 0);
+            flex-direction: row;
             font-family:Arial, Helvetica, sans-serif;
-            color: black;
-        }
-
-        @media (max-width: 768px) {
-            .row-2 {
-                flex-direction: column;
-            }
-            
-            .column {
-                width: 100%;
-                margin-bottom: 20px;
-            }
+            font-size: 14px;
         }
 
         button {
             padding: 10px 20px;
-            font-size: 16px;
+            font-size: 14px;
             background-color: #007bff;
             color: white;
             border: none;
@@ -83,8 +58,9 @@
 
         label {
             display: block; /* Makes the label take up the full width */
+            text-align: center;
             margin-bottom: 5px; /* Adds some spacing below the label */
-            font-size: 16px;
+            font-size: 14px;
             font-family:Arial, Helvetica, sans-serif;
             color: black;
         }
@@ -96,7 +72,7 @@
             border-radius: 3px;
             margin:10px;
             font-family:Arial, Helvetica, sans-serif;
-            font-size: 16px;
+            font-size: 14px;
         }
     </style>
 
@@ -105,20 +81,22 @@
 
 <body>
     <div class="container">
-        <div id="main-screen" class="row-1"></div>
-        <div class="row-2">
-            <div id="controller-1" class="column">
-                This computation estimates the area of a circle by using the ratio of points 
-                inside the circle to the total number of points randomly shot within a known area.  
-                The circle has a radius of 0.3, and the known area is 1 x 1.  
-                Vary the number of shots to observe how the estimated area converges to the true value.
-            </div>
-            <div id="controller-2" class="column">
-                    <label for="numberInput">Number of shots (10-3000):</label>
-                    <input type="number" id="numberInput" name="numberInput" min="10" max="3000" value="10">
-                    <button id="reshoot-button">Reshoot</button>
-            </div>
+        <div class="plot-container">
+            <div id="main-screen"></div>
         </div>
+
+        <div class="row-1">
+            <label for="numberInput">N shots (10-3000)</label>
+            <input type="number" id="numberInput" name="numberInput" min="10" max="3000" value="10">
+            <button id="reshoot-button">Reshoot</button>    
+        </div>
+         <div class="row-1">
+            This computation estimates the area of a circle by using the ratio of points 
+            inside the circle to the total number of points randomly shot within a known area.  
+            The circle has a radius of 0.3, and the known area is 1 x 1.  
+            Vary the number of shots to observe how the estimated area converges to the true value.
+        </div>
+
     </div>
 
     <script src="app.js" charset="utf-8"></script>
