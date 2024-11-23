@@ -125,7 +125,7 @@ function getInputNumber() {
     }
     
     if (n_input > 3000) {
-        res = 1000;
+        res = 3000;
     }
 
     nshot_input.value = res;
@@ -156,7 +156,7 @@ function update_layout(numPoints, numHits, estimated_area, true_area) {
         //     borderpad: 4,      
         // },
         {
-            text: 'Est. area: ' + String(numHits) + "/" + String(numPoints) + " x " + String(true_area.toFixed(3)) + " = " + String(estimated_area.toFixed(3)),
+            text: 'Est. area: ' + String(numHits) + "/" + String(numPoints) + " x 1" + " = " + String(estimated_area.toFixed(4)),
             x: 0.5,
             y: 0.95,
             xanchor: 'center',
