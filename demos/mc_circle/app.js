@@ -25,7 +25,7 @@ var layout   = {
     showlegend: false,
     dragmode: false,
     title: {
-        text: "Area Estimation using Monte Carlo",
+        text: "Monte Carlo Area Estimation",
         x: 0.5,
         xanchor: 'center',
         y: 0.95
