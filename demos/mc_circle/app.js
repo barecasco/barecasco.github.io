@@ -281,9 +281,11 @@ function replot() {
 
 
 init_plot();
+
 reshot_button.addEventListener('click', () => {
     replot();
 });
+
 window.addEventListener('resize', function() {
     console.log("resizing");
     // Plotly.Plots.resize('main-screen');

@@ -1,0 +1,123 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agra's Trinkets</title>
+
+    <style>
+
+        .container {
+            width: 100%;
+            /* height: 100vh; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(0, 0, 0);
+            flex-direction: column;
+            padding-top:50px;
+            /* background-color: #f5f5f5; Added for visibility */
+        }
+
+        .plot-container {
+            width: 100%;
+            max-width: 1000px;
+            /* margin: 0 auto; */
+            padding: 10px;
+            /* Use aspect-ratio if you want a specific ratio */
+            /* aspect-ratio: 16/9; */
+        }
+
+        .row-t {
+            max-width: 700px;
+            /* padding-top:10px; */
+            /* padding-bottom: 10px; */
+            padding-left:20px;
+            padding-right:20px;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            flex-direction: row;
+            font-family:Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        .row-1 {
+            max-width: 700px;
+            padding-top:10px;
+            padding-bottom: 10px;
+            padding-left:20px;
+            padding-right:20px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(0, 0, 0);
+            flex-direction: row;
+            font-family:Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #9eb4b0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #85919e;
+        }
+
+        label {
+            display: block; /* Makes the label take up the full width */
+            text-align: center;
+            margin-bottom: 5px; /* Adds some spacing below the label */
+            font-size: 14px;
+            font-family:Arial, Helvetica, sans-serif;
+            color: black;
+        }
+
+        input[type="number"] {
+            width: 100px; /* Adjust width as needed */
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin:10px;
+            font-family:Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+    </style>
+
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+</head>
+
+<body>
+    <div class="container">
+        <div class="row-t">
+            <p>
+                This simulation is an extension of : <a href="https://barecasco.github.io/demos/mc_circle/index.html">Monte Carlo Area Estimation</a>
+            </p>
+            <p>
+                An estimate of the circle's area is obtained by uniformly scattering random points within a given square area. 
+                By repeating this process, we obtain a set of estimates, from which we can calculate the average and its spread. 
+                We can then plot the average and spread against the number of random points to observe the convergence behavior of the estimate.
+            </p>
+        </div>
+        <div class="row-1">
+            <label for="numberInput">Scattering repeats (10-300)</label>
+            <input type="number" id="numberInput" name="numberInput" min="1" max="100" value="10">
+            <button id="simulate-button">Simulate</button>    
+        </div>
+        <div class="plot-container">
+            <div id="disperse-plot"></div>
+        </div>
+
+    </div>
+
+    <script src="app.js" charset="utf-8"></script>
+</body>
+
+</html>
