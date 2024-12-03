@@ -1,0 +1,105 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Agra's Trinkets</title>
+
+    <style>
+
+        .container {
+            width: 100%;
+            /* height: 100vh; */
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(0, 0, 0);
+            flex-direction: column;
+            padding-top:50px;
+            /* background-color: #f5f5f5; Added for visibility */
+        }
+
+        .plot-container {
+            width: 100%;
+            max-width: 1000px;
+            /* margin: 0 auto; */
+            padding: 10px;
+            /* Use aspect-ratio if you want a specific ratio */
+            /* aspect-ratio: 16/9; */
+        }
+
+        .row-t {
+            max-width: 700px;
+            /* padding-top:10px; */
+            /* padding-bottom: 10px; */
+            padding-left:20px;
+            padding-right:20px;
+            background-color: #ffffff;
+            color: rgb(0, 0, 0);
+            flex-direction: row;
+            font-family:Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        .row-1 {
+            max-width: 700px;
+            padding-top:10px;
+            padding-bottom: 10px;
+            padding-left:20px;
+            padding-right:20px;
+            background-color: #ffffff;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            color: rgb(0, 0, 0);
+            flex-direction: row;
+            font-family:Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+
+        button {
+            padding: 10px 20px;
+            font-size: 14px;
+            background-color: #9eb4b0;
+            color: white;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+        }
+
+        button:hover {
+            background-color: #85919e;
+        }
+
+        label {
+            display: block; /* Makes the label take up the full width */
+            text-align: center;
+            margin-bottom: 5px; /* Adds some spacing below the label */
+            font-size: 14px;
+            font-family:Arial, Helvetica, sans-serif;
+            color: black;
+        }
+
+        input[type="number"] {
+            width: 100px; /* Adjust width as needed */
+            padding: 5px;
+            border: 1px solid #ccc;
+            border-radius: 3px;
+            margin:10px;
+            font-family:Arial, Helvetica, sans-serif;
+            font-size: 14px;
+        }
+    </style>
+    <!-- + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + LIBRARY -->
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js" charset="utf-8"></script>
+    <script src="https://unpkg.com/dayjs@1.8.21/dayjs.min.js"></script>
+</head>
+
+<body>
+    <div class="container">
+    </div>
+
+    <script src="app.js" charset="utf-8"></script>
+</body>
+
+</html>
