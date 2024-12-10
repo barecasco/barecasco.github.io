@@ -121,7 +121,7 @@ const Integrator = function(new_config) {
     self.is_active          = false;
     self.is_started         = false;
     self.init_time_string   = '2024-04-01 00:00:00';
-    self.init_time          = new Date(self.init_time_string);
+    self.init_time          = dayjs(self.init_time_string);
 
     
     self.add_listener        = function(listener) {
@@ -130,14 +130,20 @@ const Integrator = function(new_config) {
 
 
     self.get_date_time      = function() {
-        const dt      = dayjs(self.init_time).add(self.time, 'second');
+        const dt      = self.init_time.add(self.time, 'second');
         return dt;
     };
 
 
     self.get_date_time_string   = function() {
-        const dt                = dayjs(self.init_time).add(self.time, 'second');
-        const timestring        = `${dt.get('year')}-${dt.get('month')}-${dt.get('date')} ${dt.get('hour')}:${dt.get('minute')}:${dt.get('second')}`; 
+        const dt                = self.init_time.add(self.time, 'second');
+        const styear            = dt.get('year').toString().padStart(2, '0');
+        const stmonth           = dt.get('month').toString().padStart(2, '0');
+        const stdate            = dt.get('date').toString().padStart(2, '0');
+        const sthour            = dt.get('hour').toString().padStart(2, '0');
+        const stminute          = dt.get('minute').toString().padStart(2, '0');
+        const stsecond          = dt.get('second').toString().padStart(2, '0');
+        const timestring        = `${styear}-${stmonth}-${stdate} ${sthour}:${stminute}:${stsecond}`; 
         return timestring
     };
 
@@ -248,6 +254,7 @@ kilang_1.get_log_history = function() {
     const total_outflows    = [];
     const outflows          = [];
     const stocks            = [];
+    const target_tanks      = [];
     for (const key in kilang_1.history) {
         if (kilang_1.history.hasOwnProperty(key)) {
             const hist      = kilang_1.history[key];
@@ -255,6 +262,7 @@ kilang_1.get_log_history = function() {
             total_outflows.push(hist.total_outflow);
             outflows.push(hist.outflow);
             stocks.push(hist.stock);
+            target_tanks.push(hist.target_tank);
             indices.push(index_count);
             index_count     += 1;
         }
@@ -265,7 +273,8 @@ kilang_1.get_log_history = function() {
         "indices"           : indices,
         "total_outflows"    : total_outflows,
         "outflows"          : outflows,
-        "stocks"            : stocks
+        "stocks"            : stocks,
+        "target_tanks"      : target_tanks
     }
 
     return log;
@@ -388,7 +397,7 @@ tangki_2.get_log_history = function() {
             timestamps.push(hist.timestamp);
             stocks.push(hist.stock);
             is_dischargings.push(hist.is_discharging);
-            in_schedules.push(hist.in_schedules);
+            in_schedules.push(hist.in_schedule);
             in_analyses.push(hist.in_analysis);
             total_outflows.push(hist.total_outflow);
             indices.push(index_count);
@@ -549,11 +558,11 @@ function kilang_1_update(){
     //if target is full, attempt to change target
     if (target_is_full || tg_in_analysis || tg_discharging) {
         if (tgtank.name == tangki_1.name) {
-            console.log(tgtank_name, "is occupied");
+            // console.log(tgtank_name, "is occupied");
             kilang_1.prop.target_tank = tangki_2.name;
         }
         else if (tgtank.name == tangki_2.name) {
-            console.log(tgtank_name, "is occupied");
+            // console.log(tgtank_name, "is occupied");
             kilang_1.prop.target_tank = tangki_1.name;
         }
         return 1;
@@ -653,7 +662,7 @@ function tangki_2_update() {
         tangki_2.prop.stock         -= delta_rate;
         tangki_2.prop.total_outflow += delta_rate;
         deliver_schedule_flow(delta_rate);
-        tangki_1.prop.is_discharging = true;
+        tangki_2.prop.is_discharging = true;
     }
 
 
@@ -761,62 +770,50 @@ simulation.set_active("delivery_update", true)
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 function plot_history() {
     const traces                = [];
+
     const conv_displayConfig    = {
         displayModeBar  : true,
-        responsive      : false
+        responsive      : true
     };
+
+    // layout overrides the css given in  the index.html
     let layout   = {
-        plot_bgcolor: '#f5f5f5',
-        grid: {
-            rows: 2,
-            columns: 1,
-            pattern: 'independent',
-            roworder: 'top to bottom',
-        },
-        legend: {
-            orientation: 'h',
-            x: 0.52,
-            y: 1.03 
-        },
-        autosize  : true,
-        height : 1200,
-        // width : 1000,
-        dragmode: false,
-        title: {
-            text: "Stock Plot",
-            standoff:30,
-            font: {
-                size: 18,
-              }
-        },
-        margin    : {
-            l : 80,
-            r : 20,
-            b : 20,
-            t : 30,
+        // autosize  : true,
+        height          : 350,
+        width           : 1000,
+        hovermode       : "x unified",
+        plot_bgcolor    : '#f5f5f5',
+        dragmode        : false,
+        title           : {
+            text        : "Stock Plot",
+            standoff    : 30,
+            font        : {
+                size    : 18,
+            }
         },
         xaxis: {
-            showticklabels: true,
-            showgrid: true,    
-            zeroline: true,
-            showline:true,
-            linecolor: 'rgba(100, 100, 100, 0.5)', // Red line color
-            linewidth: 2, 
-            // range: [0,3000]
+            title: 'Timeline',
+            tickmode: 'linear',
+            tickangle       : 45,
+            showgrid        : true,    
+            zeroline        : true,
+            showline        : true,
+            linecolor       : 'rgba(100, 100, 100, 0.5)', // Red line color
+            linewidth       : 2, 
         },
         yaxis: {
-            title: 'Stock',
-            showticklabels: true,
-            autorange: true,
-            showgrid: true,
-            zeroline: false,
-            domain: [0.53, 0.95],
-            showline:true,
-            mirror: true,
-            linecolor: 'rgba(100, 100, 100, 0.5)', // Red line color
-            linewidth: 2, 
-            ticksuffix: '  ',
-            tickprefix: '    '
+            title           : 'Stock',
+            nticks          : 10,
+            showticklabels  : true,
+            autorange       : true,
+            showgrid        : true,
+            zeroline        : true,
+            // domain          : [0.2, 0.9],
+            showline        :true,
+            linecolor       : 'rgba(100, 100, 100, 0.5)', // Red line color
+            linewidth       : 2, 
+            ticksuffix      : '  ',
+            tickprefix      : '    '
         }
     };
     
@@ -825,7 +822,8 @@ function plot_history() {
     // KILANG 1
     // ---------------
     const kilang_history = kilang_1.get_log_history();
-    let kilang_trace = {
+
+    let kilang_outflow_trace = {
         showlegend  : true,
         name        : "Outflow Kilang",
         x           : kilang_history.timestamps,
@@ -835,11 +833,57 @@ function plot_history() {
         line        : {
             color: '##6699ff',
             width: 2,
-        },
-        xaxis: 'x1',
-        yaxis: 'y1'
+        }
     };
-    traces.push(kilang_trace);
+
+    const targets       = kilang_history.target_tanks;
+    const t1_as_targets = [];
+    const t2_as_targets = [];
+    for (const target of targets) {
+        if (target == "tangki_1") {
+            t1_as_targets.push(5000);
+            t2_as_targets.push(0);
+        }
+        else if (target == "tangki_2") {
+            t1_as_targets.push(0);
+            t2_as_targets.push(5000);
+        }
+        else {
+            t1_as_targets.push(0);
+            t2_as_targets.push(0);            
+        }
+    }
+
+    let kilang_t1flow_trace = {
+        showlegend  : true,
+        name        : "Outflow to Tangki_1",
+        x           : kilang_history.timestamps,
+        y           : t1_as_targets,
+        mode        : 'lines',
+        type        : 'scatter',
+        line        : {
+            color: '##aacc00',
+            width: 2,
+        }
+    };
+
+
+    let kilang_t2flow_trace = {
+        showlegend  : true,
+        name        : "Outflow to Tangki_2",
+        x           : kilang_history.timestamps,
+        y           : t2_as_targets,
+        mode        : 'lines',
+        type        : 'scatter',
+        line        : {
+            color: '##123212',
+            width: 2,
+        }
+    };
+
+    // traces.push(kilang_t1flow_trace);
+    // traces.push(kilang_t2flow_trace);
+    // traces.push(kilang_outflow_trace);
 
 
     // ---------------
@@ -856,9 +900,7 @@ function plot_history() {
         line        : {
             color: 'ff0066',
             width: 2,
-        },
-        xaxis: 'x1',
-        yaxis: 'y1'
+        }
     };
     traces.push(tangki_1_trace);
 
@@ -867,22 +909,49 @@ function plot_history() {
     // TANGKI 2
     // --------------- 
     const tangki_2_history = tangki_2.get_log_history();
-    // console.log(tangki_2_history.in_analyses * 5000);
-    let tangki_2_trace = {
+
+    let tangki_2_schedules_trace = {
         showlegend  : true,
-        name        : "Stock Tangki 2",
+        name        : "In Schedule Tangki 2",
         x           : tangki_2_history.timestamps,
-        y           : tangki_2_history.in_analyses,
+        y           : tangki_2_history.in_schedules.map(val => val * 5000),
+        mode        : 'lines',
+        type        : 'scatter',
+        line        : {
+            color: '#00ccaa',
+            width: 2,
+        }
+    };
+
+    let tangki_2_analyses_trace = {
+        showlegend  : true,
+        name        : "In Analysis Tangki 2",
+        x           : tangki_2_history.timestamps,
+        y           : tangki_2_history.in_analyses.map(val => val * 5000),
         mode        : 'lines',
         type        : 'scatter',
         line        : {
             color: '#00cc00',
             width: 2,
-        },
-        xaxis: 'x1',
-        yaxis: 'y1'
+        }
     };
-    traces.push(tangki_2_trace);
+
+    let tangki_2_stocks_trace = {
+        showlegend  : true,
+        name        : "Stock Tangki 2",
+        x           : tangki_2_history.timestamps,
+        y           : tangki_2_history.stocks,
+        mode        : 'lines',
+        type        : 'scatter',
+        line        : {
+            color: '#bb332d',
+            width: 2,
+        }
+    };
+
+    // traces.push(tangki_2_analyses_trace); 
+    // traces.push(tangki_2_schedules_trace);
+    traces.push(tangki_2_stocks_trace);
 
 
 
@@ -890,7 +959,100 @@ function plot_history() {
 }
 
 
+function plot_gantt_chart() {
+    const tank_names    = ["kilang_1", "tangki_1", "tangki_2"];
+    const gantt         = [];
 
+    for (const tank_name of tank_names) {
+        const tank_gantt            = [];
+        const log                   = tank_map[tank_name].get_log_history();
+        let  interval_started    = false;
+        let  minute_start        = 0;
+        let  minute_end          = 0;
+        let  start_rate          = 0;
+        let  timestamp_start     = null;
+        let  timestamp_end       = null;
+        let  outflow_target      = "";
+        let  init_outflow        = 0;
+        let  total_outflow       = 0   ;
+        let  prev_outflow        = 0;
+        let  curr_target         = log.target_tanks[0];
+        //--
+        let unit_start          = 0;
+        let unit_end            = 0;
+        let unit_duration       = 0.0;
+        let duration            = 0.0;     
+        let volume              = 0.0;
+
+        const log_length          = log.indices.length;
+        for (let i = 0; i < log_length; i++) {
+            let rate              = log.hourly_rates[i];
+            let unit_time         = i * 60;
+            let is_discharging    = log.is_dischargings[i];
+            let total_outflow     = log.total_outflows[i];
+            let outflow_target    = log.target_tanks[i];
+
+            if (!is_discharging) {
+                outflow_target = "null";
+            }
+
+            if (!interval_started) {
+                let unit_start      = unit_time;
+                minute_start        = unit_time/60;
+                timestamp_start     = integrator.init_time.add(minute_start, 'minute');
+                interval_started    = true;
+                init_outflow        = prev_outflow;
+                start_rate          = rate;
+                curr_target         = outflow_target;
+            }
+            else if (interval_started && (outflow_target != curr_target || i == (log.indices.length-1))){
+                interval_started        = false;
+                unit_end                = unit_time;
+                minute_end              = unit_time/60;
+                timestamp_end           = integrator.init_time.add(minute_end, 'minute');
+                unit_duration           = unit_end - unit_start;
+                duration                = minute_end - minute_start;
+                volume                  = Math.ceil(total_outflow - init_outflow);
+                const gdict             = {
+                    "tank"       : tank_name,
+                    "start"      : unit_start,
+                    "start_time" : timestamp_start,
+                    "end"        : unit_end,
+                    "end_time"   : timestamp_end,
+                    "duration"   : unit_duration,
+                    "volume"     : volume,
+                    "target"     : curr_target   
+                } 
+                tank_gantt.push(gdict);
+                curr_target     = outflow_target;
+                prev_outflow    = total_outflow;
+            }
+        }
+        
+        if (tank_gantt.length == 0) {
+            interval_started        = false;
+            unit_end            = unit_time;
+            minute_end              = unit_end/60;
+            timestamp_end           = integrator.init_time.add(minute_end, "minute_end");
+            unit_duration           = unit_end - unit_start - 1;
+            duration                = minute_end - minute_start - 1;
+            volume                  = Math.ceil(duration * start_rate/60);
+            const gdict             = {
+                "tank"       : tank_name,
+                "start"      : unit_start,
+                "start_time" : timestamp_start,
+                "end"        : unit_end,
+                "end_time"   : timestamp_end,
+                "duration"   : unit_duration,
+                "volume"     : volume,
+                "target"     : curr_target   
+            } 
+            tank_gantt.push(gdict);
+        }
+
+        gantt.push(tank_gantt);
+    }
+}
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 // RUN SIMULATION
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
