@@ -247,7 +247,7 @@ integrator.add_listener(kilang_1);
 
 kilang_1.history        = {};
 
-kilang_1.get_log_history = function() {
+kilang_1.get_log_history = function() { 
     let index_count         = 0;
     const timestamps        = [];
     const indices           = [];
@@ -255,6 +255,9 @@ kilang_1.get_log_history = function() {
     const outflows          = [];
     const stocks            = [];
     const target_tanks      = [];
+    const hourly_rates      = [];
+    const is_dischargings   = [];
+
     for (const key in kilang_1.history) {
         if (kilang_1.history.hasOwnProperty(key)) {
             const hist      = kilang_1.history[key];
@@ -263,6 +266,8 @@ kilang_1.get_log_history = function() {
             outflows.push(hist.outflow);
             stocks.push(hist.stock);
             target_tanks.push(hist.target_tank);
+            hourly_rates.push(hist.hourly_rate);
+            is_dischargings.push(hist.is_discharging);
             indices.push(index_count);
             index_count     += 1;
         }
@@ -274,7 +279,9 @@ kilang_1.get_log_history = function() {
         "total_outflows"    : total_outflows,
         "outflows"          : outflows,
         "stocks"            : stocks,
-        "target_tanks"      : target_tanks
+        "target_tanks"      : target_tanks,
+        "hourly_rates"      : hourly_rates,
+        "is_dischargings"   : is_dischargings
     }
 
     return log;
@@ -318,6 +325,9 @@ tangki_1.get_log_history = function() {
     const in_schedules      = [];
     const in_analyses       = [];
     const total_outflows    = [];
+    const hourly_rates      = [];
+    const target_tanks      = [];
+
 
     for (const key in tangki_1.history) {
         if (tangki_1.history.hasOwnProperty(key)) {
@@ -328,6 +338,8 @@ tangki_1.get_log_history = function() {
             in_schedules.push(hist.in_schedules);
             in_analyses.push(hist.in_analysis);
             total_outflows.push(hist.total_outflow);
+            hourly_rates.push(hist.hourly_rate);
+            target_tanks.push(hist.target_tank);
             indices.push(index_count);
             index_count     += 1;
         }
@@ -340,7 +352,9 @@ tangki_1.get_log_history = function() {
         "is_dischargings"   : is_dischargings,
         "in_schedules"      : in_schedules,
         "in_analyses"       : in_analyses,
-        "total_outflows"    : total_outflows
+        "total_outflows"    : total_outflows,
+        "hourly_rates"      : hourly_rates,
+        "target_tanks"      : target_tanks
     }
 
     return log;
@@ -390,6 +404,8 @@ tangki_2.get_log_history = function() {
     const in_schedules      = [];
     const in_analyses       = [];
     const total_outflows    = [];
+    const hourly_rates      = [];
+    const target_tanks      = [];
 
     for (const key in tangki_2.history) {
         if (tangki_2.history.hasOwnProperty(key)) {
@@ -400,6 +416,8 @@ tangki_2.get_log_history = function() {
             in_schedules.push(hist.in_schedule);
             in_analyses.push(hist.in_analysis);
             total_outflows.push(hist.total_outflow);
+            hourly_rates.push(hist.hourly_rate);
+            target_tanks.push(hist.target_tank);
             indices.push(index_count);
             index_count     += 1;
         }
@@ -412,7 +430,9 @@ tangki_2.get_log_history = function() {
         "is_dischargings"   : is_dischargings,
         "in_schedules"      : in_schedules,
         "in_analyses"       : in_analyses,
-        "total_outflows"    : total_outflows
+        "total_outflows"    : total_outflows,
+        "hourly_rates"      : hourly_rates,
+        "target_tanks"      : target_tanks
     }
 
     return log;
