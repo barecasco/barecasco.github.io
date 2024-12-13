@@ -1017,7 +1017,7 @@ function plot_gantt_chart() {
             }
 
             if (!interval_started) {
-                let unit_start      = unit_time;
+                unit_start          = unit_time;
                 minute_start        = unit_time/60;
                 timestamp_start     = integrator.init_time.add(minute_start, 'minute');
                 interval_started    = true;
@@ -1072,9 +1072,137 @@ function plot_gantt_chart() {
 
         gantt.push(tank_gantt);
     }
+
+    const grouped_df_dict = {
+        "kilang_1"  : gantt[0],
+        "tangki_1"  : gantt[1],
+        "tangki_2"  : gantt[2]
+    };
+
+    let layout   = {
+        barmode         : "stack",
+        bargap          : 0.15,
+        autosize        : true,
+        height          : 500,
+        width           : 1000,
+        plot_bgcolor    : '#f5f5f5',
+        // title           : {
+        //     text        : "Gantt Chart",
+        //     standoff    : 30,
+        //     font        : {
+        //         size    : 18,
+        //     }
+        // },
+        xaxis: {
+            automargin          : true,
+            showgrid            : true,
+            rangeslider         : {},
+            side                : "top",
+            tickmode            : "array",
+            ticks               : "outside",
+            tickson             : "boundaries",
+            tickwidth           : 0.1, 
+            layer               : "below traces",
+            ticklen             : 20,
+            tickfont            : {
+                family      : "Courier",
+                size        : 20,
+                color       : "gray"
+            }
+        },
+        yaxis: {
+            automargin      : true,
+            title           : "",
+            automargin      : true,
+            ticklen         : 10,
+            showgrid        : true,
+            showticklabels  : true,
+            tickfont        : {
+                family  : "Courier",
+                size    : 16,
+                color   : "gray"
+            }
+
+        }
+    };
+
+
+    const sorted_tank_names = [
+        "tangki_2",
+        "tangki_1",
+        "kilang_1"
+    ];
+    
+    const target_tank_map = {
+        "kilang_1"  : "orchid",
+        "tangki_1"  : "orange",
+        "tangki_2"  : "mediumslateblue",
+        "reservoir" : "tomato",
+        "null"      : "f5f5f5"
+    };
+    
+    const bar_outline_map = {
+        "kilang_1"  : 1,
+        "tangki_1"  : 1,
+        "tangki_2"  : 1,
+        "reservoir" : 1,
+        "null"      : 0
+    }
+
+    const traces             = [];
+    const display_config     = {
+        displayModeBar  : true,
+        responsive      : true
+    };
+
+    for (const tank_name of sorted_tank_names) {
+        const gdicts        = grouped_df_dict[tank_name];
+        const tank_df       = new dfd.DataFrame(gdicts);
+        const colors        = tank_df.target.values.map(target => target_tank_map[target] || "white");
+        const outlines      = tank_df.target.values.map(target => bar_outline_map[target] || 0);
+        console.log(tank_name)
+        console.log(tank_df.target.values);
+        console.log(colors);
+        tank_df.print();
+        const hovertexts    = [];
+        for (const gdict of gdicts) {
+            const target        = gdict.target;
+            const start         = gdict.start;
+            const end           = gdict.end;
+            const duration      = gdict.duration;
+            const info          = `to ${target} <br>from ${start} to ${end}<br>duration ${duration}`;
+            hovertexts.push(info); 
+        }
+
+        const trace = {
+            x               : tank_df.duration.values.map(val => val/86400.),
+            y               : tank_df.tank.values,
+            base            : tank_df.start.values.map(val => val/86400.),
+            marker          : {
+                color: colors,
+                line: {
+                    color: 'black',  
+                    width: outlines
+                }
+            },
+            hovertext       : hovertexts,
+            hoverinfo       : "text",
+            text            : tank_df.volume.values,
+            orientation     : 'h',
+            showlegend      : false,
+            name            : tank_name,
+            type            : "bar"
+        }
+        traces.push(trace);
+
+    }
+
+    Plotly.newPlot("gantt-plot", traces, layout);  
+
 }
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 // RUN SIMULATION
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 integrator.run_simulation();
 plot_history();
+plot_gantt_chart();
