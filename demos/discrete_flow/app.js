@@ -792,7 +792,7 @@ function plot_history() {
     const traces                = [];
 
     const conv_displayConfig    = {
-        displayModeBar  : true,
+        displayModeBar  : false,
         responsive      : true
     };
 
@@ -803,19 +803,27 @@ function plot_history() {
         width           : 1000,
         hovermode       : "x unified",
         plot_bgcolor    : '#f5f5f5',
+        legend: {
+            orientation: 'h',
+            x: 1.,
+            y: 1.2,
+            xanchor: "right"
+        },
         dragmode        : false,
         title           : {
-            text        : "Stock Plot",
-            standoff    : 30,
+            text        : "Stock History",
+            standoff    : 0,
             font        : {
                 size    : 18,
             }
         },
         xaxis: {
-            title: 'Timeline',
             tickmode: 'linear',
-            tickangle       : 45,
-            showgrid        : true,    
+            title           : "Date",
+            // tickangle       : 45,
+            tickformat      : "%e",
+            showgrid        : true,   
+            range           : ["2024-03-01T00:00:00", "2024-03-31T00:00:00"],
             zeroline        : true,
             showline        : true,
             linecolor       : 'rgba(100, 100, 100, 0.5)', // Red line color
@@ -1081,51 +1089,56 @@ function plot_gantt_chart() {
 
     let layout   = {
         barmode         : "stack",
-        bargap          : 0.15,
+        bargap          : 0.2,
         autosize        : true,
-        height          : 500,
+        dragmode        : false,
+        height          : 400,
         width           : 1000,
-        plot_bgcolor    : '#f5f5f5',
-        // title           : {
-        //     text        : "Gantt Chart",
-        //     standoff    : 30,
-        //     font        : {
-        //         size    : 18,
-        //     }
-        // },
+        plot_bgcolor    : '#ffffff',
+        title           : {
+            text        : "Outflow Schedule",
+            standoff    : 0,
+            font        : {
+                size    : 18,
+            }
+        },
         xaxis: {
-            automargin          : true,
-            showgrid            : true,
-            rangeslider         : {},
-            side                : "top",
-            tickmode            : "array",
+            // automargin          : true,
+            showgrid            : false,
+            title               : "Date",
+            dtick              : 1,
+            // rangeslider         : {},
+            side                : "bottom",
+            // tickmode            : "array",
+            zeroline            : false,
             ticks               : "outside",
             tickson             : "boundaries",
             tickwidth           : 0.1, 
             layer               : "below traces",
-            ticklen             : 20,
+            ticklen             : 6,
+            range               : [1,31],
             tickfont            : {
-                family      : "Courier",
-                size        : 20,
+                family      : "Arial",
+                size        : 12,
                 color       : "gray"
             }
         },
         yaxis: {
             automargin      : true,
             title           : "",
-            automargin      : true,
-            ticklen         : 10,
-            showgrid        : true,
+            ticklen         : 0,
+            showgrid        : false,
+            zeroline        : false,
             showticklabels  : true,
+            ticksuffix      : '  ',
             tickfont        : {
-                family  : "Courier",
-                size    : 16,
-                color   : "gray"
+                family  : "Arial",
+                // size    : 16,
+                // color   : "gray"
             }
 
         }
     };
-
 
     const sorted_tank_names = [
         "tangki_2",
@@ -1146,13 +1159,13 @@ function plot_gantt_chart() {
         "tangki_1"  : 1,
         "tangki_2"  : 1,
         "reservoir" : 1,
-        "null"      : 0
+        "null"      : 1
     }
 
     const traces             = [];
     const display_config     = {
-        displayModeBar  : true,
-        responsive      : true
+        displayModeBar  : false,
+        responsive      : false
     };
 
     for (const tank_name of sorted_tank_names) {
@@ -1177,7 +1190,7 @@ function plot_gantt_chart() {
         const trace = {
             x               : tank_df.duration.values.map(val => val/86400.),
             y               : tank_df.tank.values,
-            base            : tank_df.start.values.map(val => val/86400.),
+            base            : tank_df.start.values.map(val => (1+val/86400.)),
             marker          : {
                 color: colors,
                 line: {
@@ -1197,7 +1210,7 @@ function plot_gantt_chart() {
 
     }
 
-    Plotly.newPlot("gantt-plot", traces, layout);  
+    Plotly.newPlot("gantt-plot", traces, layout, display_config);  
 
 }
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +

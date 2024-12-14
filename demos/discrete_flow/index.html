@@ -24,15 +24,6 @@
             /* background-color: #f5f5f5; Added for visibility */
         }
 
-        .plot-container {
-            width       : 100%;
-            /* max-width : 400px; */
-            /* margin: 0 auto; */
-            /* padding: 10px; */
-            /* Use aspect-ratio if you want a specific ratio */
-            /* aspect-ratio: 16/9; */
-        }
-
         .row-t {
             max-width: 700px;
             /* padding-top:10px; */
@@ -99,12 +90,8 @@
 </head>
 
 <body>
-    <div class="plot-container">
-        <div id="disperse-plot"></div>
-    </div>
-    <div class="plot-container">
-        <div id="gantt-plot"></div>
-    </div>
+    <div id="disperse-plot" style="display: flex; justify-content: center; align-items: center;"></div>
+    <div id="gantt-plot" style="display: flex; justify-content: center; align-items: center;"></div>
 
     <script src="app.js" charset="utf-8"></script>
 </body>
