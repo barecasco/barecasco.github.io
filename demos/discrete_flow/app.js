@@ -148,6 +148,31 @@ const Integrator = function(new_config) {
     };
 
 
+    self.timestamp_from_unit = function(unit_time) {
+        const dt                = self.init_time.add(unit_time, 'second');
+        const styear            = dt.get('year').toString().padStart(2, '0');
+        const stmonth           = dt.get('month').toString().padStart(2, '0');
+        const stdate            = dt.get('date').toString().padStart(2, '0');
+        const sthour            = dt.get('hour').toString().padStart(2, '0');
+        const stminute          = dt.get('minute').toString().padStart(2, '0');
+        const timestring        = `d${stdate} h${sthour} m${stminute}`; 
+        return timestring
+    }
+
+
+    self.duration_from_unit = function(unit_time) {
+        const dt                = self.init_time.add(unit_time, 'second');
+        const styear            = dt.get('year').toString().padStart(2, '0');
+        const stmonth           = dt.get('month').toString().padStart(2, '0');
+        const stdate            = dt.get('date').toString();
+        const sthour            = dt.get('hour').toString();
+        const stminute          = dt.get('minute').toString();
+        const timestring        = `${stdate}d ${sthour}h ${stminute}m`; 
+        return timestring
+    }
+
+
+
     self.raise_event        = function(msg) {
         // input string
         console.log("event raised:", msg);
@@ -1149,7 +1174,7 @@ function plot_gantt_chart() {
     const target_tank_map = {
         "kilang_1"  : "orchid",
         "tangki_1"  : "orange",
-        "tangki_2"  : "mediumslateblue",
+        "tangki_2"  : "orchid",
         "reservoir" : "tomato",
         "null"      : "f5f5f5"
     };
@@ -1173,17 +1198,36 @@ function plot_gantt_chart() {
         const tank_df       = new dfd.DataFrame(gdicts);
         const colors        = tank_df.target.values.map(target => target_tank_map[target] || "white");
         const outlines      = tank_df.target.values.map(target => bar_outline_map[target] || 0);
-        console.log(tank_name)
-        console.log(tank_df.target.values);
-        console.log(colors);
-        tank_df.print();
         const hovertexts    = [];
+        const volume_values = tank_df.volume.values;
+        const volume_texts  = [];
+
+        // console.log(tank_name)
+        // console.log(tank_df.target.values);
+        // console.log(colors);
+        tank_df.print();
+
+        for (const vol of volume_values) {
+            if (vol < 10) {
+                volume_texts.push("");
+            }
+            else {
+                volume_texts.push(Math.ceil(vol/100) * 100);
+            }
+        }
+        
         for (const gdict of gdicts) {
             const target        = gdict.target;
-            const start         = gdict.start;
-            const end           = gdict.end;
-            const duration      = gdict.duration;
-            const info          = `to ${target} <br>from ${start} to ${end}<br>duration ${duration}`;
+            const start         = integrator.timestamp_from_unit(gdict.start);
+            const end           = integrator.timestamp_from_unit(gdict.end);
+            const duration      = integrator.duration_from_unit(gdict.duration);
+            let info            = "";
+            if (target == "null") {
+                info          = `No target <br>start    ${start} <br>end      ${end}<br>duration ${duration}`;               
+            }
+            else {
+                info          = `deliver to ${target} <br>start    ${start} <br>end      ${end}<br>duration ${duration}`;
+            }
             hovertexts.push(info); 
         }
 
@@ -1199,8 +1243,16 @@ function plot_gantt_chart() {
                 }
             },
             hovertext       : hovertexts,
+            hoverlabel: {
+                font: {
+                  family: 'Consolas', // Or any other font family you prefer
+                  size: 12,
+                  color: 'black'
+                }
+            },
             hoverinfo       : "text",
-            text            : tank_df.volume.values,
+            text            : volume_texts,
+            // text            : tank_df.volume.values,
             orientation     : 'h',
             showlegend      : false,
             name            : tank_name,
