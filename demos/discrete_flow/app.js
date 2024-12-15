@@ -155,7 +155,7 @@ const Integrator = function(new_config) {
         const stdate            = dt.get('date').toString().padStart(2, '0');
         const sthour            = dt.get('hour').toString().padStart(2, '0');
         const stminute          = dt.get('minute').toString().padStart(2, '0');
-        const timestring        = `d${stdate} h${sthour} m${stminute}`; 
+        const timestring        = `d${stdate} ${sthour}:${stminute}`; 
         return timestring
     }
 
@@ -246,6 +246,7 @@ const Integrator = function(new_config) {
 const integrator            = new Integrator();
 integrator.step_horizon     = 30 * 24 * 60;
 integrator.timestep         = 60;
+let global_grouped_df_dict  = {};
 
 simulation                  = new Agent("simulator");
 integrator.add_listener(simulation);
@@ -479,14 +480,48 @@ const reservoir          = new Agent("reservoir");
 reservoir.name           = "reservoir";
 
 reservoir.prop           = {
+    "timestamp"         : integrator.get_date_time_string(),
     "stock"             : 0,
     "capacity"          : 10e7,
     "total_outflow"     : 0,
     "delivery_source"   : null
 };
 
-// reservoir.agent          = new Agent(reservoir.name);
+reservoir.log_state    = function() {
+    reservoir.prop.timestamp     = integrator.get_date_time_string();
+    reservoir.history[integrator.get_date_time_string()] = structuredClone(reservoir.prop);
+}
 integrator.add_listener(reservoir);
+reservoir.history        = {};
+
+
+reservoir.get_log_history = function() {
+    let index_count         = 0;
+    const timestamps        = [];
+    const indices           = [];
+    const stocks            = [];
+    const total_outflows    = [];
+
+    for (const key in reservoir.history) {
+        if (reservoir.history.hasOwnProperty(key)) {
+            const hist      = reservoir.history[key];
+            timestamps.push(hist.timestamp);
+            stocks.push(hist.stock);
+            total_outflows.push(hist.total_outflow);
+            indices.push(index_count);
+            index_count     += 1;
+        }
+    }
+
+    const log = {
+        "timestamps"        : timestamps,
+        "indices"           : indices,
+        "stocks"            : stocks,
+        "total_outflows"    : total_outflows,
+    }
+
+    return log;
+};
 
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 // SCHEDULE OBJECTS
@@ -824,7 +859,7 @@ function plot_history() {
     // layout overrides the css given in  the index.html
     let layout   = {
         // autosize  : true,
-        height          : 350,
+        height          : 400,
         width           : 1000,
         hovermode       : "x unified",
         plot_bgcolor    : '#f5f5f5',
@@ -947,13 +982,14 @@ function plot_history() {
         showlegend  : true,
         name        : "Stock Tangki 1",
         x           : tangki_1_history.timestamps,
-        y           : tangki_1_history.stocks,
+        y           : tangki_1_history.stocks.map(val => Math.ceil(val)),
         mode        : 'lines',
         type        : 'scatter',
         line        : {
             color: 'ff0066',
             width: 2,
-        }
+        },
+        hovertemplate: '%{y:.0f}' 
     };
     traces.push(tangki_1_trace);
 
@@ -993,18 +1029,38 @@ function plot_history() {
         showlegend  : true,
         name        : "Stock Tangki 2",
         x           : tangki_2_history.timestamps,
-        y           : tangki_2_history.stocks,
+        y           : tangki_2_history.stocks.map(val => Math.ceil(val)),
         mode        : 'lines',
         type        : 'scatter',
         line        : {
             color: '#bb332d',
             width: 2,
-        }
+        },
+        hovertemplate: '%{y:.0f}' 
+    };
+    traces.push(tangki_2_stocks_trace);
+
+
+    // ---------------
+    // RESERVOIR
+    // --------------- 
+    const reservoir_history = reservoir.get_log_history();
+
+    let reservoir_stock_trace = {
+        showlegend  : true,
+        name        : "Delivered Stock",
+        x           : reservoir_history.timestamps,
+        y           : reservoir_history.stocks.map(val => Math.ceil(val)),
+        mode        : 'lines',
+        type        : 'scatter',
+        line        : {
+            color: '#22aa25',
+            width: 2,
+        },
+        hovertemplate: '%{y:.0f}' 
     };
 
-    // traces.push(tangki_2_analyses_trace); 
-    // traces.push(tangki_2_schedules_trace);
-    traces.push(tangki_2_stocks_trace);
+    traces.push(reservoir_stock_trace);
 
 
 
@@ -1111,6 +1167,8 @@ function plot_gantt_chart() {
         "tangki_1"  : gantt[1],
         "tangki_2"  : gantt[2]
     };
+    
+    global_grouped_df_dict = grouped_df_dict;
 
     let layout   = {
         barmode         : "stack",
@@ -1121,15 +1179,15 @@ function plot_gantt_chart() {
         width           : 1000,
         plot_bgcolor    : '#ffffff',
         title           : {
-            text        : "Outflow Schedule",
-            standoff    : 0,
+            text        : "Outflow Gantt Chart",
+            standoff    : -100,
             font        : {
                 size    : 18,
             }
         },
         xaxis: {
             // automargin          : true,
-            showgrid            : false,
+            showgrid            : true,
             title               : "Date",
             dtick              : 1,
             // rangeslider         : {},
@@ -1216,7 +1274,10 @@ function plot_gantt_chart() {
             }
         }
         
-        for (const gdict of gdicts) {
+        // for (const gdict of gdicts) {
+        for (let i = 0; i < gdicts.length; i++) {
+            const gdict         = gdicts[i];
+            const voltext       = volume_texts[i];
             const target        = gdict.target;
             const start         = integrator.timestamp_from_unit(gdict.start);
             const end           = integrator.timestamp_from_unit(gdict.end);
@@ -1226,7 +1287,7 @@ function plot_gantt_chart() {
                 info          = `No target <br>start    ${start} <br>end      ${end}<br>duration ${duration}`;               
             }
             else {
-                info          = `deliver to ${target} <br>start    ${start} <br>end      ${end}<br>duration ${duration}`;
+                info          = `deliver ${voltext} to ${target} <br>start    ${start} <br>end      ${end}<br>duration ${duration}`;
             }
             hovertexts.push(info); 
         }
@@ -1245,14 +1306,18 @@ function plot_gantt_chart() {
             hovertext       : hovertexts,
             hoverlabel: {
                 font: {
-                  family: 'Consolas', // Or any other font family you prefer
+                  family: 'monospace', // Or any other font family you prefer
                   size: 12,
                   color: 'black'
                 }
             },
             hoverinfo       : "text",
             text            : volume_texts,
-            // text            : tank_df.volume.values,
+            textposition    : 'auto',
+            textfont    : { 
+                family: 'monospace',
+                size: 14,
+            },
             orientation     : 'h',
             showlegend      : false,
             name            : tank_name,
@@ -1263,11 +1328,111 @@ function plot_gantt_chart() {
     }
 
     Plotly.newPlot("gantt-plot", traces, layout, display_config);  
-
 }
+
+
+function plot_table() {
+    let layout   = {
+        // autosize  : true,
+        height: document.documentElement.clientHeight * 1.1,
+        width    : 800,
+        margin    : {
+            l : 20,
+            r : 20,
+            b : 0,
+            t : 50,
+        },
+        title           : {
+            text        : "Schedule Table",
+            standoff    : 0,
+            font        : {
+                size    : 18,
+            },
+            x: 0.5,  
+            y: 1.2,
+            xanchor: 'center',
+            yanchor: 'top'
+        },
+    };
+
+    const values  = [
+        [], // source
+        [], // target
+        [], // start
+        [], // end
+        [], // duration
+        []  // volume
+    ]; 
+
+    for (const tank_name of ["kilang_1", "tangki_1", "tangki_2"]) {
+        const df      = global_grouped_df_dict[tank_name];
+
+        for (const log of df) {
+            let target      = log.target;
+            let start       = integrator.timestamp_from_unit(log.start);
+            let end         = integrator.timestamp_from_unit(log.end);
+            let duration    = integrator.duration_from_unit(log.duration);
+
+            let volume      = Math.ceil(log.volume/100) * 100;
+            if (target == "null") {
+                continue;
+            }
+            values[0].push(tank_name);
+            values[1].push(target);
+            values[2].push(start);
+            values[3].push(end);
+            values[4].push(duration);
+            values[5].push(volume);
+        }
+
+    }
+
+    var data = [{
+        type: 'table',
+        header: {
+            values: [
+                ["<b>Source</b>"], 
+                ["<b>Target</b>"], 
+                ["<b>Start</b>"], 
+                ["<b>End</b>"],
+                ["<b>Duration</b>"], 
+                ["<b>Volume</b>"]
+            ],
+            align: "center",
+            line: {width: 1, color: 'black'},
+            fill: {color: "grey"},
+            font: {family: "Monospace", size: 15, color: "white"}
+        },
+        cells: {
+            values: values,
+            align: "center",
+            height: 30,
+            line: {color: "black", width: 1},
+            font: {family: "Monospace", size: 13, color: ["black"]}
+        }
+    }];
+
+    const div_name = "table-plot";
+    Plotly.newPlot(div_name, data, layout); 
+}
+
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 // RUN SIMULATION
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
-integrator.run_simulation();
-plot_history();
-plot_gantt_chart();
+const inputElement = document.getElementById("textInput");
+inputElement.value = "\
+d8 h1 m0 v3600\n\
+d12 h1 m0 v2000\n\
+d15 h1 m0 v3800\n\
+d20 h1 m0 v4000\n\
+d27 h1 m0 v3600\n\
+";
+
+document.getElementById('logButton').addEventListener('click', function() {
+    const inputText = document.getElementById('textInput').value;
+    integrator.run_simulation();
+    plot_history();
+    plot_gantt_chart();
+    plot_table();
+});
+

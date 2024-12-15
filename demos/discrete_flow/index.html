@@ -85,14 +85,65 @@
             font-family:Arial, Helvetica, sans-serif;
             font-size: 14px;
         }
+
+        .simControlContainer{
+            font-family: Arial, sans-serif;
+            text-align: center;
+            justify-content: center;
+            /* align-items: center; */
+            display: flex;
+            flex-direction:row;
+            margin-top      :50px;
+            margin-bottom   :30px;
+        }
+        .descriptionColumn{
+            text-align: left;
+            margin-left:10px;
+            margin-right:10px;
+            width: 500px;
+        }
+        .inputColumn{
+            text-align: center;
+            flex-direction: column;
+        }
+        #textInput {
+            width: 300px;
+            min-height: 150px;
+            resize: vertical;
+            margin-bottom: 10px;
+            padding: 10px;
+            box-sizing: border-box;
+        }
+        #logButton {
+            padding: 10px 20px;
+            background-color: #677068;
+            width:100%;
+            color: white;
+            border: none;
+            cursor: pointer;
+        }
     </style>
 
 </head>
 
 <body>
+    <div class="simControlContainer">
+        <div class="descriptionColumn">
+            Ini adalah sebuah cerita Ini adalah sebuah cerita 
+            Ini adalah sebuah cerita Ini adalah sebuah cerita 
+            Ini adalah sebuah cerita Ini adalah sebuah cerita 
+        </div>
+        <div class="inputColumn">
+            <textarea id="textInput" placeholder="Enter schedule here"></textarea>
+            <br>
+            <button id="logButton">Simulate Schedule</button>
+        </div>
+    </div>
     <div id="disperse-plot" style="display: flex; justify-content: center; align-items: center;"></div>
     <div id="gantt-plot" style="display: flex; justify-content: center; align-items: center;"></div>
-
+    <div id="table-plot" style="display: flex; justify-content: center; align-items: center;"></div>
+    <div id="table-tangki_1-plot" style="display: flex; justify-content: center; align-items: center;"></div>
+    <div id="table-tangki_2-plot" style="display: flex; justify-content: center; align-items: center;"></div>
     <script src="app.js" charset="utf-8"></script>
 </body>
 
