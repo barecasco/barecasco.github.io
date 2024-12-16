@@ -9,6 +9,142 @@
 const pi = Math.PI;
 
 
+// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+// utility functions
+function parseSchedule(schedule_string) {
+    const raw_matches = schedule_string.match(/([a-z])(\d+)/g); 
+    const def_matches = raw_matches.filter(element => element !== null);
+    
+    const result      = def_matches.reduce((acc, match) => {
+        const [, key, value] = match.match(/([a-z])(\d+)/);
+        const keyMap = {
+            d: "date",
+            h: "hour",
+            m: "minute",
+            v: "volume",
+        };
+        acc[keyMap[key]] = parseInt(value, 10);
+        return acc;
+    }, {});
+    
+    return result;
+}
+
+
+function reviewDate(parsed) {
+    const date = parsed.date;
+    if (date) {
+        if (date < 1) {
+            parsed.date = 1;
+        }
+
+        if (date > 31) {
+            parsed.date = 31;
+        }
+    }
+    else {
+        parsed.date = 1;
+    }
+
+    // return parsed;
+}
+
+
+function reviewHour(parsed) {
+    const hour = parsed.hour;
+    if (hour) {
+        if (hour < 0) {
+            parsed.hour = 0;
+        }
+
+        if (hour > 23) {
+            parsed.hour = 23;
+        }
+    }
+    else {
+        parsed.hour = 0;
+    }
+
+    // return parsed;
+}
+
+
+function reviewMinute(parsed) {
+    const minute = parsed.minute;
+    if (minute) {
+        if (minute < 0) {
+            parsed.minute = 0;
+        }
+
+        if (minute > 59) {
+            parsed.minute = 59;
+        }
+    }
+    else {
+        parsed.minute = 0;
+    }
+
+    // return parsed;
+}
+
+
+function reviewVolume(parsed) {
+    const volume        = parsed.volume;
+    const default_vol   = 1000;
+    const max_vol       = 10000; //based on the largest tank capacity
+
+    if (volume) {
+        if (volume < 0) {
+            parsed.volume = default_vol;
+        }
+
+        if (volume > max_vol) { 
+            parsed.volume = max_vol;
+        }
+    }
+    else {
+        parsed.volume = default_vol;
+    }
+
+    // return parsed;
+}
+
+
+function parsed_to_string(parsed) {
+    const cstring = `d${parsed.date} h${parsed.hour} m${parsed.minute} v${parsed.volume}`;
+    return cstring;
+}
+
+
+
+function cleanseInput(input_string) {
+    const raw_list      = input_string.split("\n");
+    const cleansed_list = [];
+    for (const line of raw_list) {
+        if (line == "") {
+            continue;
+        }
+        let parsed  = parseSchedule(line);
+        reviewDate(parsed);
+        reviewHour(parsed);
+        reviewMinute(parsed);
+        reviewVolume(parsed);
+        cleansed_line = parsed_to_string(parsed);
+        cleansed_list.push(cleansed_line);
+    }
+
+    return cleansed_list;
+};
+
+
+const inputElement = document.getElementById("textInput");
+inputElement.value = "\
+d8 h1 m0 v3600\n\
+d12 h1 m0 v2000\n\
+d15 h1 m0 v3800\n\
+d20 h1 m0 v4000\n\
+d27 h1 m0 v3600\n\
+";
 
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + 
 // CLASS Agent
@@ -525,13 +661,16 @@ reservoir.get_log_history = function() {
 
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 // SCHEDULE OBJECTS
+
+
+
 const schedule                  = {};
 schedule.schedule_dict          = [
-    "2024-04-08T01:00:00 3600",
-    "2024-04-12T01:00:00 2000",
-    "2024-04-15T01:00:00 3800",
-    "2024-04-20T01:00:00 4000",
-    "2024-04-27T01:00:00 3600"
+    "d8 h1 m0 v3600",
+    "d12 h1 m0 v2000",
+    "d15 h1 m0 v3800",
+    "d20 h1 m0 v4000",
+    "d27 h1 m0 v3600"
 ];
 schedule.deliveries             = [];
 schedule.current_delivery_id    = null;
@@ -542,11 +681,21 @@ schedule.prop       = {
 };
 
 for (const line of schedule.schedule_dict) {
-    const sched               = line.split(/\s+/);
-    let transport_start       = dayjs(sched[0]);
+    const parsed            = parseSchedule(line);
+    const date              = parsed.date.toString().padStart(2, '0');
+    const hour              = parsed.hour.toString().padStart(2, '0');
+    const minute            = parsed.minute.toString().padStart(2, '0');
+    const target_volume     = parsed.volume;
+    
+    const date_string       = `2024-04-${date}T${hour}:${minute}:00`;
+
+
+    // const sched               = line.split(/\s+/);
+    // let transport_start       = dayjs(sched[0]);
+    let transport_start       = dayjs(date_string);
     let analysis_end          = transport_start;
     let analysis_start        = analysis_end.add(-schedule.prop.analysis_run_time, 'second');
-    const target_volume       = parseInt(sched[1]);
+    // const target_volume       = parseInt(sched[1]);
     let transport_delta_end   = parseInt(3600 * target_volume/schedule.prop.delivery_rate); 
     let transport_end         = transport_start.add(transport_delta_end, 'second');
 
@@ -556,7 +705,8 @@ for (const line of schedule.schedule_dict) {
         "analysis_start"    : analysis_start,
         "analysis_end"      : analysis_end,
         "target_volume"     : target_volume,
-        "delivery_id"       : sched[0],
+        // "delivery_id"       : sched[0],
+        "delivery_id"       : date_string,
         "volume_delivered"  : 0.0,
         "is_done"           : false,
         "porter"            : null
@@ -1419,20 +1569,14 @@ function plot_table() {
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 // RUN SIMULATION
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
-const inputElement = document.getElementById("textInput");
-inputElement.value = "\
-d8 h1 m0 v3600\n\
-d12 h1 m0 v2000\n\
-d15 h1 m0 v3800\n\
-d20 h1 m0 v4000\n\
-d27 h1 m0 v3600\n\
-";
-
 document.getElementById('logButton').addEventListener('click', function() {
-    const inputText = document.getElementById('textInput').value;
-    integrator.run_simulation();
-    plot_history();
-    plot_gantt_chart();
-    plot_table();
+    const inputElement  = document.getElementById("textInput");
+    const inputText     = inputElement.value;
+    const cleansed_list = cleanseInput(inputText);
+    inputElement.value  = cleansed_list.join('\n');
+    // integrator.run_simulation();
+    // plot_history();
+    // plot_gantt_chart();
+    // plot_table();
 });
 
