@@ -1,12 +1,14 @@
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
-// Agent is run by the integrator
-
-
-
-
-// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 // constants
 const pi = Math.PI;
+
+const display_name_map = {
+    "kilang_1"  : "Kilang-1",
+    "tangki_1"  : "Tangki-1",
+    "tangki_2"  : "Tangki-2",
+    "null"      : "null",
+    "reservoir" : "Delivery"
+}
 
 
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
@@ -115,7 +117,6 @@ function parsed_to_string(parsed) {
     const cstring = `d${parsed.date} h${parsed.hour} m${parsed.minute} v${parsed.volume}`;
     return cstring;
 }
-
 
 
 function cleanseInput(input_string) {
@@ -1316,14 +1317,14 @@ function plot_gantt_chart() {
                 duration                = minute_end - minute_start;
                 volume                  = Math.ceil(total_outflow - init_outflow);
                 const gdict             = {
-                    "tank"       : tank_name,
+                    "tank"       : display_name_map[tank_name],
                     "start"      : unit_start,
                     "start_time" : timestamp_start,
                     "end"        : unit_end,
                     "end_time"   : timestamp_end,
                     "duration"   : unit_duration,
                     "volume"     : volume,
-                    "target"     : curr_target   
+                    "target"     : display_name_map[curr_target]   
                 } 
                 tank_gantt.push(gdict);
                 curr_target     = outflow_target;
@@ -1340,14 +1341,14 @@ function plot_gantt_chart() {
             duration                = minute_end - minute_start - 1;
             volume                  = Math.ceil(duration * start_rate/60);
             const gdict             = {
-                "tank"       : tank_name,
+                "tank"       : display_name_map[tank_name],
                 "start"      : unit_start,
                 "start_time" : timestamp_start,
                 "end"        : unit_end,
                 "end_time"   : timestamp_end,
                 "duration"   : unit_duration,
                 "volume"     : volume,
-                "target"     : curr_target   
+                "target"     : display_name_map[curr_target]   
             } 
             tank_gantt.push(gdict);
         }
@@ -1429,18 +1430,18 @@ function plot_gantt_chart() {
     ];
     
     const target_tank_map = {
-        "kilang_1"  : "orchid",
-        "tangki_1"  : "orange",
-        "tangki_2"  : "tomato",
-        "reservoir" : "#33cc33",
+        "Kilang-1"  : "orchid",
+        "Tangki-1"  : "orange",
+        "Tangki-2"  : "tomato",
+        "Delivery"  : "#33cc33",
         "null"      : "#f5f5f5"
     };
     
     const bar_outline_map = {
-        "kilang_1"  : 1,
-        "tangki_1"  : 1,
-        "tangki_2"  : 1,
-        "reservoir" : 1,
+        "Kilang-1"  : 1,
+        "Tangki-1"  : 1,
+        "Tangki-2"  : 1,
+        "Delivery"  : 1,
         "null"      : 1
     }
 
@@ -1482,9 +1483,9 @@ function plot_gantt_chart() {
             let start         = integrator.timestamp_from_unit(gdict.start);
             let end           = integrator.timestamp_from_unit(gdict.end);
             let duration      = integrator.duration_from_unit(gdict.duration);
-            if (target == 'reservoir') {
-                target = 'delivery';
-            }
+            // if (target == 'reservoir') {
+            //     target = 'delivery';
+            // }
             let info            = "";
             if (target == "null") {
                 info          = `No target <br>start    ${start} <br>end      ${end}<br>duration ${duration}`;               
@@ -1576,9 +1577,9 @@ function plot_table() {
 
         for (const log of df) {
             let target      = log.target;
-            if (target == "reservoir") {
-                target = "delivery";
-            }
+            // if (target == "reservoir") {
+            //     target = "delivery";
+            // }
             let start       = integrator.timestamp_from_unit(log.start);
             let end         = integrator.timestamp_from_unit(log.end);
             let duration    = integrator.duration_from_unit(log.duration);
@@ -1587,7 +1588,7 @@ function plot_table() {
             if (target == "null") {
                 continue;
             }
-            values[0].push(tank_name);
+            values[0].push(display_name_map[tank_name]);
             values[1].push(target);
             values[2].push(start);
             values[3].push(end);
