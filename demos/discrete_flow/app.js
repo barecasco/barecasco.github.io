@@ -13,9 +13,10 @@ const pi = Math.PI;
 // utility functions
 function parseSchedule(schedule_string) {
     const raw_matches = schedule_string.match(/([a-z])(\d+)/g); 
-    const def_matches = raw_matches.filter(element => element !== null);
-    
-    const result      = def_matches.reduce((acc, match) => {
+    if (!raw_matches) {
+        return null;
+    }
+    const result      = raw_matches.reduce((acc, match) => {
         const [, key, value] = match.match(/([a-z])(\d+)/);
         const keyMap = {
             d: "date",
@@ -125,6 +126,9 @@ function cleanseInput(input_string) {
             continue;
         }
         let parsed  = parseSchedule(line);
+        if (!parsed) {
+            continue;
+        }
         reviewDate(parsed);
         reviewHour(parsed);
         reviewMinute(parsed);
@@ -157,6 +161,14 @@ const Agent      = function(name) {
     self.updates                = {};
     self.update_states          = {};    
     self.active                 = true;
+
+
+    self.resetParameter         = function() {
+        self.event_updates          = {};
+        self.event_update_states    = {};
+        self.updates                = {};
+        self.update_states          = {};
+    };
 
 
     self.log_state               = function() {
@@ -243,23 +255,24 @@ const Agent      = function(name) {
 };
 
 
-
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + 
 // CLASS Integrator
 const Integrator = function(new_config) {
-    const self = this;
-    self.time               = 0; // seconds
-    self.step_index         = 0;
-    self.timestep           = 1;
-    self.step_horizon       = 1;
-    self.events             = [];
-    self.update_listeners   = [];
-    self.is_active          = false;
-    self.is_started         = false;
-    self.init_time_string   = '2024-04-01 00:00:00';
-    self.init_time          = dayjs(self.init_time_string);
+    const self              = this;
+    self.resetParameter     = function() {
+        self.time               = 0; // seconds
+        self.step_index         = 0;
+        self.timestep           = 1;
+        self.step_horizon       = 1;
+        self.events             = [];
+        self.update_listeners   = [];
+        self.is_active          = false;
+        self.is_started         = false;
+        self.init_time_string   = '2024-04-01 00:00:00';
+        self.init_time          = dayjs(self.init_time_string);
+    }
+    self.resetParameter();
 
-    
     self.add_listener        = function(listener) {
         self.update_listeners.push(listener);
     }
@@ -374,296 +387,10 @@ const Integrator = function(new_config) {
     };
 
  }
-
  
-
-// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + 
-// ENTITIES
-const integrator            = new Integrator();
-integrator.step_horizon     = 30 * 24 * 60;
-integrator.timestep         = 60;
-let global_grouped_df_dict  = {};
-
-simulation                  = new Agent("simulator");
-integrator.add_listener(simulation);
-// -------------------------------------------------------------------------------
-// kilang_1
-const kilang_1          = new Agent("kilang_1");
-kilang_1.name           = "kilang_1";
-
-kilang_1.prop           = {
-    "timestamp"         : integrator.get_date_time_string(),
-    "hourly_rate"       : 47.0,
-    "total_outflow"     : 0,
-    "outflow"           : 0,
-    "stock"             : 0,
-    "is_discharging"    : false,
-    "target_tank"       : "null"  
-};
-
-kilang_1.log_state      = function() {
-    kilang_1.prop.timestamp     = integrator.get_date_time_string();
-    kilang_1.history[integrator.get_date_time_string()] = structuredClone(kilang_1.prop);
-}
-integrator.add_listener(kilang_1);
-
-kilang_1.history        = {};
-
-kilang_1.get_log_history = function() { 
-    let index_count         = 0;
-    const timestamps        = [];
-    const indices           = [];
-    const total_outflows    = [];
-    const outflows          = [];
-    const stocks            = [];
-    const target_tanks      = [];
-    const hourly_rates      = [];
-    const is_dischargings   = [];
-
-    for (const key in kilang_1.history) {
-        if (kilang_1.history.hasOwnProperty(key)) {
-            const hist      = kilang_1.history[key];
-            timestamps.push(hist.timestamp);
-            total_outflows.push(hist.total_outflow);
-            outflows.push(hist.outflow);
-            stocks.push(hist.stock);
-            target_tanks.push(hist.target_tank);
-            hourly_rates.push(hist.hourly_rate);
-            is_dischargings.push(hist.is_discharging);
-            indices.push(index_count);
-            index_count     += 1;
-        }
-    }
-
-    const log = {
-        "timestamps"        : timestamps,
-        "indices"           : indices,
-        "total_outflows"    : total_outflows,
-        "outflows"          : outflows,
-        "stocks"            : stocks,
-        "target_tanks"      : target_tanks,
-        "hourly_rates"      : hourly_rates,
-        "is_dischargings"   : is_dischargings
-    }
-
-    return log;
-};
-
-
-
-// -------------------------------------------------------------------------------
-// tangki_1
-const tangki_1          = new Agent("tangki_1");
-tangki_1.name           = "tangki_1";
-tangki_1.prop           = {
-    "timestamp"         : integrator.get_date_time_string(),
-    "stock"             : 0,
-    "capacity"          : 5600,
-    "hourly_rate"       : 250.0,
-    "is_discharging"    : false,
-    "in_schedule"       : false,
-    "in_analysis"       : false,
-    "target_tank"       : "null",
-    "total_outflow"     : 0
-};
-
-tangki_1.log_state    = function() {
-    tangki_1.prop.timestamp     = integrator.get_date_time_string();
-    tangki_1.history[integrator.get_date_time_string()] = structuredClone(tangki_1.prop);
-}
-integrator.add_listener(tangki_1);
-
-tangki_1.history        = {};
-
-
-// tangki_1.agent.log_state = tangki_1.log_state; 
-
-tangki_1.get_log_history = function() {
-    let index_count         = 0;
-    const timestamps        = [];
-    const indices           = [];
-    const stocks            = [];
-    const is_dischargings   = [];
-    const in_schedules      = [];
-    const in_analyses       = [];
-    const total_outflows    = [];
-    const hourly_rates      = [];
-    const target_tanks      = [];
-
-
-    for (const key in tangki_1.history) {
-        if (tangki_1.history.hasOwnProperty(key)) {
-            const hist      = tangki_1.history[key];
-            timestamps.push(hist.timestamp);
-            stocks.push(hist.stock);
-            is_dischargings.push(hist.is_discharging);
-            in_schedules.push(hist.in_schedules);
-            in_analyses.push(hist.in_analysis);
-            total_outflows.push(hist.total_outflow);
-            hourly_rates.push(hist.hourly_rate);
-            target_tanks.push(hist.target_tank);
-            indices.push(index_count);
-            index_count     += 1;
-        }
-    }
-
-    const log = {
-        "timestamps"        : timestamps,
-        "indices"           : indices,
-        "stocks"            : stocks,
-        "is_dischargings"   : is_dischargings,
-        "in_schedules"      : in_schedules,
-        "in_analyses"       : in_analyses,
-        "total_outflows"    : total_outflows,
-        "hourly_rates"      : hourly_rates,
-        "target_tanks"      : target_tanks
-    }
-
-    return log;
-};
-
-tangki_1.in_analysis    = function() {
-    return tangki_1.prop.in_analysis;
-}
-
-tangki_1.in_schedule    = function() {
-    return tangki_1.prop.in_schedule;
-}
-
-
-
-// -------------------------------------------------------------------------------
-// tangki_2
-const tangki_2          = new Agent("tangki_2");
-tangki_2.name           = "tangki_2";
-
-tangki_2.prop           = {
-    "timestamp"         : integrator.get_date_time_string(),
-    "stock"             : 0,
-    "capacity"          : 10000,
-    "hourly_rate"       : 250.0,
-    "is_discharging"    : false,
-    "in_analysis"       : false,
-    "in_schedule"       : false,
-    "target_tank"       : "null",
-    "total_outflow"     : 0
-};
-
-tangki_2.log_state    = function() {
-    tangki_2.prop.timestamp     = integrator.get_date_time_string();
-    tangki_2.history[integrator.get_date_time_string()] = structuredClone(tangki_2.prop);
-}
-integrator.add_listener(tangki_2);
-tangki_2.history        = {};
-
-
-tangki_2.get_log_history = function() {
-    let index_count         = 0;
-    const timestamps        = [];
-    const indices           = [];
-    const stocks            = [];
-    const is_dischargings   = [];
-    const in_schedules      = [];
-    const in_analyses       = [];
-    const total_outflows    = [];
-    const hourly_rates      = [];
-    const target_tanks      = [];
-
-    for (const key in tangki_2.history) {
-        if (tangki_2.history.hasOwnProperty(key)) {
-            const hist      = tangki_2.history[key];
-            timestamps.push(hist.timestamp);
-            stocks.push(hist.stock);
-            is_dischargings.push(hist.is_discharging);
-            in_schedules.push(hist.in_schedule);
-            in_analyses.push(hist.in_analysis);
-            total_outflows.push(hist.total_outflow);
-            hourly_rates.push(hist.hourly_rate);
-            target_tanks.push(hist.target_tank);
-            indices.push(index_count);
-            index_count     += 1;
-        }
-    }
-
-    const log = {
-        "timestamps"        : timestamps,
-        "indices"           : indices,
-        "stocks"            : stocks,
-        "is_dischargings"   : is_dischargings,
-        "in_schedules"      : in_schedules,
-        "in_analyses"       : in_analyses,
-        "total_outflows"    : total_outflows,
-        "hourly_rates"      : hourly_rates,
-        "target_tanks"      : target_tanks
-    }
-
-    return log;
-};
-
-
-tangki_2.in_analysis    = function() {
-    return tangki_2.prop.in_analysis;
-}
-
-tangki_2.in_schedule    = function() {
-    return tangki_2.prop.in_schedule;
-}
-
-
-// -------------------------------------------------------------------------------
-// reservoir
-const reservoir          = new Agent("reservoir");
-reservoir.name           = "reservoir";
-
-reservoir.prop           = {
-    "timestamp"         : integrator.get_date_time_string(),
-    "stock"             : 0,
-    "capacity"          : 10e7,
-    "total_outflow"     : 0,
-    "delivery_source"   : null
-};
-
-reservoir.log_state    = function() {
-    reservoir.prop.timestamp     = integrator.get_date_time_string();
-    reservoir.history[integrator.get_date_time_string()] = structuredClone(reservoir.prop);
-}
-integrator.add_listener(reservoir);
-reservoir.history        = {};
-
-
-reservoir.get_log_history = function() {
-    let index_count         = 0;
-    const timestamps        = [];
-    const indices           = [];
-    const stocks            = [];
-    const total_outflows    = [];
-
-    for (const key in reservoir.history) {
-        if (reservoir.history.hasOwnProperty(key)) {
-            const hist      = reservoir.history[key];
-            timestamps.push(hist.timestamp);
-            stocks.push(hist.stock);
-            total_outflows.push(hist.total_outflow);
-            indices.push(index_count);
-            index_count     += 1;
-        }
-    }
-
-    const log = {
-        "timestamps"        : timestamps,
-        "indices"           : indices,
-        "stocks"            : stocks,
-        "total_outflows"    : total_outflows,
-    }
-
-    return log;
-};
 
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 // SCHEDULE OBJECTS
-
-
-
 const schedule                  = {};
 schedule.schedule_dict          = [
     "d8 h1 m0 v3600",
@@ -672,45 +399,49 @@ schedule.schedule_dict          = [
     "d20 h1 m0 v4000",
     "d27 h1 m0 v3600"
 ];
-schedule.deliveries             = [];
-schedule.current_delivery_id    = null;
 
-schedule.prop       = {
-    "analysis_run_time" : 60 * 60 * 10,
-    "delivery_rate"     : 250.0  
-};
-
-for (const line of schedule.schedule_dict) {
-    const parsed            = parseSchedule(line);
-    const date              = parsed.date.toString().padStart(2, '0');
-    const hour              = parsed.hour.toString().padStart(2, '0');
-    const minute            = parsed.minute.toString().padStart(2, '0');
-    const target_volume     = parsed.volume;
+// HERE
+function resetSchedule() {
+    schedule.deliveries             = [];
+    schedule.current_delivery_id    = null;
     
-    const date_string       = `2024-04-${date}T${hour}:${minute}:00`;
-
-
-    // const sched               = line.split(/\s+/);
-    // let transport_start       = dayjs(sched[0]);
-    let transport_start       = dayjs(date_string);
-    let analysis_end          = transport_start;
-    let analysis_start        = analysis_end.add(-schedule.prop.analysis_run_time, 'second');
-    // const target_volume       = parseInt(sched[1]);
-    let transport_delta_end   = parseInt(3600 * target_volume/schedule.prop.delivery_rate); 
-    let transport_end         = transport_start.add(transport_delta_end, 'second');
-
-    schedule.deliveries.push({
-        "transport_start"   : transport_start,
-        "transport_end"     : transport_end,
-        "analysis_start"    : analysis_start,
-        "analysis_end"      : analysis_end,
-        "target_volume"     : target_volume,
-        // "delivery_id"       : sched[0],
-        "delivery_id"       : date_string,
-        "volume_delivered"  : 0.0,
-        "is_done"           : false,
-        "porter"            : null
-    });
+    schedule.prop       = {
+        "analysis_run_time" : 60 * 60 * 10,
+        "delivery_rate"     : 250.0  
+    };
+    
+    for (const line of schedule.schedule_dict) {
+        const parsed            = parseSchedule(line);
+        const date              = parsed.date.toString().padStart(2, '0');
+        const hour              = parsed.hour.toString().padStart(2, '0');
+        const minute            = parsed.minute.toString().padStart(2, '0');
+        const target_volume     = parsed.volume;
+        
+        const date_string       = `2024-04-${date}T${hour}:${minute}:00`;
+    
+    
+        // const sched               = line.split(/\s+/);
+        // let transport_start       = dayjs(sched[0]);
+        let transport_start       = dayjs(date_string);
+        let analysis_end          = transport_start;
+        let analysis_start        = analysis_end.add(-schedule.prop.analysis_run_time, 'second');
+        // const target_volume       = parseInt(sched[1]);
+        let transport_delta_end   = parseInt(3600 * target_volume/schedule.prop.delivery_rate); 
+        let transport_end         = transport_start.add(transport_delta_end, 'second');
+    
+        schedule.deliveries.push({
+            "transport_start"   : transport_start,
+            "transport_end"     : transport_end,
+            "analysis_start"    : analysis_start,
+            "analysis_end"      : analysis_end,
+            "target_volume"     : target_volume,
+            // "delivery_id"       : sched[0],
+            "delivery_id"       : date_string,
+            "volume_delivered"  : 0.0,
+            "is_done"           : false,
+            "porter"            : null
+        });
+    }
 }
 
 
@@ -742,7 +473,6 @@ schedule.is_in_schedule     = function() {
 }
 
 
-
 schedule.set_current_transport_end  = function(input_rate) {
     for (const delivery of schedule.deliveries) {
         if (delivery.delivery_id == schedule.current_delivery_id) {
@@ -754,245 +484,536 @@ schedule.set_current_transport_end  = function(input_rate) {
     }
 }
 
-tank_map = {};
-tank_map[kilang_1.name]     = kilang_1;
-tank_map[tangki_1.name]     = tangki_1;
-tank_map[tangki_2.name]     = tangki_2;
-tank_map[reservoir.name]    = reservoir;
-
-
 
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 // SIMULATION SETUP
+// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+let global_grouped_df_dict  = {};
+let integrator              = null;
+let simulation              = null;
+let kilang_1                = null;
+let tangki_1                = null;
+let tangki_2                = null;
+let reservoir               = null;
+let tank_map                = {};
 
-kilang_1.prop.target_tank =  tangki_1.name;
-tangki_1.prop.target_tank = reservoir.name;
-tangki_2.prop.target_tank = reservoir.name;
 
+function runSimulation() {
+    integrator                  = new Integrator();
+    integrator.step_horizon     = 30 * 24 * 60;
+    integrator.timestep         = 60;
 
-// update function for kilang 1
-function kilang_1_update(){
-    const delta_rate    = kilang_1.prop.hourly_rate * integrator.timestep/3600;
-    const tgtank_name   = kilang_1.prop.target_tank;
-    const tgtank        = tank_map[tgtank_name];
-    kilang_1.prop.is_discharging = false;
-
-    if (!tgtank) {
-        return 1;
+    simulation            = new Agent("simulator");
+    integrator.add_listener(simulation);
+    // -------------------------------------------------------------------------------
+    // kilang_1
+    kilang_1          = new Agent("kilang_1");
+    kilang_1.name           = "kilang_1";
+    
+    kilang_1.prop           = {
+        "timestamp"         : integrator.get_date_time_string(),
+        "hourly_rate"       : 47.0,
+        "total_outflow"     : 0,
+        "outflow"           : 0,
+        "stock"             : 0,
+        "is_discharging"    : false,
+        "target_tank"       : "null"  
+    };
+    
+    kilang_1.log_state      = function() {
+        kilang_1.prop.timestamp     = integrator.get_date_time_string();
+        kilang_1.history[integrator.get_date_time_string()] = structuredClone(kilang_1.prop);
     }
-
-    let target_is_full  = ((tgtank.prop.stock + delta_rate) > tgtank.prop.capacity);
-    let tg_discharging  = tgtank.prop.is_discharging;
-    let tg_in_analysis  = tgtank.prop.in_analysis;
-
-    //if target is full, attempt to change target
-    if (target_is_full || tg_in_analysis || tg_discharging) {
-        if (tgtank.name == tangki_1.name) {
-            // console.log(tgtank_name, "is occupied");
-            kilang_1.prop.target_tank = tangki_2.name;
-        }
-        else if (tgtank.name == tangki_2.name) {
-            // console.log(tgtank_name, "is occupied");
-            kilang_1.prop.target_tank = tangki_1.name;
-        }
-        return 1;
-    }
-
-    // if current target is discharging, stop
-    if (tg_discharging) {
-        return 1;
-    }
-
-    tgtank.prop.stock               += delta_rate;
-    kilang_1.prop.total_outflow     += delta_rate;
-    kilang_1.prop.outflow            = delta_rate;
-    kilang_1.prop.is_discharging     = true;
-    return 0;
-}
-
-
-//update function for tangki 1
-function tangki_1_update() {
-
-    function deliver_schedule_flow(delta_rate){
-        const test_date     = integrator.get_date_time();
-        for (const delivery of schedule.deliveries) {
-            if (test_date.isAfter(delivery.transport_start) && (delivery.volume_delivered < delivery.target_volume)) {
-                if ((delivery.volume_delivered + delta_rate) >= delivery.target_volume) {
-                    delivery.volume_delivered = delivery.target_volume;
-                    console.log("volume delivered!");
-                }
-                else {
-                    delivery.volume_delivered += delta_rate;
-                }
-                break;
+    integrator.add_listener(kilang_1);
+    
+    kilang_1.history        = {};
+    
+    kilang_1.get_log_history = function() { 
+        let index_count         = 0;
+        const timestamps        = [];
+        const indices           = [];
+        const total_outflows    = [];
+        const outflows          = [];
+        const stocks            = [];
+        const target_tanks      = [];
+        const hourly_rates      = [];
+        const is_dischargings   = [];
+    
+        for (const key in kilang_1.history) {
+            if (kilang_1.history.hasOwnProperty(key)) {
+                const hist      = kilang_1.history[key];
+                timestamps.push(hist.timestamp);
+                total_outflows.push(hist.total_outflow);
+                outflows.push(hist.outflow);
+                stocks.push(hist.stock);
+                target_tanks.push(hist.target_tank);
+                hourly_rates.push(hist.hourly_rate);
+                is_dischargings.push(hist.is_discharging);
+                indices.push(index_count);
+                index_count     += 1;
             }
-
         }
-
+    
+        const log = {
+            "timestamps"        : timestamps,
+            "indices"           : indices,
+            "total_outflows"    : total_outflows,
+            "outflows"          : outflows,
+            "stocks"            : stocks,
+            "target_tanks"      : target_tanks,
+            "hourly_rates"      : hourly_rates,
+            "is_dischargings"   : is_dischargings
+        }
+    
+        return log;
+    };
+    
+    
+    // -------------------------------------------------------------------------------
+    // tangki_1
+    tangki_1          = new Agent("tangki_1");
+    tangki_1.name           = "tangki_1";
+    tangki_1.prop           = {
+        "timestamp"         : integrator.get_date_time_string(),
+        "stock"             : 0,
+        "capacity"          : 5600,
+        "hourly_rate"       : 250.0,
+        "is_discharging"    : false,
+        "in_schedule"       : false,
+        "in_analysis"       : false,
+        "target_tank"       : "null",
+        "total_outflow"     : 0
+    };
+    
+    tangki_1.log_state    = function() {
+        tangki_1.prop.timestamp     = integrator.get_date_time_string();
+        tangki_1.history[integrator.get_date_time_string()] = structuredClone(tangki_1.prop);
     }
-
-    function transact(delta_rate) {
-        reservoir.prop.stock        += delta_rate;
-        tangki_1.prop.stock         -= delta_rate;
-        tangki_1.prop.total_outflow += delta_rate;
-        deliver_schedule_flow(delta_rate);
-        tangki_1.prop.is_discharging = true;
-    }
-
-
-    const delta_rate                = tangki_1.prop.hourly_rate * integrator.timestep / 3600;
-    const stock_is_empty            = (tangki_1.prop.stock - delta_rate) < 0;
-    tangki_1.prop.is_discharging    = false;
-
-    if (stock_is_empty) {
-        reservoir.prop.delivery_source = null;
-        tangki_1.prop.is_discharging   = false;
-        tangki_1.prop.target_tank      = "null";
-        return 1;
-    }
-
-    if (!tangki_1.in_schedule()) {
-        return 1;
-    }
-
-    if (tangki_1.in_analysis()) {
-        return 1;
-    }
-
-    reservoir.prop.delivery_source  = tangki_1.name;
-    tangki_1.prop.target_tank       = reservoir.name;
-    transact(delta_rate);
-
-    return 0;
-}
-
-
-function tangki_2_update() {
-    function deliver_schedule_flow(delta_rate){
-        const test_date     = integrator.get_date_time();
-        for (const delivery of schedule.deliveries) {
-            if (test_date.isAfter(delivery.transport_start) && (delivery.volume_delivered < delivery.target_volume)) {
-                if ((delivery.volume_delivered + delta_rate) >= delivery.target_volume) {
-                    delivery.volume_delivered = delivery.target_volume;
-                    console.log("volume delivered!");
-                }
-                else {
-                    delivery.volume_delivered += delta_rate;
-                }
-                break;
+    integrator.add_listener(tangki_1);
+    
+    tangki_1.history        = {};
+    
+    
+    // tangki_1.agent.log_state = tangki_1.log_state; 
+    
+    tangki_1.get_log_history = function() {
+        let index_count         = 0;
+        const timestamps        = [];
+        const indices           = [];
+        const stocks            = [];
+        const is_dischargings   = [];
+        const in_schedules      = [];
+        const in_analyses       = [];
+        const total_outflows    = [];
+        const hourly_rates      = [];
+        const target_tanks      = [];
+    
+    
+        for (const key in tangki_1.history) {
+            if (tangki_1.history.hasOwnProperty(key)) {
+                const hist      = tangki_1.history[key];
+                timestamps.push(hist.timestamp);
+                stocks.push(hist.stock);
+                is_dischargings.push(hist.is_discharging);
+                in_schedules.push(hist.in_schedules);
+                in_analyses.push(hist.in_analysis);
+                total_outflows.push(hist.total_outflow);
+                hourly_rates.push(hist.hourly_rate);
+                target_tanks.push(hist.target_tank);
+                indices.push(index_count);
+                index_count     += 1;
             }
-
         }
-    }    
-
-
-    function transact(delta_rate) {
-        reservoir.prop.stock        += delta_rate;
-        tangki_2.prop.stock         -= delta_rate;
-        tangki_2.prop.total_outflow += delta_rate;
-        deliver_schedule_flow(delta_rate);
-        tangki_2.prop.is_discharging = true;
+    
+        const log = {
+            "timestamps"        : timestamps,
+            "indices"           : indices,
+            "stocks"            : stocks,
+            "is_dischargings"   : is_dischargings,
+            "in_schedules"      : in_schedules,
+            "in_analyses"       : in_analyses,
+            "total_outflows"    : total_outflows,
+            "hourly_rates"      : hourly_rates,
+            "target_tanks"      : target_tanks
+        }
+    
+        return log;
+    };
+    
+    tangki_1.in_analysis    = function() {
+        return tangki_1.prop.in_analysis;
     }
-
-
-    const delta_rate                = tangki_2.prop.hourly_rate * integrator.timestep / 3600;
-    const stock_is_empty            = (tangki_2.prop.stock - delta_rate) < 0;
-    tangki_2.prop.is_discharging    = false;
-
-    if (stock_is_empty) {
-        reservoir.prop.delivery_source = null;
-        tangki_2.prop.is_discharging   = false;
-        tangki_2.prop.target_tank      = "null";
-        return 1;
+    
+    tangki_1.in_schedule    = function() {
+        return tangki_1.prop.in_schedule;
     }
-
-    if (!tangki_2.in_schedule()) {
-        return 1;
+    
+    
+    // -------------------------------------------------------------------------------
+    // tangki_2
+    tangki_2          = new Agent("tangki_2");
+    tangki_2.name           = "tangki_2";
+    
+    tangki_2.prop           = {
+        "timestamp"         : integrator.get_date_time_string(),
+        "stock"             : 0,
+        "capacity"          : 10000,
+        "hourly_rate"       : 250.0,
+        "is_discharging"    : false,
+        "in_analysis"       : false,
+        "in_schedule"       : false,
+        "target_tank"       : "null",
+        "total_outflow"     : 0
+    };
+    
+    tangki_2.log_state    = function() {
+        tangki_2.prop.timestamp     = integrator.get_date_time_string();
+        tangki_2.history[integrator.get_date_time_string()] = structuredClone(tangki_2.prop);
     }
-
-    if (tangki_2.in_analysis()) {
-        return 1;
+    integrator.add_listener(tangki_2);
+    tangki_2.history        = {};
+    
+    
+    tangki_2.get_log_history = function() {
+        let index_count         = 0;
+        const timestamps        = [];
+        const indices           = [];
+        const stocks            = [];
+        const is_dischargings   = [];
+        const in_schedules      = [];
+        const in_analyses       = [];
+        const total_outflows    = [];
+        const hourly_rates      = [];
+        const target_tanks      = [];
+    
+        for (const key in tangki_2.history) {
+            if (tangki_2.history.hasOwnProperty(key)) {
+                const hist      = tangki_2.history[key];
+                timestamps.push(hist.timestamp);
+                stocks.push(hist.stock);
+                is_dischargings.push(hist.is_discharging);
+                in_schedules.push(hist.in_schedule);
+                in_analyses.push(hist.in_analysis);
+                total_outflows.push(hist.total_outflow);
+                hourly_rates.push(hist.hourly_rate);
+                target_tanks.push(hist.target_tank);
+                indices.push(index_count);
+                index_count     += 1;
+            }
+        }
+    
+        const log = {
+            "timestamps"        : timestamps,
+            "indices"           : indices,
+            "stocks"            : stocks,
+            "is_dischargings"   : is_dischargings,
+            "in_schedules"      : in_schedules,
+            "in_analyses"       : in_analyses,
+            "total_outflows"    : total_outflows,
+            "hourly_rates"      : hourly_rates,
+            "target_tanks"      : target_tanks
+        }
+    
+        return log;
+    };
+    
+    
+    tangki_2.in_analysis    = function() {
+        return tangki_2.prop.in_analysis;
     }
-
-    reservoir.prop.delivery_source  = tangki_2.name;
-    tangki_2.prop.target_tank       = reservoir.name;
-    transact(delta_rate);
-
-    return 0;
-};
-
-
-
-function delivery_update() {
-    const in_analysis = schedule.is_in_analysis();
-    const in_schedule = schedule.is_in_schedule();
-
-    if (in_analysis) {
-        tangki_1.prop.in_schedule = false;
-        tangki_2.prop.in_schedule = false;
-
-        if (tangki_1.in_analysis() || tangki_2.in_analysis()) {
-            return 0;
-        }
-
-        if (tangki_1.prop.stock/tangki_1.prop.capacity > tangki_2.prop.stock/tangki_2.prop.capacity) {
-            tangki_1.prop.in_analysis = true;
-            schedule.set_current_transport_end(tangki_1.prop.hourly_rate);
-            return 0;
-        }
-        else {
-            tangki_2.prop.in_analysis = true;
-            schedule.set_current_transport_end(tangki_2.prop.hourly_rate);
-            return 0;
-        }
-    } 
-
-    if (in_schedule) {
-        if (tangki_1.in_schedule() || tangki_2.in_schedule()) {
-            return 0;
-        }
-
-        if (tangki_1.in_analysis()) {
-            tangki_1.prop.in_schedule = true;
-            tangki_1.prop.in_analysis = false;
-            return 0;
-        }
-
-        if (tangki_2.in_analysis()) {
-            tangki_2.prop.in_schedule = true;
-            tangki_2.prop.in_analysis = false;
-            return 0;
-        }
+    
+    
+    tangki_2.in_schedule    = function() {
+        return tangki_2.prop.in_schedule;
     }
-    else {
-        tangki_1.prop.in_schedule = false;
-        tangki_2.prop.in_schedule = false;
+    
+    
+    // -------------------------------------------------------------------------------
+    // reservoir
+    reservoir          = new Agent("reservoir");
+    reservoir.name           = "reservoir";
+    
+    reservoir.prop           = {
+        "timestamp"         : integrator.get_date_time_string(),
+        "stock"             : 0,
+        "capacity"          : 10e7,
+        "total_outflow"     : 0,
+        "delivery_source"   : null
+    };
+    
+    reservoir.log_state    = function() {
+        reservoir.prop.timestamp     = integrator.get_date_time_string();
+        reservoir.history[integrator.get_date_time_string()] = structuredClone(reservoir.prop);
+    }
+    integrator.add_listener(reservoir);
+    reservoir.history        = {};
+    
+    
+    reservoir.get_log_history = function() {
+        let index_count         = 0;
+        const timestamps        = [];
+        const indices           = [];
+        const stocks            = [];
+        const total_outflows    = [];
+    
+        for (const key in reservoir.history) {
+            if (reservoir.history.hasOwnProperty(key)) {
+                const hist      = reservoir.history[key];
+                timestamps.push(hist.timestamp);
+                stocks.push(hist.stock);
+                total_outflows.push(hist.total_outflow);
+                indices.push(index_count);
+                index_count     += 1;
+            }
+        }
+    
+        const log = {
+            "timestamps"        : timestamps,
+            "indices"           : indices,
+            "stocks"            : stocks,
+            "total_outflows"    : total_outflows,
+        }
+    
+        return log;
+    };
+    
+
+    // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+    // SIMULATION SETUP
+    kilang_1.prop.target_tank =  tangki_1.name;
+    tangki_1.prop.target_tank = reservoir.name;
+    tangki_2.prop.target_tank = reservoir.name;
+    
+    tank_map = {};
+    tank_map[kilang_1.name]     = kilang_1;
+    tank_map[tangki_1.name]     = tangki_1;
+    tank_map[tangki_2.name]     = tangki_2;
+    tank_map[reservoir.name]    = reservoir;
+    
+    
+    // update function for kilang 1
+    function kilang_1_update(){
+        const delta_rate    = kilang_1.prop.hourly_rate * integrator.timestep/3600;
+        const tgtank_name   = kilang_1.prop.target_tank;
+        const tgtank        = tank_map[tgtank_name];
+        kilang_1.prop.is_discharging = false;
+    
+        if (!tgtank) {
+            return 1;
+        }
+    
+        let target_is_full  = ((tgtank.prop.stock + delta_rate) > tgtank.prop.capacity);
+        let tg_discharging  = tgtank.prop.is_discharging;
+        let tg_in_analysis  = tgtank.prop.in_analysis;
+    
+        //if target is full, attempt to change target
+        if (target_is_full || tg_in_analysis || tg_discharging) {
+            if (tgtank.name == tangki_1.name) {
+                // console.log(tgtank_name, "is occupied");
+                kilang_1.prop.target_tank = tangki_2.name;
+            }
+            else if (tgtank.name == tangki_2.name) {
+                // console.log(tgtank_name, "is occupied");
+                kilang_1.prop.target_tank = tangki_1.name;
+            }
+            return 1;
+        }
+    
+        // if current target is discharging, stop
+        if (tg_discharging) {
+            return 1;
+        }
+    
+        tgtank.prop.stock               += delta_rate;
+        kilang_1.prop.total_outflow     += delta_rate;
+        kilang_1.prop.outflow            = delta_rate;
+        kilang_1.prop.is_discharging     = true;
         return 0;
     }
+    
+    
+    //update function for tangki 1
+    function tangki_1_update() {
+    
+        function deliver_schedule_flow(delta_rate){
+            const test_date     = integrator.get_date_time();
+            for (const delivery of schedule.deliveries) {
+                if (test_date.isAfter(delivery.transport_start) && (delivery.volume_delivered < delivery.target_volume)) {
+                    if ((delivery.volume_delivered + delta_rate) >= delivery.target_volume) {
+                        delivery.volume_delivered = delivery.target_volume;
+                        console.log("volume delivered!");
+                    }
+                    else {
+                        delivery.volume_delivered += delta_rate;
+                    }
+                    break;
+                }
+    
+            }
+    
+        }
+    
+        function transact(delta_rate) {
+            reservoir.prop.stock        += delta_rate;
+            tangki_1.prop.stock         -= delta_rate;
+            tangki_1.prop.total_outflow += delta_rate;
+            deliver_schedule_flow(delta_rate);
+            tangki_1.prop.is_discharging = true;
+        }
+    
+    
+        const delta_rate                = tangki_1.prop.hourly_rate * integrator.timestep / 3600;
+        const stock_is_empty            = (tangki_1.prop.stock - delta_rate) < 0;
+        tangki_1.prop.is_discharging    = false;
+    
+        if (stock_is_empty) {
+            reservoir.prop.delivery_source = null;
+            tangki_1.prop.is_discharging   = false;
+            tangki_1.prop.target_tank      = "null";
+            return 1;
+        }
+    
+        if (!tangki_1.in_schedule()) {
+            return 1;
+        }
+    
+        if (tangki_1.in_analysis()) {
+            return 1;
+        }
+    
+        reservoir.prop.delivery_source  = tangki_1.name;
+        tangki_1.prop.target_tank       = reservoir.name;
+        transact(delta_rate);
+    
+        return 0;
+    }
+    
 
+    function tangki_2_update() {
+        function deliver_schedule_flow(delta_rate){
+            const test_date     = integrator.get_date_time();
+            for (const delivery of schedule.deliveries) {
+                if (test_date.isAfter(delivery.transport_start) && (delivery.volume_delivered < delivery.target_volume)) {
+                    if ((delivery.volume_delivered + delta_rate) >= delivery.target_volume) {
+                        delivery.volume_delivered = delivery.target_volume;
+                        // console.log("volume delivered!");
+                    }
+                    else {
+                        delivery.volume_delivered += delta_rate;
+                    }
+                    break;
+                }
+    
+            }
+        }    
+    
+    
+        function transact(delta_rate) {
+            reservoir.prop.stock        += delta_rate;
+            tangki_2.prop.stock         -= delta_rate;
+            tangki_2.prop.total_outflow += delta_rate;
+            deliver_schedule_flow(delta_rate);
+            tangki_2.prop.is_discharging = true;
+        }
+    
+    
+        const delta_rate                = tangki_2.prop.hourly_rate * integrator.timestep / 3600;
+        const stock_is_empty            = (tangki_2.prop.stock - delta_rate) < 0;
+        tangki_2.prop.is_discharging    = false;
+    
+        if (stock_is_empty) {
+            reservoir.prop.delivery_source = null;
+            tangki_2.prop.is_discharging   = false;
+            tangki_2.prop.target_tank      = "null";
+            return 1;
+        }
+    
+        if (!tangki_2.in_schedule()) {
+            return 1;
+        }
+    
+        if (tangki_2.in_analysis()) {
+            return 1;
+        }
+    
+        reservoir.prop.delivery_source  = tangki_2.name;
+        tangki_2.prop.target_tank       = reservoir.name;
+        transact(delta_rate);
+    
+        return 0;
+    };
+    
+    
+    function delivery_update() {
+        const in_analysis = schedule.is_in_analysis();
+        const in_schedule = schedule.is_in_schedule();
+    
+        if (in_analysis) {
+            tangki_1.prop.in_schedule = false;
+            tangki_2.prop.in_schedule = false;
+    
+            if (tangki_1.in_analysis() || tangki_2.in_analysis()) {
+                return 0;
+            }
+    
+            if (tangki_1.prop.stock/tangki_1.prop.capacity > tangki_2.prop.stock/tangki_2.prop.capacity) {
+                tangki_1.prop.in_analysis = true;
+                schedule.set_current_transport_end(tangki_1.prop.hourly_rate);
+                return 0;
+            }
+            else {
+                tangki_2.prop.in_analysis = true;
+                schedule.set_current_transport_end(tangki_2.prop.hourly_rate);
+                return 0;
+            }
+        } 
+    
+        if (in_schedule) {
+            if (tangki_1.in_schedule() || tangki_2.in_schedule()) {
+                return 0;
+            }
+    
+            if (tangki_1.in_analysis()) {
+                tangki_1.prop.in_schedule = true;
+                tangki_1.prop.in_analysis = false;
+                return 0;
+            }
+    
+            if (tangki_2.in_analysis()) {
+                tangki_2.prop.in_schedule = true;
+                tangki_2.prop.in_analysis = false;
+                return 0;
+            }
+        }
+        else {
+            tangki_1.prop.in_schedule = false;
+            tangki_2.prop.in_schedule = false;
+            return 0;
+        }
+    
+    
+    }
+    
+    
+    // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+    // SIMULATION SEQUENCE
+    // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+    simulation.add_update("kilang_1_update", kilang_1_update);
+    simulation.set_active("kilang_1_update", true);
+    
+    simulation.add_update("tangki_1_update", tangki_1_update);
+    simulation.set_active("tangki_1_update", true);
+    
+    simulation.add_update("tangki_2_update", tangki_2_update);
+    simulation.set_active("tangki_2_update", true);
+    
+    // activate states
+    simulation.add_update("delivery_update", delivery_update)
+    simulation.set_active("delivery_update", true)
+    
 
+    integrator.run_simulation();
 }
-
-
-
-// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
-// SIMULATION SEQUENCE
-// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
-
-simulation.add_update("kilang_1_update", kilang_1_update);
-simulation.set_active("kilang_1_update", true);
-
-simulation.add_update("tangki_1_update", tangki_1_update);
-simulation.set_active("tangki_1_update", true);
-
-simulation.add_update("tangki_2_update", tangki_2_update);
-simulation.set_active("tangki_2_update", true);
-
-// activate states
-simulation.add_update("delivery_update", delivery_update)
-simulation.set_active("delivery_update", true)
-
 
 
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
@@ -1017,15 +1038,26 @@ function plot_history() {
             orientation: 'h',
             x: 1.,
             y: 1.2,
-            xanchor: "right"
+            xanchor: "right",
+            font: {
+                family: "monospace", // Or any other font family
+                size: 12,
+                color: "grey"
+              }
         },
         dragmode        : false,
         title           : {
-            text        : "Stock History",
+            text        : "Simulated Stock",
             standoff    : 0,
             font        : {
                 size    : 18,
             }
+        },
+        margin    : {
+            // l : 0,
+            // r : 0,
+            b : 70,
+            t : 110,
         },
         xaxis: {
             tickmode: 'linear',
@@ -1038,6 +1070,11 @@ function plot_history() {
             showline        : true,
             linecolor       : 'rgba(100, 100, 100, 0.5)', // Red line color
             linewidth       : 2, 
+            tickfont            : {
+                family      : "monospace",
+                size        : 12,
+                color       : "gray"
+            }
         },
         yaxis: {
             title           : 'Stock',
@@ -1051,7 +1088,12 @@ function plot_history() {
             linecolor       : 'rgba(100, 100, 100, 0.5)', // Red line color
             linewidth       : 2, 
             ticksuffix      : '  ',
-            tickprefix      : '    '
+            tickprefix      : '    ',
+            tickfont            : {
+                family      : "monospace",
+                size        : 12,
+                color       : "gray"
+            }
         }
     };
     
@@ -1130,14 +1172,14 @@ function plot_history() {
     const tangki_1_history = tangki_1.get_log_history();
     let tangki_1_trace = {
         showlegend  : true,
-        name        : "Stock Tangki 1",
+        name        : "Stock Tangki-1",
         x           : tangki_1_history.timestamps,
         y           : tangki_1_history.stocks.map(val => Math.ceil(val)),
         mode        : 'lines',
         type        : 'scatter',
         line        : {
-            color: 'ff0066',
-            width: 2,
+            color: 'orange',
+            width: 3,
         },
         hovertemplate: '%{y:.0f}' 
     };
@@ -1177,14 +1219,14 @@ function plot_history() {
 
     let tangki_2_stocks_trace = {
         showlegend  : true,
-        name        : "Stock Tangki 2",
+        name        : "Stock Tangki-2",
         x           : tangki_2_history.timestamps,
         y           : tangki_2_history.stocks.map(val => Math.ceil(val)),
         mode        : 'lines',
         type        : 'scatter',
         line        : {
-            color: '#bb332d',
-            width: 2,
+            color: 'tomato',
+            width: 3,
         },
         hovertemplate: '%{y:.0f}' 
     };
@@ -1204,8 +1246,8 @@ function plot_history() {
         mode        : 'lines',
         type        : 'scatter',
         line        : {
-            color: '#22aa25',
-            width: 2,
+            color: '#33cc33',
+            width: 3,
         },
         hovertemplate: '%{y:.0f}' 
     };
@@ -1229,6 +1271,7 @@ function plot_gantt_chart() {
         let  minute_start        = 0;
         let  minute_end          = 0;
         let  start_rate          = 0;
+        let  unit_time           = 0;
         let  timestamp_start     = null;
         let  timestamp_end       = null;
         let  outflow_target      = "";
@@ -1246,7 +1289,7 @@ function plot_gantt_chart() {
         const log_length          = log.indices.length;
         for (let i = 0; i < log_length; i++) {
             let rate              = log.hourly_rates[i];
-            let unit_time         = i * 60;
+            unit_time         = i * 60;
             let is_discharging    = log.is_dischargings[i];
             let total_outflow     = log.total_outflows[i];
             let outflow_target    = log.target_tanks[i];
@@ -1290,7 +1333,7 @@ function plot_gantt_chart() {
         
         if (tank_gantt.length == 0) {
             interval_started        = false;
-            unit_end            = unit_time;
+            unit_end                = unit_time;
             minute_end              = unit_end/60;
             timestamp_end           = integrator.init_time.add(minute_end, "minute_end");
             unit_duration           = unit_end - unit_start - 1;
@@ -1328,9 +1371,15 @@ function plot_gantt_chart() {
         height          : 400,
         width           : 1000,
         plot_bgcolor    : '#ffffff',
+        margin    : {
+            // l : 0,
+            // r : 0,
+            b : 80,
+            t : 50,
+        },
         title           : {
             text        : "Outflow Gantt Chart",
-            standoff    : -100,
+            // standoff    : -100,
             font        : {
                 size    : 18,
             }
@@ -1351,7 +1400,7 @@ function plot_gantt_chart() {
             ticklen             : 6,
             range               : [1,31],
             tickfont            : {
-                family      : "Arial",
+                family      : "monospace",
                 size        : 12,
                 color       : "gray"
             }
@@ -1365,9 +1414,9 @@ function plot_gantt_chart() {
             showticklabels  : true,
             ticksuffix      : '  ',
             tickfont        : {
-                family  : "Arial",
-                // size    : 16,
-                // color   : "gray"
+                family  : "monospace",
+                size    : 12,
+                color   : "gray"
             }
 
         }
@@ -1382,9 +1431,9 @@ function plot_gantt_chart() {
     const target_tank_map = {
         "kilang_1"  : "orchid",
         "tangki_1"  : "orange",
-        "tangki_2"  : "orchid",
-        "reservoir" : "tomato",
-        "null"      : "f5f5f5"
+        "tangki_2"  : "tomato",
+        "reservoir" : "#33cc33",
+        "null"      : "#f5f5f5"
     };
     
     const bar_outline_map = {
@@ -1404,6 +1453,7 @@ function plot_gantt_chart() {
     for (const tank_name of sorted_tank_names) {
         const gdicts        = grouped_df_dict[tank_name];
         const tank_df       = new dfd.DataFrame(gdicts);
+        tank_df.print();
         const colors        = tank_df.target.values.map(target => target_tank_map[target] || "white");
         const outlines      = tank_df.target.values.map(target => bar_outline_map[target] || 0);
         const hovertexts    = [];
@@ -1413,7 +1463,7 @@ function plot_gantt_chart() {
         // console.log(tank_name)
         // console.log(tank_df.target.values);
         // console.log(colors);
-        tank_df.print();
+        // tank_df.print();
 
         for (const vol of volume_values) {
             if (vol < 10) {
@@ -1428,16 +1478,19 @@ function plot_gantt_chart() {
         for (let i = 0; i < gdicts.length; i++) {
             const gdict         = gdicts[i];
             const voltext       = volume_texts[i];
-            const target        = gdict.target;
-            const start         = integrator.timestamp_from_unit(gdict.start);
-            const end           = integrator.timestamp_from_unit(gdict.end);
-            const duration      = integrator.duration_from_unit(gdict.duration);
+            let target        = gdict.target;
+            let start         = integrator.timestamp_from_unit(gdict.start);
+            let end           = integrator.timestamp_from_unit(gdict.end);
+            let duration      = integrator.duration_from_unit(gdict.duration);
+            if (target == 'reservoir') {
+                target = 'delivery';
+            }
             let info            = "";
             if (target == "null") {
                 info          = `No target <br>start    ${start} <br>end      ${end}<br>duration ${duration}`;               
             }
             else {
-                info          = `deliver ${voltext} to ${target} <br>start    ${start} <br>end      ${end}<br>duration ${duration}`;
+                info          = `send ${voltext} to ${target} <br>start    ${start} <br>end      ${end}<br>duration ${duration}`;
             }
             hovertexts.push(info); 
         }
@@ -1482,6 +1535,10 @@ function plot_gantt_chart() {
 
 
 function plot_table() {
+    const display_config     = {
+        displayModeBar  : false,
+        responsive      : false
+    };
     let layout   = {
         // autosize  : true,
         height: document.documentElement.clientHeight * 1.1,
@@ -1490,7 +1547,7 @@ function plot_table() {
             l : 20,
             r : 20,
             b : 0,
-            t : 50,
+            t : 70,
         },
         title           : {
             text        : "Schedule Table",
@@ -1519,6 +1576,9 @@ function plot_table() {
 
         for (const log of df) {
             let target      = log.target;
+            if (target == "reservoir") {
+                target = "delivery";
+            }
             let start       = integrator.timestamp_from_unit(log.start);
             let end         = integrator.timestamp_from_unit(log.end);
             let duration    = integrator.duration_from_unit(log.duration);
@@ -1563,20 +1623,49 @@ function plot_table() {
     }];
 
     const div_name = "table-plot";
-    Plotly.newPlot(div_name, data, layout); 
+    Plotly.newPlot(div_name, data, layout, display_config); 
 }
 
+
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
-// RUN SIMULATION
+// TRIGGER
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
+function startLoadingAnim() {
+
+}
+
+
+function stopLoadingAnim(intervalId) {
+
+}
+
+
 document.getElementById('logButton').addEventListener('click', function() {
-    const inputElement  = document.getElementById("textInput");
-    const inputText     = inputElement.value;
-    const cleansed_list = cleanseInput(inputText);
-    inputElement.value  = cleansed_list.join('\n');
-    // integrator.run_simulation();
-    // plot_history();
-    // plot_gantt_chart();
-    // plot_table();
+    
+    setTimeout(() => {
+        let simulateButton           = document.getElementById('logButton');
+        simulateButton.innerHTML     = 'Simulating...';
+        simulateButton.disabled      = true;
+
+        // Use another setTimeout to push the loop to the next event loop
+        setTimeout(() => {
+            const inputElement      = document.getElementById("textInput");
+            const inputText         = inputElement.value;
+            const cleansed_list     = cleanseInput(inputText);
+            inputElement.value      = cleansed_list.join('\n');
+            schedule.schedule_dict = cleansed_list;
+            resetSchedule();
+        
+            runSimulation(simulateButton);
+        
+            plot_history();
+            plot_gantt_chart();
+            plot_table();
+           
+            // Reset button after loop
+            simulateButton.innerHTML     = 'Simulate Schedule';
+            simulateButton.disabled      = true;
+        }, 500);
+    }, 100);
 });
 

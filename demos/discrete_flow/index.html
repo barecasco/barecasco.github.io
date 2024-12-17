@@ -98,9 +98,11 @@
         }
         .descriptionColumn{
             text-align: left;
+            /* font-family: monospace; */
             margin-left:10px;
             margin-right:10px;
-            width: 500px;
+            width: 600px;
+            font-size: 14px;
         }
         .inputColumn{
             text-align: center;
@@ -108,8 +110,9 @@
         }
         #textInput {
             width: 300px;
-            min-height: 150px;
+            min-height: 370px;
             resize: vertical;
+            margin-top: 15px;
             margin-bottom: 10px;
             padding: 10px;
             box-sizing: border-box;
@@ -129,21 +132,73 @@
 <body>
     <div class="simControlContainer">
         <div class="descriptionColumn">
-            Ini adalah sebuah cerita Ini adalah sebuah cerita 
-            Ini adalah sebuah cerita Ini adalah sebuah cerita 
-            Ini adalah sebuah cerita Ini adalah sebuah cerita 
+            <p>
+                This is a simple simulation of an end portion of a refinery's production process. 
+                Three tanks are included: the refinery tank, Kilang-1, 
+                and the delivery buffer tanks, Tangki-1 and Tangki-2. 
+                Each tank has its own flow rate and capacity. 
+                Kilang-1 sends refined product to Tangki-1 and Tangki-2, 
+                where it is analyzed before delivery to customers.
+            </p>
+            <p>
+                A monthly delivery schedule is planned based on customer orders. 
+                The schedule specifies the product volume and expected delivery time. 
+                Delivery can be made from either Tangki-1 or Tangki-2, 
+                whichever tank has analyzed stock ready for shipment.
+                The delivery schedule is input in the box to the right. 
+                "d15 h1 m0 v3800" represents an expected delivery of 3800 units on the 15th at 1:00 AM. 
+                <b>The simulation determines the schedule's feasibility based on the delivery outcome</b> and, 
+                if feasible, displays predicted events in graphs and a table.
+            </p>
+            <p>
+                The constraints are as follows:
+            </p>
+            <ol>
+                <li>
+                    Kilang-1 continuously delivers product to Tangki-1 and Tangki-2, one at a time, 
+                    stopping only when neither tank can receive more product.
+                </li>
+                <li>
+                    A buffer tank can only receive product if it is not undergoing analysis, 
+                    not delivering product, 
+                    and not full.
+                </li>
+                <li>
+                    A 10-hour analysis window is required for each buffer tank before delivery.
+                </li>
+                <li>
+                    Deliveries must use only one buffer tank. 
+                    If an order exceeds the tank's capacity, 
+                    the delivery schedule must be split.
+                </li>
+                <li>
+                    All flow events (between tanks and during deliveries) require time to complete, 
+                    based on the flow rate.
+                </li>
+                <li>
+                    Tangki-1 and Tangki-2 have flow rates of 250 units per hour.
+                </li>
+                <li>
+                    Tangki-1 has a capacity of 5600 units, while Tangki-2 has a capacity of 10000 units.
+                </li>
+            </ol>
+            The app will attempt to reset the schedule to its default values 
+            if any input constraints are violated. 
+            Reload the page to reset to the default schedule.
         </div>
         <div class="inputColumn">
             <textarea id="textInput" placeholder="Enter schedule here"></textarea>
             <br>
             <button id="logButton">Simulate Schedule</button>
+            <br>
+            <div id="loading-text"></div>
         </div>
     </div>
     <div id="disperse-plot" style="display: flex; justify-content: center; align-items: center;"></div>
     <div id="gantt-plot" style="display: flex; justify-content: center; align-items: center;"></div>
     <div id="table-plot" style="display: flex; justify-content: center; align-items: center;"></div>
-    <div id="table-tangki_1-plot" style="display: flex; justify-content: center; align-items: center;"></div>
-    <div id="table-tangki_2-plot" style="display: flex; justify-content: center; align-items: center;"></div>
+    <div id="table-tangki-1-plot" style="display: flex; justify-content: center; align-items: center;"></div>
+    <div id="table-tangki-2-plot" style="display: flex; justify-content: center; align-items: center;"></div>
     <script src="app.js" charset="utf-8"></script>
 </body>
 
