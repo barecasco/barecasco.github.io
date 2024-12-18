@@ -94,7 +94,7 @@ function reviewMinute(parsed) {
 function reviewVolume(parsed) {
     const volume        = parsed.volume;
     const default_vol   = 1000;
-    const max_vol       = 10000; //based on the largest tank capacity
+    const max_vol       = 9000; //based on the largest tank capacity
 
     if (volume) {
         if (volume < 0) {
@@ -144,11 +144,11 @@ function cleanseInput(input_string) {
 
 const inputElement = document.getElementById("textInput");
 inputElement.value = "\
-d8 h1 m0 v3600\n\
-d12 h1 m0 v2000\n\
-d15 h1 m0 v3800\n\
-d20 h1 m0 v4000\n\
-d27 h1 m0 v3600\n\
+d9 h1 m0 v3600\n\
+d13 h1 m0 v3000\n\
+d16 h1 m0 v3400\n\
+d20 h1 m0 v3000\n\
+d25 h1 m0 v4000\n\
 ";
 
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + 
@@ -394,11 +394,11 @@ const Integrator = function(new_config) {
 // SCHEDULE OBJECTS
 const schedule                  = {};
 schedule.schedule_dict          = [
-    "d8 h1 m0 v3600",
-    "d12 h1 m0 v2000",
-    "d15 h1 m0 v3800",
-    "d20 h1 m0 v4000",
-    "d27 h1 m0 v3600"
+    "d9 h1 m0 v3600",
+    "d13 h1 m0 v3000",
+    "d16 h1 m0 v3400",
+    "d20 h1 m0 v3000",
+    "d25 h1 m0 v4000"
 ];
 
 // HERE
@@ -408,7 +408,7 @@ function resetSchedule() {
     
     schedule.prop       = {
         "analysis_run_time" : 60 * 60 * 10,
-        "delivery_rate"     : 250.0  
+        "delivery_rate"     : 260.0  
     };
     
     for (const line of schedule.schedule_dict) {
@@ -513,7 +513,7 @@ function runSimulation() {
     
     kilang_1.prop           = {
         "timestamp"         : integrator.get_date_time_string(),
-        "hourly_rate"       : 47.0,
+        "hourly_rate"       : 50.0,
         "total_outflow"     : 0,
         "outflow"           : 0,
         "stock"             : 0,
@@ -577,8 +577,8 @@ function runSimulation() {
     tangki_1.prop           = {
         "timestamp"         : integrator.get_date_time_string(),
         "stock"             : 0,
-        "capacity"          : 5600,
-        "hourly_rate"       : 250.0,
+        "capacity"          : 6000,
+        "hourly_rate"       : 260.0,
         "is_discharging"    : false,
         "in_schedule"       : false,
         "in_analysis"       : false,
@@ -658,8 +658,8 @@ function runSimulation() {
     tangki_2.prop           = {
         "timestamp"         : integrator.get_date_time_string(),
         "stock"             : 0,
-        "capacity"          : 10000,
-        "hourly_rate"       : 250.0,
+        "capacity"          : 9000,
+        "hourly_rate"       : 260.0,
         "is_discharging"    : false,
         "in_analysis"       : false,
         "in_schedule"       : false,
@@ -1632,16 +1632,6 @@ function plot_table() {
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 // TRIGGER
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
-function startLoadingAnim() {
-
-}
-
-
-function stopLoadingAnim(intervalId) {
-
-}
-
-
 document.getElementById('logButton').addEventListener('click', function() {
     
     setTimeout(() => {
