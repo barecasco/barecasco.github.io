@@ -1471,7 +1471,7 @@ function plot_gantt_chart() {
                 volume_texts.push("");
             }
             else {
-                volume_texts.push(Math.ceil(vol/100) * 100);
+                volume_texts.push(Math.ceil(vol/10) * 10);
             }
         }
         
@@ -1584,7 +1584,8 @@ function plot_table() {
             let end         = integrator.timestamp_from_unit(log.end);
             let duration    = integrator.duration_from_unit(log.duration);
 
-            let volume      = Math.ceil(log.volume/100) * 100;
+            let volume      = Math.ceil(log.volume/10) * 10;
+            // let volume      = log.volume;
             if (target == "null") {
                 continue;
             }
@@ -1665,7 +1666,7 @@ document.getElementById('logButton').addEventListener('click', function() {
            
             // Reset button after loop
             simulateButton.innerHTML     = 'Simulate Schedule';
-            simulateButton.disabled      = true;
+            simulateButton.disabled      = false;
         }, 500);
     }, 100);
 });
