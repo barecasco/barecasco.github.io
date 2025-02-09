@@ -7,10 +7,10 @@ renderer.setSize(window.innerWidth, window.innerHeight);
 document.body.appendChild(renderer.domElement);
 
 // Set camera position
-camera.position.z = 80;
+camera.position.z = 90;
 
 // Define boundary walls
-let WALL_POSITION = 30;
+let WALL_POSITION = 25;
 const walls1 = new THREE.LineSegments(
     new THREE.BufferGeometry(),
     new THREE.LineBasicMaterial({ color: 0x5995f7 })
@@ -20,7 +20,7 @@ const walls2 = new THREE.LineSegments(
     new THREE.LineBasicMaterial({ color: 0x5995f7 })
 );
 
-// Create wall vertices (rectangle)
+// wall vertices (rectangle)
 const wallVertices1 = new Float32Array([
     // Left wall
     -WALL_POSITION, -WALL_POSITION, 0,
@@ -36,7 +36,8 @@ const wallVertices1 = new Float32Array([
     WALL_POSITION, -WALL_POSITION, 0,
 ]);
 
-WALL_POSITION = 30.5;
+WALL_POSITION = 25.5;
+
 const wallVertices2 = new Float32Array([
     // Left wall
     -WALL_POSITION, -WALL_POSITION, 0,
@@ -51,12 +52,14 @@ const wallVertices2 = new Float32Array([
     -WALL_POSITION, -WALL_POSITION, 0,
     WALL_POSITION, -WALL_POSITION, 0,
 ]);
-WALL_POSITION = 30
-;
+
+WALL_POSITION = 25;
+
 walls1.geometry.setAttribute('position', new THREE.BufferAttribute(wallVertices1, 3));
 walls2.geometry.setAttribute('position', new THREE.BufferAttribute(wallVertices2, 3));
 scene.add(walls1);
 scene.add(walls2);
+
 
 // Circle properties
 const circleRadius      = 0.5;
@@ -81,7 +84,7 @@ let nextCeil            = 0;
 
 // Create circles and their trails
 for (let i = 0; i < 3; i++) {
-    const init          = {
+    const init = {
         position : {
             x : (Math.random() - 0.5) * WALL_POSITION * 2,
             y : (Math.random() - 0.5) * WALL_POSITION * 2
@@ -161,14 +164,14 @@ for (let i = 0; i < 3; i++) {
 function createTrailPoint(position, color) {
     const geometry = new THREE.CircleGeometry(circleRadius, 16);
     const material = new THREE.MeshBasicMaterial({ 
-        color: color,
-        transparent: true,
-        opacity: 0.6
+        color       : color,
+        transparent : true,
+        opacity     : 0.6
     });
-    const point = new THREE.Mesh(geometry, material);
+    const point         = new THREE.Mesh(geometry, material);
     point.position.copy(position);
-    point.position.z = 0;
-    point.createdAt = Date.now();
+    point.position.z    = 0;
+    point.createdAt     = Date.now();
     scene.add(point);
     return point;
 }
@@ -242,6 +245,37 @@ function animate() {
     nextCeil = Math.ceil(currentTime/trailTimeStep);
     renderer.render(scene, camera);
 }
+
+
+function updateOverlayText() {
+    const textElement = document.getElementById('info');
+    const canvasRect = renderer.domElement.getBoundingClientRect();
+    
+    // Convert 3D position to screen coordinates
+    const vector = new THREE.Vector3();
+    vector.setFromMatrixPosition(yourTextMesh.matrixWorld);
+    vector.project(camera);
+    
+    const x     = (vector.x * 0.5 + 0.5) * canvasRect.width;
+    const y     = (-vector.y * 0.5 + 0.5) * canvasRect.height;
+    
+    // Set position
+    textElement.style.left      = `${x}px`;
+    textElement.style.top       = `${y}px`;
+    
+    // Set responsive font size
+    const viewportWidth         = window.innerWidth;
+    const baseFontSize          = 16; 
+    const scaleFactor           = viewportWidth / 1920;
+    const responsiveFontSize    = Math.max(
+        baseFontSize * scaleFactor, 
+        12
+    );
+    
+    textElement.style.fontSize = `${responsiveFontSize}px`;
+}
+
+
 
 // Handle window resize
 window.addEventListener('resize', () => {
