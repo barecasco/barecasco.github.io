@@ -3,10 +3,11 @@ const camera         = new THREE.PerspectiveCamera(75, window.innerWidth / windo
 const renderer       = new THREE.WebGLRenderer();
 renderer.sortObjects = false;
 renderer.setSize(window.innerWidth, window.innerHeight);
+// document.getElementById("content").appendChild(renderer.domElement);
 document.body.appendChild(renderer.domElement);
 
 // Set camera position
-camera.position.z = 50;
+camera.position.z = 80;
 
 // Define boundary walls
 let WALL_POSITION = 30;
