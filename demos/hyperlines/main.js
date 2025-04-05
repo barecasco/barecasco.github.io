@@ -19,195 +19,28 @@ container.appendChild(renderer.domElement);
 /// ----------------------------------------------------------------------------------------------
 /// MAIN CAMERA
 const camera         = new tri.PerspectiveCamera(50, window.innerWidth / window.innerHeight, 0.1, 1000);
-camera.position.set(70, 70, 120);
+camera.position.set(10, 10, 20);
 
 
 /// ----------------------------------------------------------------------------------------------
 /// CONTROLLER
-const controls = new OrbitControls( camera, renderer.domElement );
+const controls      = new OrbitControls( camera, renderer.domElement );
 controls.enableZoom = false;
-// const controls          = new FirstPersonControls( camera, renderer.domElement );
-// controls.movementSpeed  = 7;
-// controls.lookSpeed      = 0.1;
+
 const clock = new tri.Clock();
 
-
-/// ----------------------------------------------------------------------------------------------
-/// WALLS
-// Define boundary walls
-let WALL_POSITION = 25;
-
-// const walls1 = new tri.LineSegments(
-//     new tri.BufferGeometry(),
-//     new tri.LineBasicMaterial({ color: 0x5995f7 })
-// );
-// const walls2 = new tri.LineSegments(
-//     new tri.BufferGeometry(),
-//     new tri.LineBasicMaterial({ color: 0x5995f7 })
-// );
-
-// // wall vertices (rectangle)
-// const wallVertices1 = new Float32Array([
-//     // Left wall
-//     -WALL_POSITION, -WALL_POSITION, 0,
-//     -WALL_POSITION, WALL_POSITION, 0,
-//     // Right wall
-//     WALL_POSITION, -WALL_POSITION, 0,
-//     WALL_POSITION, WALL_POSITION, 0,
-//     // Top wall
-//     -WALL_POSITION, WALL_POSITION, 0,
-//     WALL_POSITION, WALL_POSITION, 0,
-//     // Bottom wall
-//     -WALL_POSITION, -WALL_POSITION, 0,
-//     WALL_POSITION, -WALL_POSITION, 0,
-// ]);
-
-// WALL_POSITION = 25.5;
-
-// const wallVertices2 = new Float32Array([
-//     // Left wall
-//     -WALL_POSITION, -WALL_POSITION, 0,
-//     -WALL_POSITION, WALL_POSITION, 0,
-//     // Right wall
-//     WALL_POSITION, -WALL_POSITION, 0,
-//     WALL_POSITION, WALL_POSITION, 0,
-//     // Top wall
-//     -WALL_POSITION, WALL_POSITION, 0,
-//     WALL_POSITION, WALL_POSITION, 0,
-//     // Bottom wall
-//     -WALL_POSITION, -WALL_POSITION, 0,
-//     WALL_POSITION, -WALL_POSITION, 0,
-// ]);
-
-// WALL_POSITION = 25;
-
-// walls1.geometry.setAttribute('position', new tri.BufferAttribute(wallVertices1, 3));
-// walls2.geometry.setAttribute('position', new tri.BufferAttribute(wallVertices2, 3));
-// scene.add(walls1);
-// scene.add(walls2);
-
-
-/// ----------------------------------------------------------------------------------------------
-/// GRIDS
-const grid_xyd                  = new tri.GridHelper(50, 3);
-grid_xyd.position.y              = -WALL_POSITION + 0.1;
-grid_xyd.material.opacity        = 0.5;
-grid_xyd.material.transparent    = true;
-scene.add( grid_xyd );
-
-const grid_xyu                  = new tri.GridHelper(50, 1);
-grid_xyu.position.y              = WALL_POSITION;
-grid_xyu.material.opacity        = 0.25;
-grid_xyu.material.transparent    = true;
-scene.add( grid_xyu );
-
-const grid_yzd                  = new tri.GridHelper(50, 3);
-grid_yzd.rotation.x              = Math.PI/2;
-grid_yzd.position.z             = -WALL_POSITION + 0.1;
-grid_yzd.material.opacity       = 0.5;
-grid_yzd.material.transparent   = true;
-scene.add( grid_yzd );
-
-const grid_yzu                  = new tri.GridHelper(50, 1);
-grid_yzu.rotation.x              = Math.PI/2;
-grid_yzu.position.z             = WALL_POSITION;
-grid_yzu.material.opacity       = 0.25;
-grid_yzu.material.transparent   = true;
-scene.add( grid_yzu );
-
-const grid_xzd                  = new tri.GridHelper(50, 3);
-grid_xzd.rotation.z             = Math.PI/2;
-grid_xzd.position.x             = -WALL_POSITION + 0.1;
-grid_xzd.material.opacity       = 0.5;
-grid_xzd.material.transparent   = true;
-scene.add( grid_xzd );
-
-const grid_xzu                  = new tri.GridHelper(50, 1);
-grid_xzu.rotation.z             = Math.PI/2;
-grid_xzu.position.x             = WALL_POSITION;
-grid_xzu.material.opacity       = 0.25;
-grid_xzu.material.transparent   = true;
-scene.add( grid_xzu );
-
-
-/// WALLS
-const wall_mat = new tri.MeshStandardMaterial({ 
-    color: 0x444444, 
-    side: tri.DoubleSide 
-});
-
-// Enable shadow receiving for walls
-const wall_geom = new tri.PlaneGeometry(50, 50);
-const wall_xy = new tri.Mesh(wall_geom, wall_mat);
-wall_xy.rotation.x = Math.PI/2;
-wall_xy.position.y = -WALL_POSITION;
-wall_xy.receiveShadow = true; // Add this
-scene.add(wall_xy);
-
-const wall_xz = new tri.Mesh(wall_geom, wall_mat);
-wall_xz.position.z = -WALL_POSITION;
-wall_xz.receiveShadow = true; // Add this
-scene.add(wall_xz);
-
-const wall_yz = new tri.Mesh(wall_geom, wall_mat);
-wall_yz.rotation.y = Math.PI/2;
-wall_yz.position.x = -WALL_POSITION;
-wall_yz.receiveShadow = true; // Add this
-scene.add(wall_yz);
 
 
 // Add an ambient light to provide base illumination
 const ambientLight = new tri.AmbientLight(0x333333); // soft white light
 scene.add(ambientLight);
 
-// Ensure renderer is set up for shadows
-// renderer.shadowMap.enabled = true;
-// renderer.shadowMap.type = tri.PCFSoftShadowMap; // Optional: for softer shadows
 
 
 /// ----------------------------------------------------------------------------------------------
-/// SPHERES
-// Circle properties
-const circleRadius      = 0.5;
-const coronaRadius      = 1.4;
-const auraRadius        = 3;
-const wallThres         = auraRadius + 1;
-const circleSegments    = 16;
-const coronaOpacity     = 0.7;
-const auraOpacity       = 0.3;
-const bulbIntensity     = 200;
-const circleColors      = [0xe8f2fc, 0xe8f2fc, 0xe8f2fc];
-const auraColors        = [0x75a4f0, 0x75a4f0, 0x75a4f0];
-const circles           = [];
-const coronas           = [];
-const auras             = [];
-const trails            = [];
-const initials          = [];
-const baseTime          = Date.now();
-let currentTime         = Date.now() - baseTime;
-const trailTimeStep     = 100;
-const trailDuration     = 1200;
-let currentFloor        = 0;
-let nextCeil            = 0;
+/// LINES
 
-// Create circles and their trails
-for (let i = 0; i < 3; i++) {
-    const init = {
-        position : {
-            x : (Math.random() - 0.5) * WALL_POSITION * 2,
-            y : (Math.random() - 0.5) * WALL_POSITION * 2,
-            z : (Math.random() - 0.5) * WALL_POSITION * 2
-        },
-        velocity: {
-            x : (Math.random() - 0.5) * 0.3 * (i+1),
-            y : (Math.random() - 0.5) * 0.3 * (i+1),
-            z : (Math.random() - 0.5) * 0.3 * (i+1)
-        }
-    }
-        
-    initials.push(init);
-}
-
+const lineHight         = 10;
 
 for (let i = 0; i < 3; i++) {
     const geometry      = new tri.SphereGeometry(coronaRadius, circleSegments, circleSegments);
@@ -281,20 +114,6 @@ for (let i = 0; i < 3; i++) {
     trails.push([]);
 }
 
-// Function to create trail point
-function createTrailPoint(position, color) {
-    const geometry = new tri.SphereGeometry(circleRadius, 16, 16);
-    const material = new tri.MeshBasicMaterial({ 
-        color       : color,
-        transparent : true,
-        opacity     : 0.6
-    });
-    const point         = new tri.Mesh(geometry, material);
-    point.position.copy(position);
-    point.createdAt     = Date.now();
-    scene.add(point);
-    return point;
-}
 
 // Animation loop
 function animate() {
@@ -351,8 +170,8 @@ function animate() {
             trails[index].push(trailPoint);
 
             const scaleSet = 1 + Math.random() * 0.3;
-            auras[index].scale.set(scaleSet, scaleSet ,scaleSet);
-            coronas[index].scale.set(scaleSet, scaleSet ,scaleSet);
+            auras[index].scale.set(scaleSet, scaleSet ,1);
+            coronas[index].scale.set(scaleSet, scaleSet ,1);
             circle.intensity = bulbIntensity * scaleSet * 2;
 
             const opacMod      = (1 + (-0.5 + Math.random() * 0.5))

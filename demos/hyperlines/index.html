@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Glowing Orbs</title>
+    <style>
+        body { margin: 0; }
+        
+        #plot-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="plot-container"></div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
