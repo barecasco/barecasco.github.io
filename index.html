@@ -5,26 +5,31 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agra's Trinkets</title>
 <style>
-  body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #F8F5EC; }
-  .container { max-width: 800px; margin: auto; overflow: hidden; }
-  header { background: #F8F5EC; color: #402600; padding-top: 30px; min-height: 70px; border-bottom: #e2ded2 3px solid; }
+body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #F8F5EC; }
+  .container { max-width: 800px; margin: auto; overflow: hidden; line-height: 1.4em; font-size: 17px;}
+  .description-self { padding: 1px; width: 79%; margin: auto;}  
+  .description { padding: 1px; width: 79%; margin: auto;}
+  header { background: #F8F5EC; color: #402600; padding-top: 30px; min-height: 40px;}
   header a { color: #F8F5EC; text-decoration: none; text-transform: uppercase; font-size: 16px; }
   header ul { padding: 0; list-style: none; }
   header li { display: inline; padding: 0 20px 0 20px; }
   header #branding { float: left; }
   header #branding h1 { margin: 0; }
   header nav { float: right; margin-top: 10px; }
-  header .highlight, header .current a {font-weight: bold; padding: 0.5em;}
+  header .highlight, header .current a {font-weight: bold; padding: 0.5em; line-height: 1.2;}
   header a:hover { color: #F8F5EC; font-weight: bold; }
-  .profile { padding: 30px; background: #F8F5EC; }
+  .profile { padding: 10px; background: #F8F5EC; }
   .profile img { max-width: 150px; margin: 0 auto; display: block; }
   .profile h2 { text-align: center; color: #222222; }
   .profile p { text-align: left; color: #222222; }
   footer { background: #FFF9C4; color: #008080; text-align: center; padding: 10px; position: fixed; left: 0; bottom: 0; width: 100%; }
   ul li {
-  line-height: 1.5; 
-  margin-bottom: 10px;
-}
+    line-height: 1.5; 
+    margin-bottom: 10px;
+  }
+  h3 {
+    margin-bottom: -5px;
+  }
 </style>
 </head>
 <body>
@@ -37,16 +42,60 @@
   </header>
 
   <section class="profile">
+
     <div class="container">
-      <div class="title"><h3>HTML5 Canvas - JavaScript</h3></div>
+      <div class="description-self">
+        <p>
+          I am currently exploring the combined power of beyond-dashboard visualizations and 
+          simulation approaches in analytics engineering, hopefully delivering highly 
+          interpretable solutions for business challenges. My study involves approaching 
+          interpretable solutions from as many simulation points of view as possible, starting from the easy ones. 
+          I am having fun creating these, and I hope they will continue to grow in number.
+        </p>
+        <p>
+          I am available for short-term engagements, where we can leverage your subject matter expertise 
+          to create tailored simulation models that virtually replicate your processes and incorporate business risks.
+        </p>
+        <p>         
+          Contact me on <a href="https://www.linkedin.com/in/abarecasco/" target="_blank">LinkedIn</a> for a prompt response. 
+
+        </p> 
+      </div>
+    </div>
+  
+    <div class="container">
+      <div class="title"><h3>Plotly on Javascript</h3></div>
       <div class="description">
         <p>
-          HTML5 Canvas offers versatile capabilities for creating interactive content. 
-          You can draw various 2D shapes and manipulate images to build user experiences or deliver insights through visualized simulations. 
+          A charting library with simple interface for creating interactive visualizations
+          <br>
+          and numerous chart types offering deep customization.
         </p>
-        <ul>
-          <li><a href="demos/cv_follow_shape/index.html">Follow the Shape</a></li>
-          <li>More to come!</a></li>
+        <p>
+          - <a href="demos/mc_circle/index.html">Monte Carlo Area Estimation</a>
+          <br>
+          - <a href="demos/mc_circle_convergence/index.html">Monte Carlo Convergence Simulation</a>
+          <br>
+          - <a href="demos/discrete_flow/index.html">Refinery Delivery Schedule Simulation</a>
+          <br>
+          - <a href="demos/parallel_axes/index.html">Parallel Coordinates</a>
+          <br>
+          <br>
+          More to come!</a>
+        </p>
+      </div>
+    </div>
+  
+    <div class="container">
+      <div class="title"><h3>HTML5 Canvas</h3></div>
+      <div class="description">
+        <p>
+          A high level graphics API for drawing interactive 2D shapes on the web.
+        </p>
+          - <a href="demos/cv_follow_shape/index.html">Follow the Shape</a>
+         <br>
+         <br>
+          More to come!</a>
         </ul>
       </div>
     </div>
@@ -55,32 +104,16 @@
       <div class="title"><h3>Three.js</h3></div>
       <div class="description">
         <p>
-          This powerful JavaScript library makes it easy to create stunning 3D graphics directly in the browser. 
-          Three.js unlocks a world of possibilities, captivating users with visually compelling and engaging content.
+          A high level graphics API for drawing interactive 3D shapes on the web.
         </p>
-        <ul>
-          <li><a href="demos/orbs/index.html">Glowing Orbs</a></li>
-          <li><a href="demos/sph/index.html">Smoothed Particle Hydrodynamics</a></li>
-          <li>More to come!</a></li>
-        </ul>
-      </div>
-    </div>
-
-    <div class="container">
-      <div class="title"><h3>Plotly</h3></div>
-      <div class="description">
         <p>
-          From simple line graphs to intricate 3D plots, Plotly's intuitive interface and extensive capabilities empower you 
-          to explore data insights with ease and share your findings effectively. 
-          Transform your complex datasets into stunning, interactive charts and dashboards that tell compelling stories. 
+          - <a href="demos/orbs/index.html">Glowing Orbs</a>
+          <br>
+          - <a href="demos/sph/index.html">Smoothed Particle Hydrodynamics</a>
+          <br>
+         <br>
+          More to come!</a>
         </p>
-        <ul>
-          <li><a href="demos/mc_circle/index.html">Monte Carlo Area Estimation</a></li>
-          <li><a href="demos/mc_circle_convergence/index.html">Monte Carlo Convergence Simulation</a></li>
-          <li><a href="demos/discrete_flow/index.html">Refinery Delivery Schedule Simulation</a></li>
-          <li><a href="demos/parallel_axes/index.html">Parallel Coordinates</a></li>
-          <li>More to come!</a></li>
-        </ul>
       </div>
     </div>
 
