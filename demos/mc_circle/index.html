@@ -6,6 +6,11 @@
     <title>Agra's Trinkets</title>
 
     <style>
+        body {
+            background-color: #121212; /* Dark background */
+            color: #ffffff; /* Light text */
+            font-family: Arial, Helvetica, sans-serif;
+        }
 
         .container {
             width: 100%;
@@ -13,66 +18,74 @@
             display: flex;
             justify-content: center;
             align-items: center;
-            color: rgb(0, 0, 0);
             flex-direction: column;
-            /* background-color: #f5f5f5; Added for visibility */
         }
 
         .plot-container {
-            width: 80%;
-            max-width: 800px;
+            width: 400px;
+            height: 400px;
             margin: 0 auto;
-            /* Use aspect-ratio if you want a specific ratio */
-            aspect-ratio: 16/9;
+            margin-bottom: 25px;
+            aspect-ratio: 1;
         }
 
         .row-1 {
             max-width: 600px;
-            padding-top:10px;
-            padding-bottom: 10px;
-            padding-left:20px;
-            padding-right:20px;
-            background-color: #ffffff;
+            padding-top: 20px;
+            padding-bottom: 15px;
+            padding-left: 20px;
+            padding-right: 20px;
+            background-color: #121212; /* Darker background for rows */
+            border-radius: 8px; /* Rounded corners */
             display: flex;
             justify-content: center;
             align-items: center;
-            color: rgb(0, 0, 0);
             flex-direction: row;
-            font-family:Arial, Helvetica, sans-serif;
+            color:#8b8888;
             font-size: 14px;
+            line-height: 145%;
+            margin-bottom: 10px; /* Spacing between rows */
         }
 
         button {
             padding: 10px 20px;
             font-size: 14px;
-            background-color: #007bff;
-            color: white;
+            background-color: #515466; /* Darker shade of blue */
+            color: rgb(234, 223, 201);
             border: none;
             border-radius: 4px;
             cursor: pointer;
+            transition: background-color 0.3s ease; /* Smooth transition */
         }
 
         button:hover {
-            background-color: #0056b3;
+            background-color: rgb(88, 69, 20); /* Even darker shade on hover */
         }
 
         label {
-            display: block; /* Makes the label take up the full width */
+            display: block;
             text-align: center;
-            margin-bottom: 5px; /* Adds some spacing below the label */
+            margin-bottom: 5px;
             font-size: 14px;
-            font-family:Arial, Helvetica, sans-serif;
-            color: black;
+            margin-right: 10px;
+            color: #eeeeee; /* Slightly lighter text for labels */
         }
 
         input[type="number"] {
-            width: 100px; /* Adjust width as needed */
+            width: 100px;
             padding: 5px;
-            border: 1px solid #ccc;
+            border: 1px solid #666666; /* Darker border */
             border-radius: 3px;
-            margin:10px;
-            font-family:Arial, Helvetica, sans-serif;
+            margin: 10px;
+            margin-right:20px;
             font-size: 14px;
+            background-color: #212121; /* Dark input background */
+            color: #ffffff;
+        }
+
+        /* Optional: Style the plot area itself (if possible from CSS) */
+        #main-screen {
+            /* Add styling here if Plotly allows CSS customization */
         }
     </style>
 
@@ -88,16 +101,16 @@
         <div class="row-1">
             <label for="numberInput">N shots (10-3000)</label>
             <input type="number" id="numberInput" name="numberInput" min="10" max="3000" value="10">
-            <button id="reshoot-button">Reshoot</button>    
+            <button id="reshoot-button">Reshoot</button>
         </div>
-         <div class="row-1">
+        <div class="row-1">
             This Monte Carlo simulation estimates the area of a circle (radius 0.3, area 0.2827)
-            inscribed within a unit square (1 x 1).  
-            It achieves this by randomly generating points within the square and 
-            calculating the ratio of points falling inside the circle to the total 
+            inscribed within a unit square (1 x 1).
+            It achieves this by randomly generating points within the square and
+            calculating the ratio of points falling inside the circle to the total
             number of points.  By increasing the number of generated points
-            the simulation demonstrates the convergence of the estimated area 
-            toward the circle's true area, illustrating a fundamental application 
+            the simulation demonstrates the convergence of the estimated area
+            toward the circle's true area, illustrating a fundamental application
             of Monte Carlo methods.
 
         </div>

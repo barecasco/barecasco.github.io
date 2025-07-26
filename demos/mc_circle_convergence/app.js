@@ -21,7 +21,11 @@ const conv_displayConfig = {
 
 
 let convergence_layout   = {
-    plot_bgcolor: '#f5f5f5',
+    plot_bgcolor: '#121212',
+    paper_bgcolor: '#121212',
+    font: {
+        color: '#ffffff'
+    },
     grid: {
         rows: 2,
         columns: 1,
@@ -30,8 +34,14 @@ let convergence_layout   = {
     },
     legend: {
         orientation: 'h',
-        x: 0.49,
-        y: 0.52 // Slightly above the plot
+        x: 0.52,
+        y: 0.45, // Slightly above the plot
+        font: {
+            color: '#ffffff'
+        },
+        bgcolor: '#121212',
+        // bordercolor: '#555555',
+        // borderwidth: 1
     },
     autosize  : true,
     height : 600,
@@ -45,65 +55,97 @@ let convergence_layout   = {
         standoff:30,
         font: {
             size: 18,
-            // color: '#7f7f7f'
+            color: '#ffffff'
           }
     },
     margin    : {
         l : 80,
         r : 80,
         b : 50,
-        t : 50,
+        t : 30,
     },
     xaxis: {
         showticklabels: false,
-        showgrid: true,    
+        showgrid: false,    
         zeroline: false,
-        showline:true,
+        showline:false,
         mirror: true,
-        linecolor: 'rgba(100, 100, 100, 0.5)', // Red line color
-        linewidth: 2, 
-        range: [0,3000]
+        linecolor: '#555555',
+        linewidth: 1,
+        gridcolor: '#404040',
+        range: [0,3000],
+        tickfont: {
+            color: '#ffffff'
+        }
     },
     yaxis: {
-        title: 'Estimated Area',
+        title: {
+            text: 'Estimated Area',
+            font: {
+                color: '#ffffff'
+            }
+        },
         showticklabels: true,
         autorange: true,
-        showgrid: true,
+        showgrid: false,
         zeroline: false,
-        domain: [0.53, 0.95],
+        domain: [0.57, 0.97],
         showline:true,
-        mirror: true,
-        linecolor: 'rgba(100, 100, 100, 0.5)', // Red line color
-        linewidth: 2, 
+        mirror: false,
+        linecolor: '#555555',
+        linewidth: 1,
+        gridcolor: '#404040',
         ticksuffix: '  ',
-        tickprefix: '    '
+        tickprefix: '    ',
+        tickfont: {
+            color: '#ffffff'
+        }
     },
     xaxis2: {
-        title: 'N random points',
+        title: {
+            text: 'N random points',
+            font: {
+                color: '#ffffff'
+            }
+        },
         showticklabels: true,
         // autorange: true,
-        showgrid: true,   
-        showline: true,
+        showgrid: false,   
+        showline: false,
         mirror: true, 
-        linecolor: 'rgba(100, 100, 100, 0.5)', // Red line color
-        linewidth: 2, 
+        linecolor: '#555555',
+        linewidth: 0,
+        gridcolor: '#404040',
         zeroline: false,
-        range: [0,3000]
+        range: [0,3000],
+        tickfont: {
+            color: '#ffffff'
+        }
     },
     yaxis2: {
-        title: 'Estimated area',
+        title: {
+            text: 'Estimated area',
+            font: {
+                color: '#ffffff'
+            }
+        },
         showticklabels: true,
         autorange: true,
-        showgrid: true,
+        showgrid: false,
+        showline: false,
         zeroline: false,
         // range: [0.25, 0.35],
-        domain: [0.05, 0.45],
-        showline:true,
-        mirror: true,
-        linecolor: 'rgba(100, 100, 100, 0.5)', // Red line color
-        linewidth: 2, 
+        domain: [0.0, 0.45],
+        // showline:true,
+        mirror: false,
+        linecolor: '#555555',
+        linewidth: 0,
+        gridcolor: '#404040',
         ticksuffix: '  ',
-        tickprefix: '    '
+        tickprefix: '    ',
+        tickfont: {
+            color: '#ffffff'
+        }
 
     },
 
@@ -115,7 +157,7 @@ let convergence_layout   = {
             x1: 3000,
             y1: true_area,
             line: {
-                color: '#DD99BB',
+                color: '#FF6B9D',
                 width: 2
             },
             name:"True Area"
@@ -127,7 +169,7 @@ let convergence_layout   = {
             x1: 3000,
             y1: true_area,
             line: {
-                color: '#DD99BB',
+                color: '#FF6B9D',
                 width: 2
             },
             name:"True Area",
@@ -141,8 +183,8 @@ let convergence_layout   = {
 const annotations = [
     {
         text: 'The red dots are repeated estimations per N random points',
-        x: 0.98,
-        y: 0.92,
+        x: 0.97,
+        y: 0.95,
         xanchor: 'right',
         yref: 'paper',
         xref: 'paper',
@@ -150,13 +192,13 @@ const annotations = [
         showarrow: false,
         font: {
             family: font_family,
-            color: "black",
+            color: "#ffffff",
             size: 14
         },
-        bgcolor: '#ffffff',
-        bordercolor: '#333333',
+        bgcolor: '#121212',
+        bordercolor: '#666666',
         borderwidth: 1,
-        borderpad: 4,     
+        borderpad: 7,     
         // ax : 20,
         // ay : 0
     },
@@ -170,12 +212,13 @@ const annotations = [
         // xref: 'paper',
         align: 'left',
         showarrow: true,
+        arrowcolor: '#dfdfdf',
         font: {
             family: font_family,
-            color: "black",
+            color: "#ffffff",
             size: 13
         },
-        bgcolor: '#ffffff',
+        bgcolor: '#121212',
         // bordercolor: '#333333',
         // borderwidth: 1,
         borderpad: 3,     
@@ -192,12 +235,13 @@ const annotations = [
         yref: 'y2',
         align: 'left',
         showarrow: true,
+        arrowcolor: '#dfdfdf',
         font: {
             family: font_family,
-            color: "black",
+            color: "#ffffff",
             size: 13
         },
-        bgcolor: '#ffffff',
+        bgcolor: '#121212',
         borderpad: 3,     
         ax : 20,
         ay : 0
@@ -328,9 +372,9 @@ function simulate_convergence() {
             y: trace_data,
             mode: 'markers',
             type: 'scatter',
-            line: {
-                color: 'rgba(219, 64, 82, 0.1)',
-                width: 1,
+            marker: {
+                color: 'rgba(255, 107, 157, 0.3)',
+                size: 4
             },
             // xaxis: 'x',
             yaxis: 'y',
@@ -353,11 +397,15 @@ function simulate_convergence() {
         name: "Average of estimations",
         x: nsamples,
         y: means,
-        mode: 'lines + markers',
+        mode: 'lines+markers',
         type: 'scatter',
         line: {
-            color: '#B74C',
+            color: '#4ECDC4',
             width: 2,
+        },
+        marker: {
+            color: '#4ECDC4',
+            size: 6
         },
         xaxis: 'x2',
         yaxis: 'y2'
@@ -368,11 +416,15 @@ function simulate_convergence() {
         name: "Average + standard deviation",
         x: nsamples,
         y: stds,
-        mode: 'lines + markers',
+        mode: 'lines+markers',
         type: 'scatter',
         line: {
-            color: '#46CCB4',
+            color: '#FFE066',
             width: 2,
+        },
+        marker: {
+            color: '#FFE066',
+            size: 6
         },
         xaxis: 'x2',
         yaxis: 'y2'

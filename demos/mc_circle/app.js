@@ -20,44 +20,52 @@ const displayConfig = {
     responsive: true
 };
 
-var layout   = {
-    autosize  : true,
+var layout = {
+    autosize: true,
     showlegend: false,
     dragmode: false,
+    plot_bgcolor: "#121212",       // dark plot background
+    paper_bgcolor: "#121212",      // dark overall background
+    font: {
+        family: font_family,
+        color: "#EEE"           // light font color
+    },
     title: {
         text: "Monte Carlo Area Estimation",
         x: 0.5,
         xanchor: 'center',
-        y: 0.95
+        y: 0.97,
+        font: {
+            color: "#FFF"       // title font color
+        }
     },
-    // width    : 500,
-    // height    : 500,
-    margin    : {
-        l : 30,
-        r : 30,
-        b : 10,
-        t : 50,
-        pad:4
+    margin: {
+        l: 25,
+        r: 25,
+        b: 25,
+        t: 25,
+        pad: 4
     },
     xaxis: {
         ticks: 'none',
         showticklabels: false,
         range: [0, 1],
         autorange: false,
-        showgrid: false,    // removes x-axis grid lines
-        zeroline: false,     // removes x-axis zero line
+        showgrid: false,
+        zeroline: false,
+        color: '#CCC'
     },
     yaxis: {
         ticks: 'none',
         showticklabels: false,
         range: [0, 1],
         autorange: false,
-        showgrid: false,    // removes y-axis grid lines
-        zeroline: false,     // removes y-axis zero line
+        showgrid: false,
+        zeroline: false,
         scaleanchor: "x",
-        scaleratio: 1  // 1:1 ratio, modify as needed
+        scaleratio: 1,
+        color: '#CCC'
     },
-
     shapes: [
         {
             type: 'circle',
@@ -67,9 +75,8 @@ var layout   = {
             y0: 0.2,
             x1: 0.8,
             y1: 0.8,
-            // fillcolor: 'rgba(50, 171, 96, 0.7)',
             line: {
-                color: 'rgba(50, 171, 96, 1)'
+                color: '#362a0cff'
             }
         },
         {
@@ -81,11 +88,11 @@ var layout   = {
             x1: 1,
             y1: 1,
             line: {
-                width: 1.,
-                color: 'rgba(100, 100, 100, 0.4)'
+                width: 0.5,
+                color: 'rgba(255, 255, 255, 0.2)'
             }
         }
-      ]
+    ]
 };
 
 
@@ -158,7 +165,7 @@ function update_layout(numPoints, numHits, estimated_area, true_area) {
         {
             text: 'Est. area: ' + String(numHits) + "/" + String(numPoints) + " x 1" + " = " + String(estimated_area.toFixed(4)),
             x: 0.5,
-            y: 0.95,
+            y: 0.0,
             xanchor: 'center',
             yref: 'paper',
             xref: 'paper',
@@ -166,13 +173,13 @@ function update_layout(numPoints, numHits, estimated_area, true_area) {
             showarrow: false,
             font: {
                 family: font_family,
-                color: "black",
+                color: "white",
                 size: 12
             },
-            bgcolor: '#ffffff',
-            bordercolor: '#c7c7c7',
-            borderwidth: 2,
-            borderpad: 4,     
+            bgcolor: '#121212',
+            // bordercolor: '#c7c7c7',
+            // borderwidth: 2,
+            // borderpad: 4,     
         }
     ]
 
@@ -199,7 +206,7 @@ function init_plot() {
         y: outCircles.map(point => point.y),
         mode: 'markers',
         type: 'scatter',
-        color: 'blue',
+        marker: { color: '#c5c6c6ff', size: 3}, // updated
         hoverinfo: 'none'
     };
 
@@ -208,9 +215,10 @@ function init_plot() {
         y: inCircles.map(point => point.y),
         mode: 'markers',
         type: 'scatter',
-        color: 'red',
+        marker: { color: '#dbac34ff', size: 3 }, // updated
         hoverinfo: 'none'
     };
+
 
     const true_area      = Math.PI * r * r;
     const estimated_area = inCircles.length/randomPoints.length;
@@ -241,7 +249,8 @@ function replot() {
         y: outCircles.map(point => point.y),
         mode: 'markers',
         type: 'scatter',
-        color: 'blue'
+        marker: { color: '#c5c6c6ff', size: 3}, // updated
+        // hoverinfo: 'none'
     };
 
     const mc_hits = {
@@ -249,7 +258,8 @@ function replot() {
         y: inCircles.map(point => point.y),
         mode: 'markers',
         type: 'scatter',
-        color: 'red'
+        marker: { color: '#dbac34ff', size: 3 }, // updated
+        // hoverinfo: 'none'
     };
     
     const true_area      = Math.PI * r * r;
