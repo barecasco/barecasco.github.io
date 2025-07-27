@@ -95,7 +95,7 @@ function App (charm) {
 			x : cf.canvasWidth/2, // the number is obtained from q.centerize()
 			y : 50,
 			fonts : ["30pt Times New Roman"],
-			colors : ['#000000'],
+			colors : ['#dfdfdf'],
 			lines : [0],
 			linesWidth : 30,
 			textAlign : "center",
@@ -106,7 +106,7 @@ function App (charm) {
 			x       	: 83, // the number is obtained from q.centerize()
 			y       	: cf.canvasHeight - 120,
 			fonts		: ["15pt Arial"],
-			colors		: ['#000000'],
+			colors		: ['#dfdfdf'],
 			lines		: [0, 1, 2, 3],
 			linesWidth 	: 30,
 			textAlign : "left",
@@ -421,7 +421,7 @@ function App (charm) {
 				y 			: 0,
 				verticesX 	: tracerX,
 				verticesY 	: tracerY,
-				color 		: "#000000",
+				color 		: "#9caaaeff",
 				thickness 	: 7
 			});
 			pencil_stroke = stroke;
@@ -531,7 +531,7 @@ function App (charm) {
 				y 			: 0,
 				verticesX 	: tracerX,
 				verticesY 	: tracerY,
-				color 		: "#bb2222",
+				color 		: "#9caaaeff",
 				thickness 	: 7
 			});
 			quiz_stroke = stroke;
@@ -786,6 +786,9 @@ function App (charm) {
 
 		// sp.disable();
 		function start_mouse_down(x, y){
+			// const rect = canvas.getBoundingClientRect();
+			// x = x - rect.left;
+			// y = y - rect.top;
 			if (sp.isDisabled) return;
 			let rx      = (x - tf.x + sp.width * specs.anchor_ratio_x);
 			let ry      = (y - tf.y + sp.height * specs.anchor_ratio_y);
@@ -865,6 +868,10 @@ function App (charm) {
 
 			// sp.disable();
 			function start_mouse_down(x, y){
+				// const rect = canvas.getBoundingClientRect();
+				// x = x - rect.left;
+				// y = y - rect.top;
+
 				if (sp.isDisabled) return;
 				let rx      = (x - tf.x + sp.width * specs.anchor_ratio_x);
 				let ry      = (y - tf.y + sp.height * specs.anchor_ratio_y);
@@ -907,6 +914,9 @@ function App (charm) {
 
 			// sp.disable();
 			function start_mouse_down(x, y){
+				// const rect = canvas.getBoundingClientRect();
+				// x = x - rect.left;
+				// y = y - rect.top;
 				if (sp.isDisabled) return;
 				let rx      = (x - tf.x + sp.width * specs.anchor_ratio_x);
 				let ry      = (y - tf.y + sp.height * specs.anchor_ratio_y);
@@ -950,6 +960,9 @@ function App (charm) {
 
 			// sp.disable();
 			function start_mouse_down(x, y){
+				// const rect = canvas.getBoundingClientRect();
+				// x = x - rect.left;
+				// y = y - rect.top;
 				if (sp.isDisabled) return;
 				let rx      = (x - tf.x + sp.width * specs.anchor_ratio_x);
 				let ry      = (y - tf.y + sp.height * specs.anchor_ratio_y);
@@ -989,6 +1002,9 @@ function App (charm) {
 		sp.disable();
 
 		function start_mouse_down(x, y){
+			// const rect = canvas.getBoundingClientRect();
+			// x = x - rect.left;
+			// y = y - rect.top;
 			if (sp.isDisabled) return;
 			let rx      = (x - tf.x + sp.width * specs.anchor_ratio_x);
 			let ry      = (y - tf.y + sp.height * specs.anchor_ratio_y);

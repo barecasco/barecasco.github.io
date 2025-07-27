@@ -849,11 +849,11 @@ function runSimulation() {
                     }
                     break;
                 }
-    
+
             }
-    
+
         }
-    
+
         function transact(delta_rate) {
             reservoir.prop.stock        += delta_rate;
             tangki_1.prop.stock         -= delta_rate;
@@ -861,31 +861,31 @@ function runSimulation() {
             deliver_schedule_flow(delta_rate);
             tangki_1.prop.is_discharging = true;
         }
-    
-    
+
+
         const delta_rate                = tangki_1.prop.hourly_rate * integrator.timestep / 3600;
         const stock_is_empty            = (tangki_1.prop.stock - delta_rate) < 0;
         tangki_1.prop.is_discharging    = false;
-    
+
         if (stock_is_empty) {
             reservoir.prop.delivery_source = null;
             tangki_1.prop.is_discharging   = false;
             tangki_1.prop.target_tank      = "null";
             return 1;
         }
-    
+
         if (!tangki_1.in_schedule()) {
             return 1;
         }
-    
+
         if (tangki_1.in_analysis()) {
             return 1;
         }
-    
+
         reservoir.prop.delivery_source  = tangki_1.name;
         tangki_1.prop.target_tank       = reservoir.name;
         transact(delta_rate);
-    
+
         return 0;
     }
     
@@ -904,11 +904,11 @@ function runSimulation() {
                     }
                     break;
                 }
-    
+
             }
         }    
-    
-    
+
+
         function transact(delta_rate) {
             reservoir.prop.stock        += delta_rate;
             tangki_2.prop.stock         -= delta_rate;
@@ -916,31 +916,31 @@ function runSimulation() {
             deliver_schedule_flow(delta_rate);
             tangki_2.prop.is_discharging = true;
         }
-    
-    
+
+
         const delta_rate                = tangki_2.prop.hourly_rate * integrator.timestep / 3600;
         const stock_is_empty            = (tangki_2.prop.stock - delta_rate) < 0;
         tangki_2.prop.is_discharging    = false;
-    
+
         if (stock_is_empty) {
             reservoir.prop.delivery_source = null;
             tangki_2.prop.is_discharging   = false;
             tangki_2.prop.target_tank      = "null";
             return 1;
         }
-    
+
         if (!tangki_2.in_schedule()) {
             return 1;
         }
-    
+
         if (tangki_2.in_analysis()) {
             return 1;
         }
-    
+
         reservoir.prop.delivery_source  = tangki_2.name;
         tangki_2.prop.target_tank       = reservoir.name;
         transact(delta_rate);
-    
+
         return 0;
     };
     
@@ -948,15 +948,15 @@ function runSimulation() {
     function delivery_update() {
         const in_analysis = schedule.is_in_analysis();
         const in_schedule = schedule.is_in_schedule();
-    
+
         if (in_analysis) {
             tangki_1.prop.in_schedule = false;
             tangki_2.prop.in_schedule = false;
-    
+
             if (tangki_1.in_analysis() || tangki_2.in_analysis()) {
                 return 0;
             }
-    
+
             if (tangki_1.prop.stock/tangki_1.prop.capacity > tangki_2.prop.stock/tangki_2.prop.capacity) {
                 tangki_1.prop.in_analysis = true;
                 schedule.set_current_transport_end(tangki_1.prop.hourly_rate);
@@ -968,18 +968,18 @@ function runSimulation() {
                 return 0;
             }
         } 
-    
+
         if (in_schedule) {
             if (tangki_1.in_schedule() || tangki_2.in_schedule()) {
                 return 0;
             }
-    
+
             if (tangki_1.in_analysis()) {
                 tangki_1.prop.in_schedule = true;
                 tangki_1.prop.in_analysis = false;
                 return 0;
             }
-    
+
             if (tangki_2.in_analysis()) {
                 tangki_2.prop.in_schedule = true;
                 tangki_2.prop.in_analysis = false;
@@ -991,8 +991,8 @@ function runSimulation() {
             tangki_2.prop.in_schedule = false;
             return 0;
         }
-    
-    
+
+
     }
     
     
@@ -1018,7 +1018,7 @@ function runSimulation() {
 
 
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
-// VISUALIZATION TOOL
+// VISUALIZATION TOOL - DARK THEME
 // + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + +
 function plot_history() {
     const traces                = [];
@@ -1028,23 +1028,30 @@ function plot_history() {
         responsive      : true
     };
 
-    // layout overrides the css given in  the index.html
+    // Dark theme layout
     let layout   = {
-        // autosize  : true,
-        height          : 400,
-        width           : 1000,
+        height          : 450,
+        width           : 1150,
         hovermode       : "x unified",
-        plot_bgcolor    : '#f5f5f5',
+        plot_bgcolor    : '#121212',
+        paper_bgcolor   : '#121212',
+        font: {
+            color: '#e0e0e0',
+            family: 'Arial, sans-serif'
+        },
         legend: {
             orientation: 'h',
             x: 1.,
             y: 1.2,
             xanchor: "right",
             font: {
-                family: "monospace", // Or any other font family
+                family: "Arial, sans-serif",
                 size: 12,
-                color: "grey"
-              }
+                color: "#e0e0e0"
+            },
+            bgcolor: 'rgba(30, 30, 30, 0.8)',
+            bordercolor: '#404040',
+            borderwidth: 1
         },
         dragmode        : false,
         title           : {
@@ -1052,123 +1059,62 @@ function plot_history() {
             standoff    : 0,
             font        : {
                 size    : 18,
+                color   : '#e0e0e0'
             }
         },
         margin    : {
-            // l : 0,
-            // r : 0,
             b : 70,
             t : 110,
         },
         xaxis: {
             tickmode: 'linear',
-            title           : "Date",
-            // tickangle       : 45,
+            title           : {
+                text: "Date",
+                font: { color: '#e0e0e0' }
+            },
             tickformat      : "%e",
-            showgrid        : true,   
+            showgrid        : true,
+            gridcolor       : '#404040',
             range           : ["2024-03-01T00:00:00", "2024-03-31T00:00:00"],
             zeroline        : true,
-            showline        : true,
-            linecolor       : 'rgba(100, 100, 100, 0.5)', // Red line color
-            linewidth       : 2, 
-            tickfont            : {
-                family      : "monospace",
+            zerolinecolor   : '#666666',
+            showline        : false,
+            linecolor       : '#666666',
+            linewidth       : 2,
+            tickfont        : {
+                family      : "Arial, sans-serif",
                 size        : 12,
-                color       : "gray"
+                color       : "#b0b0b0"
             }
         },
         yaxis: {
-            title           : 'Stock',
+            title           : {
+                text: 'Stock',
+                font: { color: '#e0e0e0' }
+            },
             nticks          : 10,
             showticklabels  : true,
             autorange       : true,
             showgrid        : true,
+            gridcolor       : '#404040',
             zeroline        : true,
-            // domain          : [0.2, 0.9],
-            showline        :true,
-            linecolor       : 'rgba(100, 100, 100, 0.5)', // Red line color
-            linewidth       : 2, 
+            zerolinecolor   : '#666666',
+            showline        : true,
+            linecolor       : '#666666',
+            linewidth       : 2,
             ticksuffix      : '  ',
             tickprefix      : '    ',
-            tickfont            : {
-                family      : "monospace",
+            tickfont        : {
+                family      : "Arial, sans-serif",
                 size        : 12,
-                color       : "gray"
+                color       : "#b0b0b0"
             }
         }
     };
     
 
     // ---------------
-    // KILANG 1
-    // ---------------
-    const kilang_history = kilang_1.get_log_history();
-
-    let kilang_outflow_trace = {
-        showlegend  : true,
-        name        : "Outflow Kilang",
-        x           : kilang_history.timestamps,
-        y           : kilang_history.total_outflows,
-        mode        : 'lines',
-        type        : 'scatter',
-        line        : {
-            color: '##6699ff',
-            width: 2,
-        }
-    };
-
-    const targets       = kilang_history.target_tanks;
-    const t1_as_targets = [];
-    const t2_as_targets = [];
-    for (const target of targets) {
-        if (target == "tangki_1") {
-            t1_as_targets.push(5000);
-            t2_as_targets.push(0);
-        }
-        else if (target == "tangki_2") {
-            t1_as_targets.push(0);
-            t2_as_targets.push(5000);
-        }
-        else {
-            t1_as_targets.push(0);
-            t2_as_targets.push(0);            
-        }
-    }
-
-    let kilang_t1flow_trace = {
-        showlegend  : true,
-        name        : "Outflow to Tangki_1",
-        x           : kilang_history.timestamps,
-        y           : t1_as_targets,
-        mode        : 'lines',
-        type        : 'scatter',
-        line        : {
-            color: '##aacc00',
-            width: 2,
-        }
-    };
-
-
-    let kilang_t2flow_trace = {
-        showlegend  : true,
-        name        : "Outflow to Tangki_2",
-        x           : kilang_history.timestamps,
-        y           : t2_as_targets,
-        mode        : 'lines',
-        type        : 'scatter',
-        line        : {
-            color: '##123212',
-            width: 2,
-        }
-    };
-
-    // traces.push(kilang_t1flow_trace);
-    // traces.push(kilang_t2flow_trace);
-    // traces.push(kilang_outflow_trace);
-
-
-    // ---------------
-    // TANGKI 1
+    // TANGKI 1 - Updated colors for dark theme
     // --------------- 
     const tangki_1_history = tangki_1.get_log_history();
     let tangki_1_trace = {
@@ -1179,44 +1125,18 @@ function plot_history() {
         mode        : 'lines',
         type        : 'scatter',
         line        : {
-            color: 'orange',
-            width: 3,
+            color: '#ff9500', // Brighter orange for dark theme
+            width: 1,
         },
-        hovertemplate: '%{y:.0f}' 
+        hovertemplate: '%{y:.0f}<extra></extra>'
     };
     traces.push(tangki_1_trace);
 
 
     // ---------------
-    // TANGKI 2
+    // TANGKI 2 - Updated colors for dark theme
     // --------------- 
     const tangki_2_history = tangki_2.get_log_history();
-
-    let tangki_2_schedules_trace = {
-        showlegend  : true,
-        name        : "In Schedule Tangki 2",
-        x           : tangki_2_history.timestamps,
-        y           : tangki_2_history.in_schedules.map(val => val * 5000),
-        mode        : 'lines',
-        type        : 'scatter',
-        line        : {
-            color: '#00ccaa',
-            width: 2,
-        }
-    };
-
-    let tangki_2_analyses_trace = {
-        showlegend  : true,
-        name        : "In Analysis Tangki 2",
-        x           : tangki_2_history.timestamps,
-        y           : tangki_2_history.in_analyses.map(val => val * 5000),
-        mode        : 'lines',
-        type        : 'scatter',
-        line        : {
-            color: '#00cc00',
-            width: 2,
-        }
-    };
 
     let tangki_2_stocks_trace = {
         showlegend  : true,
@@ -1226,16 +1146,16 @@ function plot_history() {
         mode        : 'lines',
         type        : 'scatter',
         line        : {
-            color: 'tomato',
-            width: 3,
+            color: '#ff6b6b', // Brighter red for dark theme
+            width: 1,
         },
-        hovertemplate: '%{y:.0f}' 
+        hovertemplate: '%{y:.0f}<extra></extra>'
     };
     traces.push(tangki_2_stocks_trace);
 
 
     // ---------------
-    // RESERVOIR
+    // RESERVOIR - Updated colors for dark theme
     // --------------- 
     const reservoir_history = reservoir.get_log_history();
 
@@ -1247,15 +1167,13 @@ function plot_history() {
         mode        : 'lines',
         type        : 'scatter',
         line        : {
-            color: '#33cc33',
-            width: 3,
+            color: '#51cf66', // Brighter green for dark theme
+            width: 1,
         },
-        hovertemplate: '%{y:.0f}' 
+        hovertemplate: '%{y:.0f}<extra></extra>'
     };
 
     traces.push(reservoir_stock_trace);
-
-
 
     Plotly.newPlot("disperse-plot", traces, layout, conv_displayConfig);  
 }
@@ -1364,62 +1282,74 @@ function plot_gantt_chart() {
     
     global_grouped_df_dict = grouped_df_dict;
 
+    // Dark theme layout for Gantt chart
     let layout   = {
         barmode         : "stack",
         bargap          : 0.2,
         autosize        : true,
         dragmode        : false,
-        height          : 400,
-        width           : 1000,
-        plot_bgcolor    : '#ffffff',
+        height          : 450,
+        width           : 1150,
+        plot_bgcolor    : '#121212',
+        paper_bgcolor   : '#121212',
+        font: {
+            color: '#e0e0e0',
+            family: 'Arial, sans-serif'
+        },
         margin    : {
-            // l : 0,
-            // r : 0,
             b : 80,
             t : 50,
         },
         title           : {
             text        : "Outflow Gantt Chart",
-            // standoff    : -100,
             font        : {
                 size    : 18,
+                color   : '#e0e0e0'
             }
         },
         xaxis: {
-            // automargin          : true,
             showgrid            : true,
-            title               : "Date",
+            gridcolor           : '#404040',
+            title               : {
+                text: "Date",
+                font: { color: '#e0e0e0' }
+            },
             dtick              : 1,
-            // rangeslider         : {},
             side                : "bottom",
-            // tickmode            : "array",
             zeroline            : false,
             ticks               : "outside",
             tickson             : "boundaries",
             tickwidth           : 0.1, 
             layer               : "below traces",
+            showgrid            : false,
+            showline            : false,
             ticklen             : 6,
             range               : [1,31],
+            linecolor           : '#666666',
             tickfont            : {
-                family      : "monospace",
+                family      : "Arial, sans-serif",
                 size        : 12,
-                color       : "gray"
+                color       : "#b0b0b0"
             }
         },
         yaxis: {
             automargin      : true,
-            title           : "",
+            title           : {
+                text: "",
+                font: { color: '#e0e0e0' }
+            },
             ticklen         : 0,
             showgrid        : false,
             zeroline        : false,
+            showline        : false,
             showticklabels  : true,
             ticksuffix      : '  ',
+            linecolor       : '#666666',
             tickfont        : {
-                family  : "monospace",
+                family  : "Arial, sans-serif",
                 size    : 12,
-                color   : "gray"
+                color   : "#e0e0e0"
             }
-
         }
     };
 
@@ -1429,12 +1359,13 @@ function plot_gantt_chart() {
         "kilang_1"
     ];
     
+    // Updated colors for dark theme
     const target_tank_map = {
-        "Kilang-1"  : "orchid",
-        "Tangki-1"  : "orange",
-        "Tangki-2"  : "tomato",
-        "Delivery"  : "#33cc33",
-        "null"      : "#f5f5f5"
+        "Kilang-1"  : "#5a3e77ff", // Brighter purple
+        "Tangki-1"  : "#8f6b38ff", // Brighter orange
+        "Tangki-2"  : "#863737ff", // Brighter red
+        "Delivery"  : "#2e783aff", // Brighter green
+        "null"      : "#121212"  // Dark gray for null
     };
     
     const bar_outline_map = {
@@ -1455,16 +1386,11 @@ function plot_gantt_chart() {
         const gdicts        = grouped_df_dict[tank_name];
         const tank_df       = new dfd.DataFrame(gdicts);
         tank_df.print();
-        const colors        = tank_df.target.values.map(target => target_tank_map[target] || "white");
+        const colors        = tank_df.target.values.map(target => target_tank_map[target] || "#2a2a2a");
         const outlines      = tank_df.target.values.map(target => bar_outline_map[target] || 0);
         const hovertexts    = [];
         const volume_values = tank_df.volume.values;
         const volume_texts  = [];
-
-        // console.log(tank_name)
-        // console.log(tank_df.target.values);
-        // console.log(colors);
-        // tank_df.print();
 
         for (const vol of volume_values) {
             if (vol < 10) {
@@ -1475,7 +1401,6 @@ function plot_gantt_chart() {
             }
         }
         
-        // for (const gdict of gdicts) {
         for (let i = 0; i < gdicts.length; i++) {
             const gdict         = gdicts[i];
             const voltext       = volume_texts[i];
@@ -1483,9 +1408,6 @@ function plot_gantt_chart() {
             let start         = integrator.timestamp_from_unit(gdict.start);
             let end           = integrator.timestamp_from_unit(gdict.end);
             let duration      = integrator.duration_from_unit(gdict.duration);
-            // if (target == 'reservoir') {
-            //     target = 'delivery';
-            // }
             let info            = "";
             if (target == "null") {
                 info          = `No target <br>start    ${start} <br>end      ${end}<br>duration ${duration}`;               
@@ -1503,24 +1425,27 @@ function plot_gantt_chart() {
             marker          : {
                 color: colors,
                 line: {
-                    color: 'black',  
+                    color: '#b7b7b7ff', // Dark theme border
                     width: outlines
                 }
             },
             hovertext       : hovertexts,
             hoverlabel: {
                 font: {
-                  family: 'monospace', // Or any other font family you prefer
+                  family: 'Arial, sans-serif',
                   size: 12,
-                  color: 'black'
-                }
+                  color: '#e0e0e0'
+                },
+                bgcolor: '#2a2a2a',
+                bordercolor: '#666666'
             },
             hoverinfo       : "text",
             text            : volume_texts,
             textposition    : 'auto',
             textfont    : { 
-                family: 'monospace',
+                family: 'Arial, sans-serif',
                 size: 14,
+                color: '#e0e0e0'
             },
             orientation     : 'h',
             showlegend      : false,
@@ -1540,10 +1465,18 @@ function plot_table() {
         displayModeBar  : false,
         responsive      : false
     };
+    
+    // Dark theme layout for table
     let layout   = {
-        // autosize  : true,
         height: document.documentElement.clientHeight * 1.1,
         width    : 800,
+        height   : 700,
+        plot_bgcolor    : '#121212',
+        paper_bgcolor   : '#121212',
+        font: {
+            color: '#e0e0e0',
+            family: 'Arial, sans-serif'
+        },
         margin    : {
             l : 20,
             r : 20,
@@ -1555,6 +1488,7 @@ function plot_table() {
             standoff    : 0,
             font        : {
                 size    : 18,
+                color   : '#e0e0e0'
             },
             x: 0.5,  
             y: 1.2,
@@ -1577,15 +1511,11 @@ function plot_table() {
 
         for (const log of df) {
             let target      = log.target;
-            // if (target == "reservoir") {
-            //     target = "delivery";
-            // }
             let start       = integrator.timestamp_from_unit(log.start);
             let end         = integrator.timestamp_from_unit(log.end);
             let duration    = integrator.duration_from_unit(log.duration);
-
             let volume      = Math.ceil(log.volume/10) * 10;
-            // let volume      = log.volume;
+            
             if (target == "null") {
                 continue;
             }
@@ -1596,7 +1526,6 @@ function plot_table() {
             values[4].push(duration);
             values[5].push(volume);
         }
-
     }
 
     var data = [{
@@ -1611,16 +1540,17 @@ function plot_table() {
                 ["<b>Volume</b>"]
             ],
             align: "center",
-            line: {width: 1, color: 'black'},
-            fill: {color: "grey"},
-            font: {family: "Monospace", size: 15, color: "white"}
+            line: {width: 1, color: '#666666'},
+            fill: {color: "#121212"}, // Dark header background
+            font: {family: "Arial, sans-serif", size: 15, color: "#e0e0e0"}
         },
         cells: {
             values: values,
             align: "center",
             height: 30,
-            line: {color: "black", width: 1},
-            font: {family: "Monospace", size: 13, color: ["black"]}
+            line: {color: "#666666", width: 1},
+            fill: {color: "#2a2a2a"}, // Dark cell background
+            font: {family: "Arial, sans-serif", size: 13, color: "#e0e0e0"}
         }
     }];
 
@@ -1660,4 +1590,3 @@ document.getElementById('logButton').addEventListener('click', function() {
         }, 500);
     }, 100);
 });
-

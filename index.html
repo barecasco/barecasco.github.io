@@ -5,120 +5,405 @@
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>Agra's Trinkets</title>
 <style>
-body { font-family: Arial, sans-serif; margin: 0; padding: 0; background-color: #F8F5EC; }
-  .container { max-width: 800px; margin: auto; overflow: hidden; line-height: 1.4em; font-size: 17px;}
-  .description-self { padding: 1px; width: 79%; margin: auto;}  
-  .description { padding: 1px; width: 79%; margin: auto;}
-  header { background: #F8F5EC; color: #402600; padding-top: 30px; min-height: 40px;}
-  header a { color: #F8F5EC; text-decoration: none; text-transform: uppercase; font-size: 16px; }
-  header ul { padding: 0; list-style: none; }
-  header li { display: inline; padding: 0 20px 0 20px; }
-  header #branding { float: left; }
-  header #branding h1 { margin: 0; }
-  header nav { float: right; margin-top: 10px; }
-  header .highlight, header .current a {font-weight: bold; padding: 0.5em; line-height: 1.2;}
-  header a:hover { color: #F8F5EC; font-weight: bold; }
-  .profile { padding: 10px; background: #F8F5EC; }
-  .profile img { max-width: 150px; margin: 0 auto; display: block; }
-  .profile h2 { text-align: center; color: #222222; }
-  .profile p { text-align: left; color: #222222; }
-  footer { background: #FFF9C4; color: #008080; text-align: center; padding: 10px; position: fixed; left: 0; bottom: 0; width: 100%; }
-  ul li {
-    line-height: 1.5; 
-    margin-bottom: 10px;
+  * {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
-  h3 {
-    margin-bottom: -5px;
+
+  body { 
+    font-family: Arial, Helvetica, sans-serif;
+    margin: 0; 
+    padding: 0; 
+    background-color: #121212;
+    color: #ffffff;
+    line-height: 145%;
+    min-height: 100vh;
+  }
+
+  .container { 
+    max-width: 1000px;
+    margin: 0 auto;
+    padding: 20px;
+  }
+
+  header { 
+    background-color: #121212;
+    color: #ffffff;
+    padding: 30px 0;
+    width: 100%;
+  }
+
+  header .container {
+    text-align: center;
+  }
+
+  header h1 { 
+    font-size: 28px;
+    font-weight: normal;
+    margin: 0;
+  }
+
+  .profile { 
+    width: 100%;
+  }
+
+  .description-self { 
+    padding: 20px;
+    margin: 0 0 30px 0;
+    background-color: #272727;
+    border-radius: 8px;
+    font-size: 15px;
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 30px;
+  }
+
+  .description-self .column {
+    display: flex;
+    flex-direction: column;
+  }
+
+  .description-self p {
+    margin: 0 0 15px 0;
+  }
+
+  .description-self p:last-child {
+    margin-bottom: 0;
+  }
+
+  .description-self a {
+    color: #64b5f6;
+    text-decoration: none;
+  }
+
+  .description-self a:hover {
+    text-decoration: underline;
+  }
+
+  .section-card {
+    margin: 0 0 0 0;
+    background-color: #121212;
+    border-radius: 8px;
+    padding: 0px;
+  }
+
+  .title h3 {
+    color: #ffffff;
+    font-size: 18px;
+    font-weight: normal;
+    margin: 0 0 15px 0;
+  }
+
+  .description p {
+    color: #ffffff;
+    margin-bottom: 15px;
+    font-size: 14px;
+    line-height: 145%;
+  }
+
+  .carousel-container {
+    margin: 20px 0;
+  }
+
+  .carousel-track {
+    display: flex;
+    gap: 20px;
+    overflow-x: auto;
+    padding: 10px 0;
+    scroll-behavior: smooth;
+  }
+
+  .carousel-track::-webkit-scrollbar {
+    height: 8px;
+  }
+
+  .carousel-track::-webkit-scrollbar-track {
+    background: #212121;
+    border-radius: 4px;
+  }
+
+  .carousel-track::-webkit-scrollbar-thumb {
+    background: #515466;
+    border-radius: 4px;
+  }
+
+  .demo-item {
+    flex: 0 0 250px;
+    background-color: #212121;
+    border-radius: 8px;
+    border: 1px solid #333333;
+    overflow: hidden;
+    transition: border-color 0.3s ease;
+  }
+
+  .demo-item:hover {
+    border-color: #515466;
+  }
+
+  .demo-thumbnail {
+    width: 100%;
+    height: 140px;
+    background-color: #2a2a2a;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    position: relative;
+  }
+
+  .demo-thumbnail img {
+    width: 100%;
+    height: 100%;
+    object-fit: cover;
+  }
+
+  .demo-thumbnail.placeholder {
+    background-color: #333333;
+  }
+
+  .placeholder-icon {
+    font-size: 24px;
+    opacity: 0.5;
+  }
+
+  .demo-content {
+    padding: 15px;
+  }
+
+  .demo-title {
+    color: #64b5f6;
+    font-size: 14px;
+    font-weight: normal;
+    margin-bottom: 8px;
+    text-decoration: none;
+    display: block;
+  }
+
+  .demo-title:hover {
+    text-decoration: underline;
+  }
+
+  .demo-description {
+    color: #cccccc;
+    font-size: 13px;
+    line-height: 145%;
+    margin: 0;
+  }
+
+  .more-coming {
+    color: #888888;
+    font-style: italic;
+    font-size: 13px;
+    margin-top: 15px;
+  }
+
+  /* Responsive design */
+  @media (max-width: 768px) {
+    .container {
+      padding: 10px;
+    }
+    
+    header h1 {
+      font-size: 24px;
+    }
+    
+    .description-self {
+      grid-template-columns: 1fr;
+      gap: 15px;
+      padding: 15px;
+    }
+    
+    .section-card {
+      max-width: 100%;
+      padding: 15px;
+    }
+    
+    .demo-item {
+      flex: 0 0 220px;
+    }
   }
 </style>
 </head>
 <body>
   <header>
     <div class="container">
-      <div id="branding">
-        <h1><span class="highlight">Agra's Trinkets</h1>
-      </div>
+      <h1>Agra's Trinkets</h1>
     </div>
   </header>
 
   <section class="profile">
-
     <div class="container">
       <div class="description-self">
-        <p>
-          I am currently exploring the combined power of beyond-dashboard visualizations and 
-          simulation approaches in analytics engineering, hopefully delivering highly 
-          interpretable solutions for business challenges. My study involves approaching 
-          interpretable solutions from as many simulation points of view as possible, starting from the easy ones. 
-          I am having fun creating these, and I hope they will continue to grow in number.
-        </p>
-        <p>
-          I am available for short-term engagements, where we can leverage your subject matter expertise 
-          to create tailored simulation models that virtually replicate your processes and incorporate business risks.
-        </p>
-        <p>         
-          Contact me on <a href="https://www.linkedin.com/in/abarecasco/" target="_blank">LinkedIn</a> for a prompt response. 
-
-        </p> 
+        <div class="column">
+          <h3 style="text-align: left;">"To see the forest for the trees. Problems can be simpler just by changing how we see them."</h3>
+          <br>
+          <p>
+            I am currently exploring the combined power of beyond-dashboard visualizations 
+            and simulation approaches to deliver highly interpretable solutions for 
+            business challenges. My study involves approaching solutions from both simulation 
+            and visualization perspectives, exploring as many angles as possible. Here are some 
+            examples that showcase my learning journey, starting with the simpler ones. 
+            I'm enjoying creating these, and I hope to continue adding to them.
+          </p>
+        </div>
+        <div class="column">
+          <p>
+            I am available for short-term engagements, where I can leverage your subject matter expertise to create 
+            tailored simulations and visualizations that virtually replicate your processes while incorporating risks and constraints.
+          </p>
+          <p>         
+            Contact me on <a href="https://www.linkedin.com/in/abarecasco/" target="_blank">LinkedIn</a> for a prompt response.<br>
+            Or email me at: barecasco@gmail.com
+          </p>
+        </div>
       </div>
     </div>
   
     <div class="container">
-      <div class="title"><h3>Plotly on Javascript</h3></div>
-      <div class="description">
-        <p>
-          A charting library with simple interface for creating interactive visualizations
-          <br>
-          and numerous chart types offering deep customization.
-        </p>
-        <p>
-          - <a href="demos/mc_circle/index.html">Monte Carlo Area Estimation</a>
-          <br>
-          - <a href="demos/mc_circle_convergence/index.html">Monte Carlo Convergence Simulation</a>
-          <br>
-          - <a href="demos/discrete_flow/index.html">Refinery Delivery Schedule Simulation</a>
-          <br>
-          - <a href="demos/parallel_axes/index.html">Parallel Coordinates</a>
-          <br>
-          <br>
-          More to come!</a>
-        </p>
+      <div class="section-card">
+        <div class="title"><h3>Plotly</h3></div>
+        <div class="description">
+          <div class="carousel-container">
+            <div class="carousel-track" id="plotly-carousel">
+              <div class="demo-item">
+                <div class="demo-thumbnail">
+                  <img src="images/mc-circle-thumbnail.png" alt="Monte Carlo Area Estimation" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+                </div>
+                <div class="demo-content">
+                  <a href="demos/mc_circle/index.html" class="demo-title">Monte Carlo Area Estimation</a>
+                  <p class="demo-description">Interactive simulation showing how random sampling can estimate π using geometric probability.</p>
+                </div>
+              </div>
+              <div class="demo-item">
+                <div class="demo-thumbnail">
+                  <img src="images/mc-sim-thumbnail.png" alt="Monte Carlo Convergence" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+                </div>
+                <div class="demo-content">
+                  <a href="demos/mc_circle_convergence/index.html" class="demo-title">Monte Carlo Convergence Simulation</a>
+                  <p class="demo-description">Visualizing how Monte Carlo methods converge to true values with increasing sample size.</p>
+                </div>
+              </div>
+              <div class="demo-item">
+                <div class="demo-thumbnail">
+                  <img src="images/discrete-flow-thumbnail.png" alt="Refinery Simulation" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+                </div>
+                <div class="demo-content">
+                  <a href="demos/discrete_flow/index.html" class="demo-title">Refinery Delivery Schedule Simulation</a>
+                  <p class="demo-description">Discrete event simulation modeling scheduling and delivery optimization scenarios.</p>
+                </div>
+              </div>
+              <div class="demo-item">
+                <div class="demo-thumbnail">
+                  <img src="images/parallel-coords-thumbnail.png" alt="Parallel Coordinates" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+                </div>
+                <div class="demo-content">
+                  <a href="demos/parallel_axes/index.html" class="demo-title">Parallel Coordinates</a>
+                  <p class="demo-description">Multi-dimensional data visualization technique for exploring relationships between variables.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
   
     <div class="container">
-      <div class="title"><h3>HTML5 Canvas</h3></div>
-      <div class="description">
-        <p>
-          A high level graphics API for drawing interactive 2D shapes on the web.
-        </p>
-          - <a href="demos/cv_follow_shape/index.html">Follow the Shape</a>
-         <br>
-         <br>
-          More to come!</a>
-        </ul>
+      <div class="section-card">
+        <div class="title"><h3>Three.js</h3></div>
+        <div class="description">
+          <div class="carousel-container">
+            <div class="carousel-track" id="threejs-carousel">
+              <div class="demo-item">
+                <div class="demo-thumbnail">
+                  <img src="images/orbs-thumbnail.png" alt="Glowing Orbs" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+                </div>
+                <div class="demo-content">
+                  <a href="demos/orbs/index.html" class="demo-title">Glowing Orbs</a>
+                  <p class="demo-description">Mesmerizing 3D visualization featuring luminescent spheres with particle effects and dynamic lighting.</p>
+                </div>
+              </div>
+              <div class="demo-item">
+                <div class="demo-thumbnail">
+                  <img src="images/sph-thumbnail.png" alt="SPH Simulation" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+                </div>
+                <div class="demo-content">
+                  <a href="demos/sph/index.html" class="demo-title">Smoothed Particle Hydrodynamics</a>
+                  <p class="demo-description">Physics-based fluid simulation demonstrating particle behavior and fluid dynamics in 3D space.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
 
-    <div class="container">
-      <div class="title"><h3>Three.js</h3></div>
-      <div class="description">
-        <p>
-          A high level graphics API for drawing interactive 3D shapes on the web.
-        </p>
-        <p>
-          - <a href="demos/orbs/index.html">Glowing Orbs</a>
-          <br>
-          - <a href="demos/sph/index.html">Smoothed Particle Hydrodynamics</a>
-          <br>
-         <br>
-          More to come!</a>
-        </p>
+  <div class="container">
+      <div class="section-card">
+        <div class="title"><h3>HTML5 Canvas</h3></div>
+        <div class="description">
+          <div class="carousel-container">
+            <div class="carousel-track" id="canvas-carousel">
+              <div class="demo-item">
+                <div class="demo-thumbnail">
+                  <img src="images/followme-thumbnail.png" alt="Follow the Shape" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+                </div>
+                <div class="demo-content">
+                  <a href="demos/cv_follow_shape/index.html" class="demo-title">Follow the Shape</a>
+                  <p class="demo-description">Interactive canvas experience where shapes respond dynamically to user input and movement patterns.</p>
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
     </div>
+
 
   </section>
 
+  <script>
+    // Simple carousel functionality
+    const tracks = document.querySelectorAll('.carousel-track');
+    
+    tracks.forEach(track => {
+      // Touch/drag scrolling for mobile
+      let isDown = false;
+      let startX;
+      let scrollLeft;
 
+      track.addEventListener('mousedown', (e) => {
+        isDown = true;
+        startX = e.pageX - track.offsetLeft;
+        scrollLeft = track.scrollLeft;
+      });
+
+      track.addEventListener('mouseleave', () => {
+        isDown = false;
+      });
+
+      track.addEventListener('mouseup', () => {
+        isDown = false;
+      });
+
+      track.addEventListener('mousemove', (e) => {
+        if (!isDown) return;
+        e.preventDefault();
+        const x = e.pageX - track.offsetLeft;
+        const walk = (x - startX) * 2;
+        track.scrollLeft = scrollLeft - walk;
+      });
+    });
+
+    // Click to open demo links
+    const demoItems = document.querySelectorAll('.demo-item');
+    demoItems.forEach(item => {
+      item.addEventListener('click', (e) => {
+        const link = item.querySelector('a');
+        if (link && e.target !== link) {
+          window.open(link.href, '_blank');
+        }
+      });
+    });
+  </script>
 </body>
 </html>

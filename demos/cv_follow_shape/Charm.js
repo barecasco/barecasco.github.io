@@ -11,7 +11,7 @@ var Charm    			= function (new_config) {
 		canvasLeft		: "0px",
 		canvasTop		: "0px",
 		canvasZindex	: 0,
-		canvasBgColor	: '#ffffff',
+		canvasBgColor	: '#121212',
 		assetTargetCount: 25
 	};
 
@@ -96,6 +96,10 @@ var Charm    			= function (new_config) {
 		context						= dom.getContext("2d");
         container.appendChild (dom);
         var onResizeSubscribers     = [];
+
+		self.getBoundingClientRect 	= function() {
+			return dom.getBoundingClientRect();
+		}
 
 		self.getScaleX			= function() {
 			return xScale;
