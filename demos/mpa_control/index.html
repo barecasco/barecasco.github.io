@@ -448,7 +448,13 @@
                 }
             };
 
-            Plotly.newPlot('biomass-boxplot', traces, layout, { responsive: true });
+            let biomass_config = {
+                responsive: true,
+                modeBarButtons: {
+                    ['toImage', 'pan2d', 'resetViews']
+                }
+            }
+            Plotly.newPlot('biomass-boxplot', traces, layout, biomass_config);
         }
 
         // Create trophic diversity chart
@@ -509,7 +515,14 @@
                 }
             };
 
-            Plotly.newPlot('trophic-diversity', [trace], layout, { responsive: true });
+            let trophic_config = {
+                responsive: true,
+                modeBarButtons: [
+                    ['toImage', 'pan2d', 'resetViews']
+                ]    
+            }
+
+            Plotly.newPlot('trophic-diversity', [trace], layout, trophic_config);
         }
 
         // Create temporal trends
@@ -591,7 +604,14 @@
                 }
             };
 
-            Plotly.newPlot('temporal-trends', [trace1, trace2], layout, { responsive: true });
+
+            let temporal_config = {
+                responsive: true,
+                modeBarButtons: [
+                    ['toImage', 'pan2d', 'resetViews']
+                ]    
+            }
+            Plotly.newPlot('temporal-trends', [trace1, trace2], layout, temporal_config);
         }
 
         // Create size distribution
@@ -631,7 +651,14 @@
                 }
             };
 
-            Plotly.newPlot('size-distribution', traces, layout, { responsive: true });
+            let sized_config = {
+                responsive: true,
+                modeBarButtons: [
+                    ['toImage', 'pan2d', 'resetViews']
+                ]    
+            }
+            
+            Plotly.newPlot('size-distribution', traces, layout, sized_config);
         }
 
         // Create site map
@@ -696,7 +723,14 @@
                 paper_bgcolor: chart_bg,
             };
 
-            Plotly.newPlot('site-map', [trace], layout, { responsive: true, scrollZoom: true});
+            let site_config = {
+                responsive: true, 
+                scrollZoom: true,
+                modeBarButtons: [
+                    ['toImage', 'resetViews']
+                ]
+            }
+            Plotly.newPlot('site-map', [trace], layout, site_config);
         }
 
         // Create environmental factors chart
@@ -775,12 +809,17 @@
                     orientation: "h", 
                     yanchor: "bottom", 
                     y: 1.02, 
-                    x: 0.5,
+                    x: 0.3,
                     xanchor: 'center'
                 }
             };
-
-            Plotly.newPlot('environmental-factors', traces, layout, { responsive: true });
+            
+            enviro_config = {
+                modeBarButtons: [
+                    ['zoom2d', 'pan2d']
+                ]
+            }
+            Plotly.newPlot('environmental-factors', traces, layout, enviro_config);
         }
 
         // Create summary table
