@@ -450,9 +450,9 @@
 
             let biomass_config = {
                 responsive: true,
-                modeBarButtons: {
+                modeBarButtons: [
                     ['toImage', 'pan2d', 'resetViews']
-                }
+                ]
             }
             Plotly.newPlot('biomass-boxplot', traces, layout, biomass_config);
         }
