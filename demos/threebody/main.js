@@ -1109,17 +1109,19 @@ function animate() {
                 }
             }
             
-            trails[index].unshift({
-                x: circle.position.x,
-                y: circle.position.y,
-                z: circle.position.z
-            });
+            if (frameCount % 3 == 0) {
+                trails[index].unshift({
+                    x: circle.position.x,
+                    y: circle.position.y,
+                    z: circle.position.z
+                });
 
-            if (trails[index].length > maxTrailPoints) {
-                trails[index].pop();
+                if (trails[index].length > maxTrailPoints) {
+                    trails[index].pop();
+                }
+                
+                updateTrailLine(index);
             }
-            
-            updateTrailLine(index);
         });
 
         frameCount++;
