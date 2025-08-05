@@ -1,0 +1,71 @@
+<!--
+ Author: Agra Barecasco
+ Created: August 5, 2025
+ Last Modified: August 5, 2025
+ Contact: barecasco@gmail.com
+ -->
+ 
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Glowing Orbs</title>
+    <style>
+        body { margin: 0; }
+        
+        #plot-container {
+            width: 100%;
+            height: 100vh;
+            position: relative;
+        }
+
+        #text-hint-overlay {
+            position: absolute; 
+            top: 20px; 
+            left: 20px; 
+            color: white; 
+            font-size: 13px; 
+            font-family: 'Arial', 'Helvetica';
+            line-height: 1.4em;
+            pointer-events: none; 
+            z-index: 99;
+        }
+
+        #text-auth-overlay {
+            position: absolute; 
+            bottom: 20px; 
+            right: 20px; 
+            color: white; 
+            font-size: 13px; 
+            font-family: 'Arial', 'Helvetica';
+            line-height: 1.4em;
+            pointer-events: none; 
+            z-index: 99;
+        }
+
+    </style>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/"
+            }
+        }
+    </script>
+</head>
+<body>
+    <div id="text-hint-overlay">
+        To move a body: set Control Mode to 'position' and click a body.<br>
+        To change velocity:<br>
+        &nbsp;&nbsp;&nbsp;- set Control Mode to 'velocity' and click an arrow head to adjust direction.<br>
+        &nbsp;&nbsp;&nbsp;- edit velocity magnitude using the input box.<br>
+        Drag mouse to orbit, scroll to zoom.<br>
+        Esc to clear selection.
+    </div>
+
+    <div id="text-auth-overlay">
+        Agra Barecasco, August 5, 2025
+    </div>
+    <div id="plot-container"></div>
+    <script type="module" src="main.js"></script>
+</body>
+</html>
