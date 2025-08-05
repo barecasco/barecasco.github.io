@@ -296,7 +296,7 @@ gui.add(guiParams, 'controlMode', ['position', 'velocity']).name('Control Mode')
 
 
 // Add velocity magnitude control (initially hidden)
-velocityMagnitudeControl = gui.add(guiParams, 'velocityMagnitude', 0.01, 2.0).name('Velocity Magnitude').onChange((value) => {
+velocityMagnitudeControl = gui.add(guiParams, 'velocityMagnitude', 0.01, 2.0, 0.01).name('Velocity Magnitude').onChange((value) => {
     if (currentlyControlledBodyIndex >= 0 && controlMode === 'velocity') {
         updateVelocityMagnitude(value);
     }
@@ -321,8 +321,8 @@ arrowFolder.open();
 function updateVelocityMagnitude(newMagnitude) {
     if (currentlyControlledBodyIndex < 0 || controlMode !== 'velocity') return;
     
-    const circle = circles[currentlyControlledBodyIndex];
-    const currentVelocity = circle.velocity;
+    const circle            = circles[currentlyControlledBodyIndex];
+    const currentVelocity   = circle.velocity;
     
     // Calculate current direction (normalized)
     const currentMagnitude = Math.sqrt(
