@@ -351,7 +351,7 @@ function updateVelocityMagnitude(newMagnitude) {
     
     currentVelocityMagnitude = newMagnitude;
     const arrow = velocityArrows[currentlyControlledBodyIndex];
-    updateVelocityArrowOnly(arrow, circle.velocity, circle.position, currentlyControlledBodyIndex);
+    updateVelocityArrow(arrow, circle.velocity, circle.position, currentlyControlledBodyIndex);
 }
 
 
