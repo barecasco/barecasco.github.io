@@ -48,7 +48,7 @@ const arrowHeadWidth        = 0.3;
 const arrowShaftRadius      = 0.02;
 let showVelocityArrows      = true;
 
-/// WALLS
+/// DEPLOYMENT AREA
 const DEPLOY_LENGTH     = 20;
 const TRAVERSE_LIMIT    = 100;
 
@@ -107,6 +107,8 @@ const pmasses   = {
     green   : greenMass,
     blue    : blueMass
 };
+
+
 /// ----------------------------------------------------------------------------------------------
 /// STAGE
 const scene     = new tri.Scene();
@@ -196,24 +198,8 @@ const yline  = new tri.Line(ygeom, ymat);
 scene.add(yline);
 
 
-/// WALLS
-const wall_mat = new tri.MeshStandardMaterial({ 
-    color: 0x444444, 
-    side: tri.DoubleSide 
-});
-
-const wall_geom = new tri.PlaneGeometry(200, 200);
-const wall_xy   = new tri.Mesh(wall_geom, wall_mat);
-wall_xy.rotation.x = Math.PI/2;
-wall_xy.position.y = 0;
-wall_xy.material.opacity        = 0.5;
-wall_xy.material.transparent    = true;
-// wall_xy.receiveShadow = true; // Add this
-// scene.add(wall_xy);
-
-
-// Add an ambient light to provide base illumination
-const ambientLight = new tri.AmbientLight(0xffffff); // soft white light
+// ambient light to provide base illumination
+const ambientLight = new tri.AmbientLight(0xffffff);
 scene.add(ambientLight);
 
 
@@ -433,7 +419,7 @@ function createVelocityArrow(color) {
         color: color,
     });
     const shaft = new tri.Mesh(shaftGeometry, shaftMaterial);
-    shaft.position.y = 0.5; // Position shaft so it starts at origin
+    shaft.position.y = 0.5; // position shaft so it starts at origin
     arrowGroup.add(shaft);
     
     // arrow head (cone)
@@ -443,7 +429,7 @@ function createVelocityArrow(color) {
         wireframe: true
     });
     const head = new tri.Mesh(headGeometry, headMaterial);
-    head.position.y = 1 + arrowHeadLength/2; // Position at top of shaft
+    head.position.y = 1 + arrowHeadLength/2; // position at top of shaft
     head.visible = true;
     arrowGroup.add(head);
     
@@ -464,7 +450,6 @@ function createVelocityArrow(color) {
     return arrowGroup;
 }
 
-/// Function to update velocity arrow
 function updateVelocityArrow(arrowGroup, velocity, position, bodyIndex) {
     if (!showVelocityArrows) {
         arrowGroup.visible = false;
@@ -473,29 +458,19 @@ function updateVelocityArrow(arrowGroup, velocity, position, bodyIndex) {
     
     arrowGroup.visible = true;
     
-    // Calculate velocity magnitude
     const velMagnitude = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
     
-    // If velocity is too small, hide the arrow
     if (velMagnitude < 0.01) {
         arrowGroup.visible = false;
         return;
     }
     
-    // Scale the arrow based on velocity magnitude
     const scaledLength = velMagnitude * arrowScaleFactor;
-    
-    // Update shaft length
     arrowGroup.shaft.scale.y    = scaledLength;
-    arrowGroup.shaft.position.y = scaledLength / 2;
-    
-    // Update head position
+    arrowGroup.shaft.position.y = scaledLength / 2;    
     arrowGroup.head.position.y  = scaledLength + arrowHeadLength/2;
-    
-    // Position the arrow at the body's position
     arrowGroup.position.copy(position);
     
-    // Update helper visibility based on control mode
     if (controlMode === 'velocity') {
         arrowGroup.velocityHelper.visible = true;
         arrowGroup.velocityHelper.material.opacity = 0.7;
@@ -504,20 +479,20 @@ function updateVelocityArrow(arrowGroup, velocity, position, bodyIndex) {
         arrowGroup.velocityHelper.material.opacity = 0.0;
     }
         
-    // Orient the arrow in the direction of velocity
+    // orient the arrow in the direction of velocity
     const velocityVector = new tri.Vector3(velocity.x, velocity.y, velocity.z).normalize();
     
-    // Calculate rotation to align arrow with velocity vector
+    // calculate rotation to align arrow with velocity vector
     if (velocityVector.length() > 0) {
         arrowGroup.lookAt(
             position.x + velocityVector.x,
             position.y + velocityVector.y,
             position.z + velocityVector.z
         );
-        // Rotate 90 degrees around X axis because arrow points up by default
+        // rotate 90 degrees around X axis because arrow points up by default
         arrowGroup.rotateX(Math.PI / 2);
         
-        // Update helper position
+        // update helper position
         arrowGroup.velocityHelper.rotation.copy(arrowGroup.rotation);
         arrowGroup.head.getWorldPosition(arrowGroup.velocityHelper.position);
     }
@@ -532,29 +507,20 @@ function updateVelocityArrowOnly(arrowGroup, velocity, position, bodyIndex) {
     
     arrowGroup.visible = true;
     
-    // Calculate velocity magnitude
     const velMagnitude = Math.sqrt(velocity.x * velocity.x + velocity.y * velocity.y + velocity.z * velocity.z);
     
-    // If velocity is too small, hide the arrow
     if (velMagnitude < 0.01) {
         arrowGroup.visible = false;
         return;
     }
     
-    // Scale the arrow based on velocity magnitude
     const scaledLength = velMagnitude * arrowScaleFactor;
     
-    // Update shaft length
     arrowGroup.shaft.scale.y    = scaledLength;
     arrowGroup.shaft.position.y = scaledLength / 2;
-    
-    // Update head position
     arrowGroup.head.position.y  = scaledLength + arrowHeadLength/2;
-    
-    // Position the arrow at the body's position
     arrowGroup.position.copy(position);
     
-    // Update helper visibility based on control mode
     if (controlMode === 'velocity') {
         arrowGroup.velocityHelper.visible = true;
         arrowGroup.velocityHelper.material.opacity = 0.7;
@@ -563,17 +529,14 @@ function updateVelocityArrowOnly(arrowGroup, velocity, position, bodyIndex) {
         arrowGroup.velocityHelper.material.opacity = 0.0;
     }
         
-    // Orient the arrow in the direction of velocity
     const velocityVector = new tri.Vector3(velocity.x, velocity.y, velocity.z).normalize();
     
-    // Calculate rotation to align arrow with velocity vector
     if (velocityVector.length() > 0) {
         arrowGroup.lookAt(
             position.x + velocityVector.x,
             position.y + velocityVector.y,
             position.z + velocityVector.z
         );
-        // Rotate 90 degrees around X axis because arrow points up by default
         arrowGroup.rotateX(Math.PI / 2);
     }
 }
@@ -601,7 +564,7 @@ for (let i = 0; i < numBodies; i++) {
     initials.push(init);
 }
 
-// Compute average position and velocity
+// compute average position and velocity
 let totalPos = { x: 0, y: 0, z: 0 };
 let totalVel = { x: 0, y: 0, z: 0 };
 
@@ -627,7 +590,7 @@ const avgVel = {
     z: totalVel.z / numBodies
 };
 
-// Subtract average from each body
+// subtract average from each body
 for (const obj of initials) {
     obj.position.x -= avgPos.x;
     obj.position.y -= avgPos.y;
@@ -693,7 +656,7 @@ for (let i = 0; i < 3; i++) {
     trails.push([]);
 }
 
-// Create velocity arrows for each body
+// create velocity arrows
 for (let i = 0; i < 3; i++) {
     const arrow = createVelocityArrow(arrowColors[i]);
     scene.add(arrow);
@@ -760,7 +723,6 @@ function updateTrailLine(index) {
 /// ----------------------------------------------------------------------------------------------
 /// PHYSICS FUNCTIONS
 
-// Calculate gravitational force between two bodies
 function calculateGravitationalForce(body1, body2) {
     const dx = body2.position.x - body1.position.x;
     const dy = body2.position.y - body1.position.y;
@@ -769,7 +731,7 @@ function calculateGravitationalForce(body1, body2) {
     const distanceSquared = dx*dx + dy*dy + dz*dz;
     const distance = Math.sqrt(distanceSquared);
     
-    // Avoid division by zero and add small softening parameter
+    // avoid division by zero
     const softening         = 0.5;
     const forceMagnitude    = G * body1.mass * body2.mass / (distanceSquared + softening*softening);
     
@@ -781,37 +743,37 @@ function calculateGravitationalForce(body1, body2) {
 }
 
 
-// Euler integration step
+// euler integration
 function eulerStep() {
-    // Calculate forces on each body
+    // calculate forces on each body
     const forces = circles.map(() => ({ x: 0, y: 0, z: 0 }));
     
     for (let i = 0; i < circles.length; i++) {
         for (let j = i + 1; j < circles.length; j++) {
             const force = calculateGravitationalForce(circles[i], circles[j]);
             
-            // Apply force to body i (attraction towards body j)
+            // apply force to body i (attraction towards body j)
             forces[i].x += force.x;
             forces[i].y += force.y;
             forces[i].z += force.z;
             
-            // Apply equal and opposite force to body j
+            // apply equal and opposite force to body j
             forces[j].x -= force.x;
             forces[j].y -= force.y;
             forces[j].z -= force.z;
         }
     }
     
-    // Update velocities and positions using Euler method
+    // update velocities and positions using euler method
     for (let i = 0; i < circles.length; i++) {
         const body = circles[i];
         
-        // Update velocity: v = v + (F/m) * dt
+        // update velocity: v = v + (F/m) * dt
         body.velocity.x += (forces[i].x / body.mass) * dt;
         body.velocity.y += (forces[i].y / body.mass) * dt;
         body.velocity.z += (forces[i].z / body.mass) * dt;
         
-        // Update position: x = x + v * dt
+        // update position: x = x + v * dt
         body.position.x += body.velocity.x * dt;
         body.position.y += body.velocity.y * dt;
         body.position.z += body.velocity.z * dt;
@@ -823,22 +785,14 @@ function updateBodiesByControl() {
     if (!transformControl.object) return;
     
     if (controlMode === 'position') {
-        // Find which aura is being transformed
         const transformedObject = transformControl.object;
         const coronaIndex = coronas.indexOf(transformedObject);
         if (coronaIndex === -1) return;
         
-        // Update the corresponding circle's position to match the aura
         circles[coronaIndex].position.x = transformedObject.position.x;
         circles[coronaIndex].position.y = transformedObject.position.y;
         circles[coronaIndex].position.z = transformedObject.position.z;
-        
-        // Optional: Reset velocity when manually positioning
-        // circles[coronaIndex].velocity.x = 0;
-        // circles[coronaIndex].velocity.y = 0;
-        // circles[coronaIndex].velocity.z = 0;
-        
-        // Update corona position as well
+                
         coronas[coronaIndex].position.x = transformedObject.position.x;
         coronas[coronaIndex].position.y = transformedObject.position.y;
         coronas[coronaIndex].position.z = transformedObject.position.z;
@@ -848,7 +802,7 @@ function updateBodiesByControl() {
         updateVelocityArrow(arrow, circle.velocity, circle.position, coronaIndex);
 
     } else if (controlMode === 'velocity') {
-        // Find which velocity helper is being transformed
+        // find which velocity helper is being transformed
         const transformedObject = transformControl.object;
         let velocityHelperIndex = -1;
         
@@ -861,7 +815,7 @@ function updateBodiesByControl() {
         
         if (velocityHelperIndex === -1) return;
         
-        // Calculate the new velocity direction from new helper position
+        // calculate the new velocity direction from new helper position
         let arrow           = velocityArrows[velocityHelperIndex];
         let vhelper         = arrow.velocityHelper;
         let circle          = circles[velocityHelperIndex];
@@ -873,7 +827,7 @@ function updateBodiesByControl() {
             dirpos.y,
             dirpos.z
         );
-        // Rotate 90 degrees around X axis because arrow points up by default
+        // rotate 90 degrees around X axis
         arrow.rotateX(Math.PI / 2);
     
         const currentVelocity   = circles[velocityHelperIndex].velocity;
@@ -883,7 +837,7 @@ function updateBodiesByControl() {
             currentVelocity.z * currentVelocity.z
         );
 
-        // Update the velocity to maintain magnitude but change direction
+        // update the velocity to maintain magnitude but change direction
         circle.velocity.x = heading.x * currentMagnitude;
         circle.velocity.y = heading.y * currentMagnitude;
         circle.velocity.z = heading.z * currentMagnitude;
@@ -891,7 +845,7 @@ function updateBodiesByControl() {
         // update orientation of the helper
         vhelper.rotation.copy(arrow.rotation);
 
-        // Update helper position
+        // update helper position
         renderer.render(scene, camera);
     }
 }
@@ -915,10 +869,10 @@ function pauseAnimation() {
 }
 
 function resetBodies() {
-    // Clear trails
+    // clear trails
     trails.forEach(trail => trail.length = 0);
     
-    // Reset positions and velocities to initial values
+    // reset positions and velocities to initial values
     for (let i = 0; i < circles.length; i++) {
         circles[i].position.x = initials[i].position.x;
         circles[i].position.y = initials[i].position.y;
@@ -933,18 +887,18 @@ function resetBodies() {
         coronas[i].position.z = initials[i].position.z;
     }
     
-    // Clear trail lines
+    // clear trail lines
     trailLines.forEach(segments => {
         segments.forEach(segment => {
             segment.line.visible = false;
         });
     });
     
-    // Detach any controls
+    // detach any controls
     transformControl.detach();
     currentlyControlledBodyIndex = -1;
     
-    // Hide velocity magnitude control
+    // hide velocity magnitude control
     if (velocityMagnitudeControl) {
         velocityMagnitudeControl.hide();
     }
@@ -1130,25 +1084,17 @@ function animate() {
 
     if (isAnimating) {
         currentTime     = Date.now() - baseTime; 
-        // Perform multiple physics steps per frame for better accuracy
         for (let step = 0; step < 3; step++) {
             eulerStep();
         }
         
-        // Update circles
         circles.forEach((circle, index) => {        
-            // auras[index].position.x     = circle.position.x;
-            // auras[index].position.y     = circle.position.y;
-            // auras[index].position.z     = circle.position.z;
-
             coronas[index].position.x   = circle.position.x;
             coronas[index].position.y   = circle.position.y;
             coronas[index].position.z   = circle.position.z;
             
-            // Update velocity arrows
             updateVelocityArrow(velocityArrows[index], circle.velocity, circle.position, index);
             
-            // Update velocity magnitude in GUI if this body is currently selected
             if (index === currentlyControlledBodyIndex && controlMode === 'velocity' && velocityMagnitudeControl) {
                 const currentVel = circle.velocity;
                 const newMagnitude = Math.sqrt(
@@ -1163,21 +1109,17 @@ function animate() {
                 }
             }
             
-            // Add to trail every few frames
-            if (frameCount % 2 === 0) {
-                trails[index].unshift({
-                    x: circle.position.x,
-                    y: circle.position.y,
-                    z: circle.position.z
-                });
+            trails[index].unshift({
+                x: circle.position.x,
+                y: circle.position.y,
+                z: circle.position.z
+            });
 
-                // Limit trail length
-                if (trails[index].length > maxTrailPoints) {
-                    trails[index].pop();
-                }
-                
-                updateTrailLine(index);
+            if (trails[index].length > maxTrailPoints) {
+                trails[index].pop();
             }
+            
+            updateTrailLine(index);
         });
 
         frameCount++;
@@ -1192,40 +1134,31 @@ function animateOnce() {
 
     if (isAnimating) {
         currentTime     = Date.now() - baseTime; 
-        // Perform multiple physics steps per frame for better accuracy
         for (let step = 0; step < 3; step++) {
             eulerStep();
         }
         
         // Update circles
-        circles.forEach((circle, index) => {        
-            // auras[index].position.x     = circle.position.x;
-            // auras[index].position.y     = circle.position.y;
-            // auras[index].position.z     = circle.position.z;
-
+        circles.forEach((circle, index) => {         
             coronas[index].position.x   = circle.position.x;
             coronas[index].position.y   = circle.position.y;
             coronas[index].position.z   = circle.position.z;
             
-            // Update velocity arrows
             updateVelocityArrow(velocityArrows[index], circle.velocity, circle.position, index);
             
-            // Add to trail every few frames
-            // if (frameCount % 2 === 0) {
                 trails[index].unshift({
-                    x: circle.position.x,
-                    y: circle.position.y,
-                    z: circle.position.z
-                });
+                x: circle.position.x,
+                y: circle.position.y,
+                z: circle.position.z
+            });
 
-                // Limit trail length
-                if (trails[index].length > maxTrailPoints) {
-                    trails[index].pop();
-                }
-                
-                updateTrailLine(index);
-            // }
-        });
+            // Limit trail length
+            if (trails[index].length > maxTrailPoints) {
+                trails[index].pop();
+            }
+            
+            updateTrailLine(index);
+         });
 
         frameCount++;
     }
@@ -1235,7 +1168,7 @@ function animateOnce() {
 }
 
 
-// Handle window resize
+// handle window resize
 window.addEventListener('resize', () => {
     camera.aspect = window.innerWidth / window.innerHeight;
     camera.updateProjectionMatrix();
