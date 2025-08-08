@@ -6,6 +6,18 @@
     <title>Agra's Trinkets</title>
 
     <style>
+        #text-auth-overlay {
+            position: absolute; 
+            bottom: 20px; 
+            right: 20px; 
+            color: white; 
+            font-size: 15px; 
+            font-family: 'Arial', 'Helvetica';
+            line-height: 1.4em;
+            pointer-events: none; 
+            z-index: 99;
+        }
+
         body {
             background-color: #121212; /* Dark background */
             color: #ffffff; /* Light text */
@@ -93,6 +105,9 @@
 </head>
 
 <body>
+    <div id="text-auth-overlay">
+        Agra Barecasco
+    </div>
     <div class="container">
         <div class="plot-container">
             <div id="main-screen"></div>

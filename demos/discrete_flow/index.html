@@ -11,6 +11,18 @@
     <script src="https://cdn.jsdelivr.net/npm/danfojs@1.1.2/lib/bundle.min.js"></script>
 
     <style>
+        #text-auth-overlay {
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            color: white; 
+            font-size: 15px; 
+            font-family: 'Arial', 'Helvetica';
+            line-height: 1.4em;
+            pointer-events: none; 
+            z-index: 99;
+        }
+
         body {
             margin: 0;
             padding: 0;
@@ -232,6 +244,10 @@
 </head>
 
 <body>
+    <div id="text-auth-overlay">
+        Agra Barecasco
+    </div>
+    
     <div class="container">
         <div class="simControlContainer">
             <div class="descriptionColumn">

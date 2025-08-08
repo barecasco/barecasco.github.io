@@ -26,65 +26,12 @@ camera.position.set(70, 70, 120);
 /// CONTROLLER
 const controls = new OrbitControls( camera, renderer.domElement );
 controls.enableZoom = false;
-// const controls          = new FirstPersonControls( camera, renderer.domElement );
-// controls.movementSpeed  = 7;
-// controls.lookSpeed      = 0.1;
 const clock = new tri.Clock();
 
 
 /// ----------------------------------------------------------------------------------------------
 /// WALLS
-// Define boundary walls
 let WALL_POSITION = 25;
-
-// const walls1 = new tri.LineSegments(
-//     new tri.BufferGeometry(),
-//     new tri.LineBasicMaterial({ color: 0x5995f7 })
-// );
-// const walls2 = new tri.LineSegments(
-//     new tri.BufferGeometry(),
-//     new tri.LineBasicMaterial({ color: 0x5995f7 })
-// );
-
-// // wall vertices (rectangle)
-// const wallVertices1 = new Float32Array([
-//     // Left wall
-//     -WALL_POSITION, -WALL_POSITION, 0,
-//     -WALL_POSITION, WALL_POSITION, 0,
-//     // Right wall
-//     WALL_POSITION, -WALL_POSITION, 0,
-//     WALL_POSITION, WALL_POSITION, 0,
-//     // Top wall
-//     -WALL_POSITION, WALL_POSITION, 0,
-//     WALL_POSITION, WALL_POSITION, 0,
-//     // Bottom wall
-//     -WALL_POSITION, -WALL_POSITION, 0,
-//     WALL_POSITION, -WALL_POSITION, 0,
-// ]);
-
-// WALL_POSITION = 25.5;
-
-// const wallVertices2 = new Float32Array([
-//     // Left wall
-//     -WALL_POSITION, -WALL_POSITION, 0,
-//     -WALL_POSITION, WALL_POSITION, 0,
-//     // Right wall
-//     WALL_POSITION, -WALL_POSITION, 0,
-//     WALL_POSITION, WALL_POSITION, 0,
-//     // Top wall
-//     -WALL_POSITION, WALL_POSITION, 0,
-//     WALL_POSITION, WALL_POSITION, 0,
-//     // Bottom wall
-//     -WALL_POSITION, -WALL_POSITION, 0,
-//     WALL_POSITION, -WALL_POSITION, 0,
-// ]);
-
-// WALL_POSITION = 25;
-
-// walls1.geometry.setAttribute('position', new tri.BufferAttribute(wallVertices1, 3));
-// walls2.geometry.setAttribute('position', new tri.BufferAttribute(wallVertices2, 3));
-// scene.add(walls1);
-// scene.add(walls2);
 
 
 /// ----------------------------------------------------------------------------------------------

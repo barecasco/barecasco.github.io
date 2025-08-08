@@ -11,6 +11,18 @@
             position: relative;
         }
 
+        #text-auth-overlay {
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            color: white; 
+            font-size: 15px; 
+            font-family: 'Arial', 'Helvetica';
+            line-height: 1.4em;
+            pointer-events: none; 
+            z-index: 99;
+        }
+
     </style>
     <script type="importmap">
         {
@@ -22,6 +34,9 @@
     </script>
 </head>
 <body>
+    <div id="text-auth-overlay">
+        Agra Barecasco
+    </div>
     <div id="plot-container"></div>
     <script type="module" src="main.js"></script>
 </body>

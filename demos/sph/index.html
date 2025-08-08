@@ -1,3 +1,10 @@
+<!--
+ Author: Agra Barecasco
+ Created: June 1, 2025
+ Last Modified: August 5, 2025
+ Contact: barecasco@gmail.com
+ -->
+ 
 <!DOCTYPE html>
 <html lang="en">
 <head>
@@ -5,6 +12,18 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Dam Break SPH Simulation</title>
     <style>
+        #text-auth-overlay {
+            position: absolute; 
+            top: 20px; 
+            right: 20px; 
+            color: white; 
+            font-size: 15px; 
+            font-family: 'Arial', 'Helvetica';
+            line-height: 1.4em;
+            pointer-events: none; 
+            z-index: 99;
+        }
+
         body, html {
             margin: 0;
             padding: 0;
@@ -50,6 +69,9 @@
     </script>
 </head>
 <body>
+    <div id="text-auth-overlay">
+        Agra Barecasco
+    </div>
     <div id="simulation-container"></div>
     <div id="overlay-text">
         Press A or D to rotate.

@@ -1,3 +1,11 @@
+/*
+ * Author: Agra Barecasco
+ * Created: June 1, 2025
+ * Last Modified: August 5, 2025
+ * Contact: barecasco@gmail.com
+*/
+
+
 import * as tri from 'three';
 
 ///--- STAGE
