@@ -1,0 +1,611 @@
+const chart_bg = "#1a1a1a"
+
+// Sample data generation
+function loadDataFromFiles() {
+    try {
+        // Try to load the JSON files synchronously using XMLHttpRequest
+        const observeRequest = new XMLHttpRequest();
+        observeRequest.open('GET', 'observe_fish.json', false); // false = synchronous
+        observeRequest.send();
+
+        const siteRequest = new XMLHttpRequest();
+        siteRequest.open('GET', 'site_fish.json', false); // false = synchronous
+        siteRequest.send();
+
+        if (observeRequest.status === 200 && siteRequest.status === 200) {
+            const observeFish = JSON.parse(observeRequest.responseText);
+            const siteFish = JSON.parse(siteRequest.responseText);
+            return { observeFish, siteFish };
+        } else {
+            throw new Error('Failed to load data files');
+        }
+    } catch (error) {
+        console.error('Error loading data files:', error);
+        // console.log('Using sample data instead');
+        // return generateSampleData(); // Fallback to sample data
+    }
+}
+
+const { observeFish, siteFish } = loadDataFromFiles();
+
+// Initialize filters
+function initializeFilters() {
+    const mpaValues = [...new Set(observeFish.map(d => d['control/mpa']))];
+    const yearValues = [...new Set(observeFish.map(d => d.year))].sort();
+    const trophicValues = [...new Set(observeFish.map(d => d.trophic))];
+    const familyValues = [...new Set(observeFish.map(d => d.family))];
+
+    populateSelect('mpa-control-filter', mpaValues);
+    populateSelect('year-filter', yearValues);
+    populateSelect('trophic-filter', trophicValues);
+    populateSelect('family-filter', familyValues);
+}
+
+function populateSelect(selectId, values) {
+    const select = document.getElementById(selectId);
+    values.forEach(value => {
+        const option = document.createElement('option');
+        option.value = value;
+        option.textContent = value;
+        select.appendChild(option);
+    });
+}
+
+// Filter data function
+function filterData() {
+    const mpaControl = document.getElementById('mpa-control-filter').value;
+    const year = document.getElementById('year-filter').value;
+    const trophic = document.getElementById('trophic-filter').value;
+    const family = document.getElementById('family-filter').value;
+
+    let filtered = observeFish.slice();
+
+    if (mpaControl !== 'all') {
+        filtered = filtered.filter(d => d['control/mpa'] === mpaControl);
+    }
+    if (year !== 'all') {
+        filtered = filtered.filter(d => d.year == year);
+    }
+    if (trophic !== 'all') {
+        filtered = filtered.filter(d => d.trophic === trophic);
+    }
+    if (family !== 'all') {
+        filtered = filtered.filter(d => d.family === family);
+    }
+
+    return filtered;
+}
+
+// Update metrics
+function updateMetrics(data) {
+    const totalObs = data.length;
+    const uniqueSpecies = new Set(data.map(d => d.species)).size;
+    const avgBiomass = data.length > 0 ? (data.reduce((sum, d) => sum + d['biomass_(kg/ha)'], 0) / data.length).toFixed(2) : '0.00';
+    const totalSites = new Set(data.map(d => d.site_name)).size;
+
+    document.getElementById('total-observations').textContent = totalObs.toLocaleString();
+    document.getElementById('total-species').textContent = uniqueSpecies.toLocaleString();
+    document.getElementById('avg-biomass').textContent = avgBiomass;
+    document.getElementById('total-sites').textContent = totalSites.toLocaleString();
+}
+
+// Create biomass boxplot
+function createBiomassBoxplot(data) {
+    const mpaData = data.filter(d => d['control/mpa'] === 'MPA').map(d => d['biomass_(kg/ha)']);
+    const controlData = data.filter(d => d['control/mpa'] === 'Control').map(d => d['biomass_(kg/ha)']);
+
+    const traces = [];
+    if (mpaData.length > 0) {
+        traces.push({
+            y: mpaData,
+            type: 'box',
+            name: 'MPA',
+            marker: { color: '#1f77b4' }
+        });
+    }
+    if (controlData.length > 0) {
+        traces.push({
+            y: controlData,
+            type: 'box',
+            name: 'Control',
+            marker: { color: '#ff7f0e' }
+        });
+    }
+
+    const layout = {
+        template: 'plotly_dark',
+        paper_bgcolor: chart_bg,
+        plot_bgcolor: chart_bg,
+        height: 400,
+        margin: { t: 20, b: 40, l: 60, r: 20 },
+        yaxis: { title: 'Biomass (kg/ha)' },
+        showlegend: true,
+        xaxis: { 
+            // title: { text: 'Your Title', font: { color: '#ffffff' } },
+            tickfont: { color: '#ffffff' }
+        },
+        yaxis: { 
+            // title: { text: 'Your Title', font: { color: '#ffffff' } },
+            tickfont: { color: '#ffffff' }
+        },
+        legend: {
+            font: { color: '#ffffff' },
+            orientation : "h", 
+            yanchor:"bottom", 
+            xanchor:"center",
+            y:-0.15, 
+            x:0.5
+        }
+    };
+
+    let biomass_config = {
+        responsive: true,
+        modeBarButtons: [
+            ['toImage', 'pan2d', 'resetViews']
+        ]
+    }
+    Plotly.newPlot('biomass-boxplot', traces, layout, biomass_config);
+}
+
+// Create trophic diversity chart
+function createTrophicDiversity(data) {
+    const trophicCounts = {};
+    data.forEach(d => {
+        if (!trophicCounts[d.trophic]) {
+            trophicCounts[d.trophic] = new Set();
+        }
+        trophicCounts[d.trophic].add(d.species);
+    });
+
+    const x = Object.keys(trophicCounts);
+    const y = x.map(trophic => trophicCounts[trophic].size);
+
+    const trace = {
+        x: x,
+        y: y,
+        type: 'bar',
+        marker: {
+            color : [
+                "#315A82",
+                "#AF662E",
+                "#417633",
+                "#92302B",
+                "#6B5189",
+                "#64453E",
+                "#9D5F8D",
+                "#616161",
+                "#8B8C38",
+                "#458B97"
+            ]
+        },
+    };
+
+    const layout = {
+        template: 'plotly_dark',
+        paper_bgcolor: chart_bg,
+        plot_bgcolor: chart_bg,
+        height: 400,
+        margin: { t: 20, b: 90, l: 60, r: 20 },
+        xaxis: { 
+            // title: {
+            //     text: 'Trophic Level',
+            //     font: { color: '#ffffff' }  // Add this
+            // },
+            tickfont: { color: '#ffffff' }
+        },
+        yaxis: { 
+            title: {
+                text: 'Number of Species',
+                font: { color: '#ffffff' }  // Add this
+            },
+            tickfont: { color: '#ffffff' }
+        },
+        legend: {
+            font: { color: '#ffffff' }
+        }
+    };
+
+    let trophic_config = {
+        responsive: true,
+        modeBarButtons: [
+            ['toImage', 'pan2d', 'resetViews']
+        ]    
+    }
+
+    Plotly.newPlot('trophic-diversity', [trace], layout, trophic_config);
+}
+
+// Create temporal trends
+function createTemporalTrends(data) {
+    const temporal = {};
+    data.forEach(d => {
+        const key = `${d.year}-${d.month.toString().padStart(2, '0')}`;
+        if (!temporal[key]) {
+            temporal[key] = { biomass: [], density: [] };
+        }
+        temporal[key].biomass.push(d['biomass_(kg/ha)']);
+        temporal[key].density.push(d['density_(n/ha)']);
+    });
+
+    const dates = Object.keys(temporal).sort();
+    const avgBiomass = dates.map(date => 
+        temporal[date].biomass.reduce((a, b) => a + b, 0) / temporal[date].biomass.length
+    );
+    const avgDensity = dates.map(date => 
+        temporal[date].density.reduce((a, b) => a + b, 0) / temporal[date].density.length
+    );
+
+    const trace1 = {
+        x: dates,
+        y: avgBiomass,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Biomass',
+        line: { color: 'skyblue' },
+        yaxis: 'y'
+    };
+
+    const trace2 = {
+        x: dates,
+        y: avgDensity,
+        type: 'scatter',
+        mode: 'lines+markers',
+        name: 'Density',
+        line: { color: 'yellow' },
+        yaxis: 'y2'
+    };
+
+    const layout = {
+        template: 'plotly_dark',
+        paper_bgcolor: chart_bg,
+        plot_bgcolor: chart_bg,
+        height: 400,
+        margin: { t: 20, b: 40, l: 60, r: 60 },
+        xaxis: { 
+            title: {
+                text: 'Date',
+                font: { color: '#ffffff' }  // Add this
+            },
+            tickfont: { color: '#ffffff' }
+        },
+        yaxis: { 
+            side: 'left',
+            title: {
+                text: 'Biomass (kg/ha)', 
+                font: { color: '#ffffff' }  // Add this
+            },
+            tickfont: { color: '#ffffff' }
+        },
+        yaxis2: { 
+            side: 'right',
+            overlaying: 'y',
+            title: {
+                text: 'Density (n/ha)', 
+                font: { color: '#ffffff' }  // Add this
+            },
+            tickfont: { color: '#ffffff' }
+        },
+        legend: {
+            font: { color: '#ffffff' },
+            orientation : "h", 
+            yanchor:"bottom", 
+            y:1.05, 
+            x:-0.05
+        }
+    };
+
+
+    let temporal_config = {
+        responsive: true,
+        modeBarButtons: [
+            ['toImage', 'pan2d', 'resetViews']
+        ]    
+    }
+    Plotly.newPlot('temporal-trends', [trace1, trace2], layout, temporal_config);
+}
+
+// Create size distribution
+function createSizeDistribution(data) {
+    const trophics = [...new Set(data.map(d => d.trophic))];
+    const traces = trophics.map((trophic, i) => ({
+        x: data.filter(d => d.trophic === trophic).map(d => d['size_(cm)']),
+        type: 'histogram',
+        name: trophic,
+        opacity: 0.7,
+        nbinsx: 40
+    }));
+
+    const layout = {
+        template: 'plotly_dark',
+        paper_bgcolor: chart_bg,
+        plot_bgcolor: chart_bg,
+        height: 400,
+        margin: { t: 20, b: 40, l: 60, r: 20 },
+        barmode: 'overlay',
+        xaxis: { 
+            title: {
+                text: 'Size (cm)',
+                font: { color: '#ffffff' }  // Add this
+            },
+            tickfont: { color: '#ffffff' }
+        },
+        yaxis: { 
+            title: {
+                text: 'Count',
+                font: { color: '#ffffff' }  // Add this
+            },
+            tickfont: { color: '#ffffff' }
+        },
+        legend: {
+            font: { color: '#ffffff' }
+        }
+    };
+
+    let sized_config = {
+        responsive: true,
+        modeBarButtons: [
+            ['toImage', 'pan2d', 'resetViews']
+        ]    
+    }
+    
+    Plotly.newPlot('size-distribution', traces, layout, sized_config);
+}
+
+// Create site map
+function createSiteMap(data) {
+    const siteData = {};
+    data.forEach(d => {
+        if (!siteData[d.sea_site_id]) {
+            const site = siteFish.find(s => s.sea_site_id === d.sea_site_id);
+            siteData[d.sea_site_id] = {
+                lat: site.latitude,
+                lon: site.longitude,
+                site_name: site.site_name,
+                mpa_control: site['mpa/control'],
+                biomass: [],
+                density: []
+            };
+        }
+        siteData[d.sea_site_id].biomass.push(d['biomass_(kg/ha)']);
+        siteData[d.sea_site_id].density.push(d['density_(n/ha)']);
+    });
+
+    const siteArray = Object.values(siteData);
+    const avgBiomass = siteArray.map(site => 
+        site.biomass.reduce((a, b) => a + b, 0) / site.biomass.length
+    );
+
+    const trace = {
+        type: 'scattermapbox',
+        lat: siteArray.map(s => s.lat),
+        lon: siteArray.map(s => s.lon),
+        mode: 'markers',
+        marker: {
+            size: avgBiomass.map(b => Math.max(2, 3*Math.log(b))),
+            color: siteArray.map(s => s.mpa_control === 'MPA' ? 'rgb(59,117,175)' : 'rgb(239,134,54)'),
+            opacity: 0.7
+        },
+        text: siteArray.map(s => `${s.site_name}<br>lat: ${s.lat}<br>lon: ${s.lon}<br>mpa: ${s.mpa_control}<br>avg_bmass: ${(s.biomass.reduce((a, b) => a + b, 0) / s.biomass.length).toFixed(2)} kg/ha`),
+        hovertemplate: '%{text}<extra></extra>'
+    };
+
+    const layout = {
+        title: {
+            text: 'Site Locations',
+            x: 0.001,          
+            y: 0.995,   
+            xanchor: 'left', 
+            yanchor: 'top',
+            font: {
+                family: 'Arial, sans-serif',
+                size: 19,
+                weight: 'bold',
+                color: '#ffffff'
+            }
+        },
+        mapbox: {
+            style: 'carto-darkmatter',
+            center: { lat: -2.12739, lon: 128.66352 },
+            zoom: 6
+        },
+        height: 630,
+        margin: { t: 0, b: 0, l: 0, r: 0 },
+        paper_bgcolor: chart_bg,
+    };
+
+    let site_config = {
+        responsive: true, 
+        scrollZoom: true,
+        modeBarButtons: [
+            ['toImage', 'resetViews']
+        ]
+    }
+    Plotly.newPlot('site-map', [trace], layout, site_config);
+}
+
+// Create environmental factors chart
+function createEnvironmentalFactors(data) {
+    const envData = {};
+    data.forEach(d => {
+        if (!envData[d.sea_site_id]) {
+            const site = siteFish.find(s => s.sea_site_id === d.sea_site_id);
+            envData[d.sea_site_id] = {
+                visibility: site.visibility,
+                bleaching: site.bleaching,
+                biomass: []
+            };
+        }
+        envData[d.sea_site_id].biomass.push(d['biomass_(kg/ha)']);
+    });
+
+    const envArray = Object.values(envData);
+    const avgBiomass = envArray.map(env => 
+        env.biomass.reduce((a, b) => a + b, 0) / env.biomass.length
+    );
+
+    const bleachingGroups = {
+        'n/a': { color: 'grey', data: [] },
+        'No': { color: 'green', data: [] },
+        'Yes': { color: 'red', data: [] }
+    };
+
+    // Group data by bleaching status
+    envArray.forEach((env, i) => {
+        bleachingGroups[env.bleaching].data.push({
+            x: env.visibility,
+            y: avgBiomass[i],
+            bleaching: env.bleaching
+        });
+    });
+
+    // Create separate traces
+    const traces = Object.entries(bleachingGroups).map(([status, group]) => ({
+        x: group.data.map(d => d.x),
+        y: group.data.map(d => d.y),
+        mode: 'markers',
+        type: 'scatter',
+        name: `Blc: ${status}`,
+        marker: {
+            size: 7,
+            color: group.color,
+            opacity: 0.7,
+            line: {width: 0}
+        },
+        hovertemplate: 'Visibility: %{x}<br>Avg Biomass: %{y:.2f}<br>Bleaching: ' + status + '<extra></extra>'
+    }));
+
+    const layout = {
+        template: 'plotly_dark',
+        paper_bgcolor: chart_bg,
+        plot_bgcolor: chart_bg,
+        height: 550,
+        margin: { t: 20, b: 40, l: 60, r: 20 },
+        xaxis: { 
+            title: {
+                text: 'Visibility',
+                font: { color: '#ffffff' }
+            },
+            tickfont: { color: '#ffffff' }
+        },
+        yaxis: { 
+            title: {
+                text: 'Avg Biomass (kg/ha)',
+                font: { color: '#ffffff' }
+            },
+            tickfont: { color: '#ffffff' }
+        },
+        legend: {
+            font: { color: '#ffffff' },
+            orientation: "h", 
+            yanchor: "bottom", 
+            y: 1.02, 
+            x: 0.3,
+            xanchor: 'center'
+        }
+    };
+    
+    enviro_config = {
+        modeBarButtons: [
+            ['zoom2d', 'pan2d']
+        ]
+    }
+    Plotly.newPlot('environmental-factors', traces, layout, enviro_config);
+}
+
+// Create summary table
+function createSummaryTable(data) {
+    const summary = {};
+    data.forEach(d => {
+        const key = `${d.family}_${d.trophic}_${d['control/mpa']}`;
+        if (!summary[key]) {
+            summary[key] = {
+                family: d.family,
+                trophic: d.trophic,
+                'control/mpa': d['control/mpa'],
+                species: new Set(),
+                biomass: [],
+                density: [],
+                size: []
+            };
+        }
+        summary[key].species.add(d.species);
+        summary[key].biomass.push(d['biomass_(kg/ha)']);
+        summary[key].density.push(d['density_(n/ha)']);
+        summary[key].size.push(d['size_(cm)']);
+    });
+
+    const tableData = Object.values(summary).map(s => ({
+        family: s.family,
+        trophic: s.trophic,
+        'control/mpa': s['control/mpa'],
+        species: s.species.size,
+        'biomass_(kg/ha)': (s.biomass.reduce((a, b) => a + b, 0) / s.biomass.length).toFixed(2),
+        'density_(n/ha)': (s.density.reduce((a, b) => a + b, 0) / s.density.length).toFixed(2),
+        'size_(cm)': (s.size.reduce((a, b) => a + b, 0) / s.size.length).toFixed(2)
+    }));
+
+    let tableHtml = `
+        <table>
+            <thead>
+                <tr>
+                    <th>Family</th>
+                    <th>Trophic</th>
+                    <th>Control/MPA</th>
+                    <th>Species Count</th>
+                    <th>Avg Biomass (kg/ha)</th>
+                    <th>Avg Density (n/ha)</th>
+                    <th>Avg Size (cm)</th>
+                </tr>
+            </thead>
+            <tbody>
+    `;
+
+    tableData.slice(0, 20).forEach(row => {
+        tableHtml += `
+            <tr>
+                <td>${row.family}</td>
+                <td>${row.trophic}</td>
+                <td>${row['control/mpa']}</td>
+                <td>${row.species}</td>
+                <td>${row['biomass_(kg/ha)']}</td>
+                <td>${row['density_(n/ha)']}</td>
+                <td>${row['size_(cm)']}</td>
+            </tr>
+        `;
+    });
+
+    tableHtml += '</tbody></table>';
+    document.getElementById('summary-table').innerHTML = tableHtml;
+}
+
+// Update dashboard
+function updateDashboard() {
+    const filteredData = filterData();
+    
+    updateMetrics(filteredData);
+    createSizeDistribution(filteredData);
+    createTrophicDiversity(filteredData);
+    createTemporalTrends(filteredData);
+    createBiomassBoxplot(filteredData);
+    createSiteMap(filteredData);
+    createEnvironmentalFactors(filteredData);
+    createSummaryTable(filteredData);
+}
+
+// Event listeners
+document.getElementById('mpa-control-filter').addEventListener('change', updateDashboard);
+document.getElementById('year-filter').addEventListener('change', updateDashboard);
+document.getElementById('trophic-filter').addEventListener('change', updateDashboard);
+document.getElementById('family-filter').addEventListener('change', updateDashboard);
+
+// Initialize
+initializeFilters();
+updateDashboard();
+
+// Handle window resize
+window.addEventListener('resize', function() {
+    const plotIds = ['biomass-boxplot', 'trophic-diversity', 'temporal-trends', 'size-distribution', 'site-map', 'environmental-factors'];
+    plotIds.forEach(id => {
+        Plotly.Plots.resize(id);
+    });
+});

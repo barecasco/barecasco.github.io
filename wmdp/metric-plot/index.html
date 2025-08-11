@@ -1,0 +1,69 @@
+<!--
+ Author: Agra Barecasco
+ Contact: barecasco@gmail.com
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <link rel="stylesheet" href="../style.css">
+
+    <title>A single plot</title>
+</head>
+
+
+<body>
+    <div id="text-auth-overlay">
+        Agra Barecasco
+    </div>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Barecasco dashboard template</h1>
+        </div>
+
+
+        <!-- Controls -->
+        <div class="controls">
+            <h3>Filters</h3>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Trophic Level:</label>
+                    <select id="trophic-filter">
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
+        </div>
+
+
+        <!-- Metrics -->
+        <div class="metrics-row">
+            <div class="metric-card">
+                <div class="metric-value" id="total-observations">0</div>
+                <div class="metric-label">Total Observations</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="total-species">0</div>
+                <div class="metric-label">Unique Species</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="total-sites">0</div>
+                <div class="metric-label">Survey Sites</div>
+            </div>
+        </div>
+
+    </div>
+
+    <script src="main.js"d></script>
+</body>
+
+
+</html>

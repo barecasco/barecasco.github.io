@@ -1,0 +1,119 @@
+<!--
+ Author: Agra Barecasco
+ Contact: barecasco@gmail.com
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <link rel="stylesheet" href="../style.css">
+
+    <title>barecasco all chart</title>
+</head>
+
+
+<body>
+    <div id="text-auth-overlay">
+        Agra Barecasco
+    </div>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Barecasco's plotly.js Catalog</h1>
+        </div>
+
+
+        <!-- Controls -->
+        <!-- <div class="controls">
+            <h3>Filters</h3>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Trophic Level:</label>
+                    <select id="trophic-filter">
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
+        </div> -->
+
+
+        <!-- metric row -->
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h3>Simple Text</h3>
+                <div id="metric-text-description">
+                    <p>
+                        Ketika ingin menampilkan satu atau dua angka saja,
+                        teks sederhana adalah cara yang baik untuk berkomunikasi.
+                        Memasang grafik berpotensi membuka interpretasi lain selain
+                        dari yang ingin kita sampaikan.
+                    </p>
+                </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="total-observations">0</div>
+                <div class="metric-label">Total Observations</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="total-species">0</div>
+                <div class="metric-label">Unique Species</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="total-sites">0</div>
+                <div class="metric-label">Survey Sites</div>
+            </div>
+        </div>
+
+        
+        <!-- table row -->
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h3>Table</h3>
+                <div id="metric-text-description">
+                    <p>
+
+                    </p>
+                </div>
+            </div>
+        <div class="table-container chart-60">
+            <h3>Filtered Data Summary</h3>
+            <div id="summary-table"></div>
+        </div>
+        </div>
+
+
+        <!-- Bar chart row -->
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h3>Bar Chart</h3>
+                <div id="bar-chart-description">
+                    <p>
+                        Grafik batang mudah untuk dibaca. 
+                        Mata dapat membandingkan data dari ujung batang
+                        sehingga kita dapat melihat secara cepat dan menentukan
+                        kategori terbesar, kategori terkecil, dan perbandingan antar
+                        kategori.
+                    </p>
+                </div>
+            </div>
+            <div class="chart-container chart-60">
+                <h3>Species Diversity by Trophic Level</h3>
+                <div id="trophic-diversity"></div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="main.js"></script>
+</body>
+
+
+</html>
