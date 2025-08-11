@@ -36,8 +36,8 @@ let currentTime             = Date.now() - baseTime;
 const bodyColors            = [0xf075a4, 0xa4f075, 0x75a4f0]; // [blue, red, green]
 const arrowColors           = [0xffffff, 0xffffff, 0xffffff];
 const bodyIndices           = {"red": 0, "green": 1, "blue": 2};
-const maxTrailPoints        = 500;
-const trailSegmentLength    = 500;
+const maxTrailPoints        = 150;
+const trailSegmentLength    = 150;
 const origin                = new tri.Vector3(0,0,0);
 
 
@@ -1084,9 +1084,7 @@ function animate() {
 
     if (isAnimating) {
         currentTime     = Date.now() - baseTime; 
-        for (let step = 0; step < 3; step++) {
-            eulerStep();
-        }
+        eulerStep();
         
         circles.forEach((circle, index) => {        
             coronas[index].position.x   = circle.position.x;
@@ -1109,7 +1107,7 @@ function animate() {
                 }
             }
             
-            if (frameCount % 3 == 0) {
+            if (frameCount % 10 == 0) {
                 trails[index].unshift({
                     x: circle.position.x,
                     y: circle.position.y,
@@ -1148,7 +1146,7 @@ function animateOnce() {
             
             updateVelocityArrow(velocityArrows[index], circle.velocity, circle.position, index);
             
-                trails[index].unshift({
+            trails[index].unshift({
                 x: circle.position.x,
                 y: circle.position.y,
                 z: circle.position.z
