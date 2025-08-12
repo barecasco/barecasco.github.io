@@ -1,0 +1,51 @@
+
+def latlon_to_decimal(latlon_str):
+    latlon_str = latlon_str.lower()
+    nreg = r"(\d+[,\.]*\d*)"
+    sreg = r"[nsew]"
+
+    if not latlon_str:
+        return None
+    
+    if latlon_str.lower() == "n/a":
+        return None
+    
+    if latlon_str.lower() == "nan":
+        return None 
+    
+    n_matches = re.findall(nreg, latlon_str)
+    s_match   = re.findall(sreg, latlon_str)
+
+    if len(n_matches) == 1:
+        return float(latlon_str)
+
+    if len(n_matches) == 3:
+        degree, minute, seconds = n_matches
+        if s_match:
+            direction = s_match[0]
+    else:
+        return None
+    
+    degrees = int(degree)
+    minutes = int(minute)
+    
+    seconds = seconds.replace(",", ".")
+    seconds = float(seconds)
+
+    decimal_degrees = degrees + (minutes / 60) + (seconds / 3600)
+
+    if direction == 'n':
+        return decimal_degrees
+    
+    if direction == 's':
+        decimal_degrees = -decimal_degrees
+        return decimal_degrees
+    
+    if direction == 'e':
+        return decimal_degrees
+    
+    if direction == 'w':
+        decimal_degrees = -decimal_degrees
+        return decimal_degrees
+    
+

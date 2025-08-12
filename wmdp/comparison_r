@@ -1,0 +1,51 @@
+dms_to_decimal <- function(coord_string) {
+  lat_lon_pattern <- "([NS]?)\\s*([0-9]+)[°]?\\s*([0-9]+)[′']?\\s*([0-9.]+)[″\"]?\\s*([NS]?)\\s*[,\\s]+([EW]?)\\s*([0-9]+)[°]?\\s*([0-9]+)[′']?\\s*([0-9.]+)[″\"]?\\s*([EW]?)"
+  
+  matches <- str_match(coord_string, lat_lon_pattern)
+  
+  if (is.na(matches[1])) {
+    decimal_pattern <- "([NS]?)\\s*([0-9.]+)[°]?\\s*([NS]?)\\s*[,\\s]+([EW]?)\\s*([0-9.]+)[°]?\\s*([EW]?)"
+    decimal_matches <- str_match(coord_string, decimal_pattern)
+    
+    if (!is.na(decimal_matches[1])) {
+      lat_dir <- ifelse(decimal_matches[2] != "" && decimal_matches[2] != "", decimal_matches[2], decimal_matches[4])
+      lat_val <- as.numeric(decimal_matches[3])
+      lon_dir <- ifelse(decimal_matches[5] != "" && decimal_matches[5] != "", decimal_matches[5], decimal_matches[7])
+      lon_val <- as.numeric(decimal_matches[6])
+      
+      # Apply direction
+      if (lat_dir == "S") lat_val <- -lat_val
+      if (lon_dir == "W") lon_val <- -lon_val
+      
+      return(c(lat_val, lon_val))
+    }
+    return(c(NA, NA))
+  }
+  
+  # Extract components
+  lat_dir1 <- matches[2]
+  lat_deg <- as.numeric(matches[3])
+  lat_min <- as.numeric(matches[4])
+  lat_sec <- as.numeric(matches[5])
+  lat_dir2 <- matches[6]
+  
+  lon_dir1 <- matches[7]
+  lon_deg <- as.numeric(matches[8])
+  lon_min <- as.numeric(matches[9])
+  lon_sec <- as.numeric(matches[10])
+  lon_dir2 <- matches[11]
+  
+  # Determine actual direction (could be before or after the numbers)
+  lat_direction <- ifelse(lat_dir1 != "" && !is.na(lat_dir1), lat_dir1, lat_dir2)
+  lon_direction <- ifelse(lon_dir1 != "" && !is.na(lon_dir1), lon_dir1, lon_dir2)
+  
+  # Convert to decimal degrees
+  lat_decimal <- lat_deg + (lat_min / 60) + (lat_sec / 3600)
+  lon_decimal <- lon_deg + (lon_min / 60) + (lon_sec / 3600)
+  
+  # Apply direction (South and West are negative)
+  if (lat_direction == "S") lat_decimal <- -lat_decimal
+  if (lon_direction == "W") lon_decimal <- -lon_decimal
+  
+  return(c(lat_decimal, lon_decimal))
+}

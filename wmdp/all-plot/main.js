@@ -1,41 +1,69 @@
-// ----------------------------------------------------------------------------- Script parameters
-const chart_bg = "#1a1a1a"
+// ----------------------------------------------------------------------------- SCRIPT PARAMETER
 
 
-// ----------------------------------------------------------------------------- Data loading
-function loadDataFromFiles() {
+
+// ----------------------------------------------------------------------------- DATA LOADING
+function loadDefaultLayout() {
+    try {
+        const layoutRequest = new XMLHttpRequest();
+        layoutRequest.open('GET', '../layout.json', false);
+        layoutRequest.send();
+
+        if (layoutRequest.status === 200) {
+            const defaultLayout = JSON.parse(layoutRequest.responseText);
+            return defaultLayout;
+        } else {
+            throw new Error('Failed to load data file');
+        }
+    } catch (error) {
+        console.error('Error loading data files:', error);
+    }    
+}
+
+
+function loadObserveFishData() {
     try {
         // Try to load the JSON files synchronously using XMLHttpRequest
         const observeRequest = new XMLHttpRequest();
         observeRequest.open('GET', '../data/observe_fish.json', false);
         observeRequest.send();
 
+        if (observeRequest.status === 200) {
+            const observeFish = JSON.parse(observeRequest.responseText);
+            return observeFish;
+        } else {
+            throw new Error('Failed to load data file');
+        }
+    } catch (error) {
+        console.error('Error loading data files:', error);
+    }    
+}
+
+
+function loadSiteFishData() {
+    try {
         const siteRequest = new XMLHttpRequest();
         siteRequest.open('GET', '../data/site_fish.json', false);
         siteRequest.send();
 
-        if (observeRequest.status === 200 && siteRequest.status === 200) {
-            const observeFish = JSON.parse(observeRequest.responseText);
+        if (siteRequest.status === 200) {
             const siteFish = JSON.parse(siteRequest.responseText);
-            return { observeFish, siteFish };
+            return siteFish;
         } else {
             throw new Error('Failed to load data files');
         }
     } catch (error) {
-        console.error('Error loading data files:', error);
+        console.error('Error loading data file:', error);
     }
 }
 
-const { observeFish, siteFish } = loadDataFromFiles();
+const observerFish  = loadObserveFishData();
+const siteFish      = loadSiteFishData();
+const defaultLayout = loadDefaultLayout();
 
 
 
-// ----------------------------------------------------------------------------- Initialize filters
-function initializeFilters() {
-    const trophicValues = [...new Set(observeFish.map(d => d.trophic))];
-    populateSelect('trophic-filter', trophicValues);
-}
-
+// ----------------------------------------------------------------------------- INITIALIZE FILTERS
 function populateSelect(selectId, values) {
     const select = document.getElementById(selectId);
     values.forEach(value => {
@@ -47,7 +75,17 @@ function populateSelect(selectId, values) {
 }
 
 
-// ----------------------------------------------------------------------------- Filter data function
+function initializeFilters() {
+    const trophicValues = [...new Set(observeFish.map(d => d.trophic))];
+    populateSelect('trophic-filter', trophicValues);
+}
+
+
+
+
+
+// ----------------------------------------------------------------------------- FILTER DATA FUNCTION
+// Apply filters before updating the dashboard
 function filterData() {
     let filtered    = observeFish.slice();
 
@@ -61,7 +99,9 @@ function filterData() {
 }
 
 
-// ----------------------------------------------------------------------------- Update plot
+
+
+// ----------------------------------------------------------------------------- CREATE & UPDATE PLOT
 function updateMetrics(data) {
     const totalObs      = data.length;
     const uniqueSpecies = new Set(data.map(d => d.species)).size;
@@ -172,34 +212,18 @@ function createTrophicDiversity(data) {
         },
     };
 
-    const layout = {
-        template        : 'plotly_dark',
-        paper_bgcolor   : chart_bg,
-        plot_bgcolor    : chart_bg,
+
+
+    const addedLayout = {
         height          : 400,
-        margin          : { t: 20, b: 90, l: 60, r: 20 },
-        xaxis           : { 
-            tickfont: { 
-                color: '#ffffff' 
-            }
-        },
         yaxis: { 
             title: {
                 text: 'Number of Species',
-                font: { 
-                    color: '#ffffff' 
-                }
             },
-            tickfont: { 
-                color: '#ffffff' 
-            }
         },
-        legend: {
-            font: { 
-                color: '#ffffff' 
-            }
-        }
     };
+
+    const layout = {...defaultLayout, ...addedLayout}
 
     let trophic_config = {
         responsive      : true,
@@ -237,47 +261,26 @@ function createScatterPlotSample(data) {
             };
             
 
-            const layout = {
-                template        : 'plotly_dark',
-                paper_bgcolor   : chart_bg,
-                plot_bgcolor    : chart_bg,
+            const addedLayout = {
                 height          : 400,
-                margin          : { t: 20, b: 90, l: 60, r: 20 },
-
                 xaxis           : { 
                     title: {
                         text: 'X Axis',
-                        font: { 
-                            color: '#ffffff' 
-                        }
                     },
                     range   : [-5, 105],
-                    tickfont: { 
-                        color: '#ffffff' 
-                    }
                 },
 
                 yaxis: { 
                     range   : [-5, 105],
                     title: {
                         text   : 'Y Axis',
-                        font    : { 
-                            color: '#ffffff' 
-                        }
                     },
-                    tickfont    : { 
-                        color   : '#ffffff' 
-                    }
                 },
                 
-                legend: {
-                    font: { 
-                        color: '#ffffff' 
-                    }
-                },
                 showlegend: false,
                 hovermode: 'closest'
             };
+            const layout = {...defaultLayout, ...addedLayout};
             
             // Plot configuration
             const config = {
@@ -293,21 +296,24 @@ function createScatterPlotSample(data) {
 }
 
 
-// ----------------------------------------------------------------------------- Update dashboard
+// ----------------------------------------------------------------------------- UPDATE VISUALIZATIONS
 function updateDashboard() {
-    const filteredData = filterData();
-    updateMetrics(filteredData);
-    createSummaryTable(filteredData);
-    createTrophicDiversity(filteredData);
+    updateMetrics(observerFish);
+    createSummaryTable(observerFish);
+    createTrophicDiversity(observerFish);
     createScatterPlotSample();
 }
 
 
-// ----------------------------------------------------------------------------- Event listeners
+// ----------------------------------------------------------------------------- EVENT LISTENERS
 // document.getElementById('trophic-filter').addEventListener('change', updateDashboard);
 
 
-// ----------------------------------------------------------------------------- Initialize
+
+// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + 
+// MAIN
+// + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + + 
+
 // initializeFilters();
 updateDashboard();
 
