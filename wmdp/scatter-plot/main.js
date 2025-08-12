@@ -4,47 +4,6 @@
 
 
 // ----------------------------------------------------------------------------- DATA LOADING
-function deepMergeImmutable(...objects) {
-    function isObject(item) {
-        return item && typeof item === 'object' && !Array.isArray(item);
-    }
-
-    function mergeDeep(target, source) {
-        const result = { ...target };
-
-        for (const key in source) {
-            if (isObject(source[key]) && isObject(target[key])) {
-                result[key] = mergeDeep(target[key], source[key]);
-            } else {
-                result[key] = source[key];
-            }
-        }
-
-        return result;
-    }
-
-    return objects.reduce(mergeDeep, {});
-}
-
-
-function loadDefaultLayout() {
-    try {
-        const layoutRequest = new XMLHttpRequest();
-        layoutRequest.open('GET', '../layout.json', false);
-        layoutRequest.send();
-
-        if (layoutRequest.status === 200) {
-            const defaultLayout = JSON.parse(layoutRequest.responseText);
-            return defaultLayout;
-        } else {
-            throw new Error('Failed to load data file');
-        }
-    } catch (error) {
-        console.error('Error loading data files:', error);
-    }    
-}
-
-
 function loadObserveFishData() {
     try {
         // Try to load the JSON files synchronously using XMLHttpRequest
@@ -83,7 +42,7 @@ function loadSiteFishData() {
 
 // const observerFish      = loadObserveFishData();
 // const siteFish          = loadSiteFishData();
-const defaultLayout     = loadDefaultLayout();
+const defaultLayout     = loadDefaultLayout("../layout.json");
 
 
 // ----------------------------------------------------------------------------- INITIALIZE FILTERS
@@ -190,7 +149,7 @@ function createScatterPlotSample_2() {
     var trace1 = {
         x: [52698, 43117],
         y: [53, 31],
-        mode: 'markers',
+        mode: 'lines',
         name: 'North America',
         text: ['United States', 'Canada'],
         marker: {
@@ -207,7 +166,7 @@ function createScatterPlotSample_2() {
     var trace2 = {
         x: [39317, 37236, 35650, 30066, 29570, 27159, 23557, 21046, 18007],
         y: [33, 20, 13, 19, 27, 19, 49, 44, 38],
-        mode: 'markers',
+        mode: 'lines',
         name: 'Europe',
         text: ['Germany', 'Britain', 'France', 'Spain', 'Italy', 'Czech Rep.', 'Greece', 'Poland'],
         marker: {
@@ -220,7 +179,7 @@ function createScatterPlotSample_2() {
     var trace3 = {
         x: [42952, 37037, 33106, 17478, 9813, 5253, 4692, 3899],
         y: [23, 42, 54, 89, 14, 99, 93, 70],
-        mode: 'markers',
+        mode: 'lines',
         name: 'Asia/Pacific',
         text: ['Australia', 'Japan', 'South Korea', 'Malaysia', 'China', 'Indonesia', 'Philippines', 'India'],
         marker: {
@@ -233,7 +192,7 @@ function createScatterPlotSample_2() {
     var trace4 = {
         x: [19097, 18601, 15595, 13546, 12026, 7434, 5419],
         y: [43, 47, 56, 80, 86, 93, 80],
-        mode: 'markers',
+        mode: 'lines',
         name: 'Latin America',
         text: ['Chile', 'Argentina', 'Mexico', 'Venezuela', 'Venezuela', 'El Salvador', 'Bolivia'],
         marker: {
@@ -245,7 +204,7 @@ function createScatterPlotSample_2() {
     
     const addedLayout = {
         height          : 400,
-        showlegend  : false,
+        showlegend  : true,
         hovermode   : 'closest',
         xaxis: {
             title: {
@@ -372,44 +331,6 @@ function createScatterPlotSample_3() {
 }
 
 
-
-for( var i = 0 ; i < xData.length ; i++ ) {
-  var result = {
-    xref: 'paper',
-    x: 0.05,
-    y: yData[i][0],
-    xanchor: 'right',
-    yanchor: 'middle',
-    text: labels[i] + ' ' + yData[i][0] +'%',
-    showarrow: false,
-    font: {
-      family: 'Arial',
-      size: 16,
-      color: 'black'
-    }
-  };
-  var result2 = {
-    xref: 'paper',
-    x: 0.95,
-    y: yData[i][11],
-    xanchor: 'left',
-    yanchor: 'middle',
-    text: yData[i][11] +'%',
-    font: {
-      family: 'Arial',
-      size: 16,
-      color: 'black'
-    },
-    showarrow: false
-  };
-
-  layout.annotations.push(result, result2);
-}
-
-Plotly.newPlot('myDiv', data, layout);
-
-
-
 function createScatterPlotSample_4() {
 
     var xData = [
@@ -464,27 +385,26 @@ function createScatterPlotSample_4() {
     }
 
 
-
-    var layout = {
+    const addedLayout = {
         showlegend  : false,
-        height      : 600,
-        width       : 600,
+        height      : 400,
+        // width       : 900,
 
         xaxis: {
-            showline: true,
-            showgrid: false,
-            showticklabels: true,
-            linecolor: 'rgb(204,204,204)',
-            linewidth: 2,
-            tickmode: 'linear',
-            ticks: 'outside',
-            tickcolor: 'rgb(204,204,204)',
-            tickwidth: 2,
-            ticklen: 5,
+            showline        : true,
+            showgrid        : false,
+            showticklabels  : true,
+            linecolor   : 'rgba(255, 255, 255, 1)',
+            linewidth   : 2,
+            tickmode    : 'linear',
+            ticks       : 'outside',
+            tickcolor   : 'rgba(255, 255, 255, 1)',
+            tickwidth   : 2,
+            ticklen     : 5,
             tickfont: {
-            family: 'Arial',
-            size: 12,
-            color: 'rgb(82, 82, 82)'
+                family  : 'Arial',
+                size    : 12,
+                color   : 'rgba(255, 255, 255, 1)'
             }
         },
 
@@ -494,31 +414,14 @@ function createScatterPlotSample_4() {
             showline: false,
             showticklabels: false
         },
-        autosize: false,
+        // autosize: false,
 
         margin: {
-            autoexpand: false,
+            autoexpand: true,
             l: 100,
-            r: 20,
-            t: 100
         },
 
         annotations: [
-            {
-                xref: 'paper',
-                yref: 'paper',
-                x: 0.0,
-                y: 1.05,
-                xanchor: 'left',
-                yanchor: 'bottom',
-                text: 'Main Source for News',
-                font:{
-                    family: 'Arial',
-                    size: 30,
-                    color: 'rgb(37,37,37)'
-                },
-                showarrow: false
-            },
             {
                 xref: 'paper',
                 yref: 'paper',
@@ -531,19 +434,46 @@ function createScatterPlotSample_4() {
                 font: {
                     family: 'Arial',
                     size: 12,
-                    color: 'rgb(150,150,150)'
+                    color: 'rgba(255, 255, 255, 1)'
             }
             }
         ]
     };
 
-    const addedLayout = {
-        legend: {
-            y: 0.5,
-            traceorder: 'reversed',
-            font: {size: 16},
-            yref: 'paper'
-        }
+
+    for( var i = 0 ; i < xData.length ; i++ ) {
+        var result = {
+            xref    : 'paper',
+            x       : 0.05,
+            y       : yData[i][0],
+            xanchor : 'right',
+            yanchor : 'middle',
+            text    : labels[i] + ' ' + yData[i][0] +'%',
+            font    : {
+                family  : 'Arial',
+                size    : 14,
+                color   : 'white',
+            },
+            showarrow: false,
+        };
+
+        let lastIndex = yData[i].length - 1;
+        var result2 = {
+            xref    : 'paper',
+            x       : 0.95,
+            y       : yData[i][lastIndex],
+            xanchor : 'left',
+            yanchor : 'middle',
+            text    : yData[i][lastIndex] +'%',
+            font    : {
+                family  : 'Arial',
+                size    : 14,
+                color   : 'white'
+            },
+            showarrow : false
+        };
+
+        addedLayout.annotations.push(result, result2);
     }
 
     const layout = deepMergeImmutable(defaultLayout, addedLayout);
@@ -557,19 +487,93 @@ function createScatterPlotSample_4() {
             ['toImage', 'pan2d', 'resetViews']
         ]   
     };
-    d
     // Create the plot
-    const dataset = [trace1, trace2, trace3, trace4];
 
-    Plotly.newPlot('scatter-plot-container-3', dataset, layout, config);
+    Plotly.newPlot('scatter-plot-container-4', data, layout, config);
 }
 
+
+function createScatterPlotSample_5() {
+    const range     = [];
+    const values    = [];
+    const mcolors   = [];
+    let rangeLength = 100;
+    let step        = 2 * Math.PI / rangeLength;
+    for (let i = 0; i < 100; i++) {
+        let num = i * step;
+        let val = Math.sin(num);
+        let col = val < 0 ?'rgb(219, 64, 82)' : 'rgba(35, 98, 165, 1)';
+        range.push(num);
+        values.push(val);
+        mcolors.push(col);
+    }
+
+    let trace1 = {
+        x       : range,
+        y       : values,
+        mode    : 'markers',
+        marker  : {
+            color   : mcolors,
+            size    : 2
+        }
+    };
+
+    const addedLayout = {
+        height      : 400,
+        showlegend  : false,
+        hovermode   : 'closest',
+
+        yaxis: {
+            showgrid: false,
+            zeroline: false,
+            showline: false,
+            showticklabels: false
+        },
+
+        xaxis: {
+            showgrid: false,
+            zeroline: false,
+            showline: false,
+            showticklabels: false
+        },
+
+        shapes: [
+            {
+                type: 'line',
+                x0: 0,
+                y0: 0,
+                x1: 2 * Math.PI,
+                y1: 0,
+                line: {
+                    color: '#158438ff',
+                    width: 1
+                },
+                name:"Zero"
+            }
+        ],
+    }
+    const layout = {...defaultLayout, ...addedLayout};                        
+
+
+    // Plot configuration
+    const config = {
+        responsive      : true,
+        displayModeBar  : false,
+    };
+    
+    // Create the plot
+    const dataset = [trace1];
+
+    Plotly.newPlot('scatter-plot-container-5', dataset, layout, config);
+}
 
 // ----------------------------------------------------------------------------- UPDATE VISUALIZATIONS
 function updateDashboard() {
     createScatterPlotSample_1();
     createScatterPlotSample_2();
     createScatterPlotSample_3();
+    createScatterPlotSample_4();
+    createScatterPlotSample_5();
 }
 
 

@@ -3,24 +3,6 @@
 
 
 // ----------------------------------------------------------------------------- DATA LOADING
-function loadDefaultLayout() {
-    try {
-        const layoutRequest = new XMLHttpRequest();
-        layoutRequest.open('GET', '../layout.json', false);
-        layoutRequest.send();
-
-        if (layoutRequest.status === 200) {
-            const defaultLayout = JSON.parse(layoutRequest.responseText);
-            return defaultLayout;
-        } else {
-            throw new Error('Failed to load data file');
-        }
-    } catch (error) {
-        console.error('Error loading data files:', error);
-    }    
-}
-
-
 function loadObserveFishData() {
     try {
         // Try to load the JSON files synchronously using XMLHttpRequest
@@ -179,7 +161,6 @@ function createSummaryTable(data) {
 }
 
 
-// Create bar chart example
 function createTrophicDiversity(data) {
     const trophicCounts = {};
     data.forEach(d => {
@@ -236,63 +217,260 @@ function createTrophicDiversity(data) {
 }
 
 
-// create scatter plot example
-function createScatterPlotSample(data) {
-           const x = [];
-            const y = [];
-            
-            for (let i = 0; i < 100; i++) {
-                x.push(Math.random() * 100); // Random x between 0 and 100
-                y.push(Math.random() * 100); // Random y between 0 and 100
+function createScatterPlotSample() {
+    var trace1 = {
+        x: [52698, 43117],
+        y: [53, 31],
+        mode: 'markers',
+        name: 'North America',
+        text: ['United States', 'Canada'],
+        marker: {
+            color: 'rgb(164, 194, 244)',
+            size: 12,
+            line: {
+            color: 'white',
+            width: 0.5
             }
-            
-            // Create the scatter plot data
-            const trace = {
-                x: x,
-                y: y,
-                mode: 'markers',
-                type: 'scatter',
-                name: 'Random Points',
-                marker: {
-                    color: 'rgb(31, 119, 180)',
-                    size: 8,
-                    opacity: 0.7
-                }
-            };
-            
+        },
+        type: 'scatter'
+    };
 
-            const addedLayout = {
-                height          : 400,
-                xaxis           : { 
-                    title: {
-                        text: 'X Axis',
-                    },
-                    range   : [-5, 105],
-                },
+    var trace2 = {
+        x: [39317, 37236, 35650, 30066, 29570, 27159, 23557, 21046, 18007],
+        y: [33, 20, 13, 19, 27, 19, 49, 44, 38],
+        mode: 'markers',
+        name: 'Europe',
+        text: ['Germany', 'Britain', 'France', 'Spain', 'Italy', 'Czech Rep.', 'Greece', 'Poland'],
+        marker: {
+            color: 'rgb(255, 217, 102)',
+            size: 12
+        },
+        type: 'scatter'
+    };
 
-                yaxis: { 
-                    range   : [-5, 105],
-                    title: {
-                        text   : 'Y Axis',
-                    },
-                },
-                
-                showlegend: false,
-                hovermode: 'closest'
-            };
-            const layout = {...defaultLayout, ...addedLayout};
-            
-            // Plot configuration
-            const config = {
-                responsive      : true,
-                displayModeBar  : true,
-                modeBarButtons  : [
-                    ['toImage', 'pan2d', 'resetViews']
-                ]   
-            };
-            
-            // Create the plot
-            Plotly.newPlot('scatter-plot-container', [trace], layout, config);
+    var trace3 = {
+        x: [42952, 37037, 33106, 17478, 9813, 5253, 4692, 3899],
+        y: [23, 42, 54, 89, 14, 99, 93, 70],
+        mode: 'markers',
+        name: 'Asia/Pacific',
+        text: ['Australia', 'Japan', 'South Korea', 'Malaysia', 'China', 'Indonesia', 'Philippines', 'India'],
+        marker: {
+            color: 'rgb(234, 153, 153)',
+            size: 12
+        },
+        type: 'scatter'
+    };
+
+    var trace4 = {
+        x: [19097, 18601, 15595, 13546, 12026, 7434, 5419],
+        y: [43, 47, 56, 80, 86, 93, 80],
+        mode: 'markers',
+        name: 'Latin America',
+        text: ['Chile', 'Argentina', 'Mexico', 'Venezuela', 'Venezuela', 'El Salvador', 'Bolivia'],
+        marker: {
+            color: 'rgb(142, 124, 195)',
+            size: 12
+        },
+        type: 'scatter'
+    };
+    
+    const addedLayout = {
+        height          : 400,
+        showlegend  : false,
+        hovermode   : 'closest',
+        xaxis: {
+            title: {
+                text: 'GDP per Capita'
+            },
+            showgrid: true,
+            zeroline: false
+        },
+        yaxis: {
+            title: {
+                text: 'Percent'
+            },
+            showline: false
+        }
+    }
+
+    const layout = deepMergeImmutable(defaultLayout, addedLayout);
+
+
+    // Plot configuration
+    const config = {
+        responsive      : true,
+        displayModeBar  : true,
+        modeBarButtons  : [
+            ['toImage', 'pan2d', 'resetViews']
+        ]   
+    };
+    
+    // Create the plot
+    const dataset = [trace1, trace2, trace3, trace4];
+
+    Plotly.newPlot('scatter-plot-container', dataset, layout, config);
+}
+
+
+function createSlopGraphSample() {
+
+    var xData = [
+        [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013],
+        [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013],
+        [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013],
+        [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013]
+    ];
+
+    var yData = [
+        [74, 82, 80, 74, 73, 72, 74, 70, 70, 66, 66, 69],
+        [45, 42, 50, 46, 36, 36, 34, 35, 32, 31, 31, 28],
+        [13, 14, 20, 24, 20, 24, 24, 40, 35, 41, 43, 50],
+        [18, 21, 18, 21, 16, 14, 13, 18, 17, 16, 19, 23]
+    ];
+
+    var colors = [
+        'rgba(67,67,67,1)', 
+        'rgba(115,115,115,1)', 
+        'rgba(49,130,189, 1)',
+        'rgba(189,189,189,1)'
+    ];
+
+    var lineSize    = [2, 2, 4, 2];
+    var labels      = ['Television', 'Newspaper', 'Internet', 'Radio'];
+    var data        = [];
+
+    for ( var i = 0 ; i < xData.length ; i++ ) {
+        var result = {
+            x       : xData[i],
+            y       : yData[i],
+            type    : 'scatter',
+            mode    : 'lines',
+            line    : {
+                color   : colors[i],
+                width   : lineSize[i]
+            }
+        };
+        
+        var result2 = {
+            x       : [xData[i][0], xData[i][11]],
+            y       : [yData[i][0], yData[i][11]],
+            type    : 'scatter',
+            mode    : 'markers',
+            marker  : {
+            color   : colors[i],
+            size    : 12
+            }
+        };
+
+        data.push(result, result2);
+    }
+
+
+    const addedLayout = {
+        showlegend  : false,
+        height      : 600,
+        // width       : 900,
+
+        xaxis: {
+            showline        : true,
+            showgrid        : false,
+            showticklabels  : true,
+            linecolor   : 'rgba(255, 255, 255, 1)',
+            linewidth   : 2,
+            tickmode    : 'linear',
+            ticks       : 'outside',
+            tickcolor   : 'rgba(255, 255, 255, 1)',
+            tickwidth   : 2,
+            ticklen     : 5,
+            tickfont: {
+                family  : 'Arial',
+                size    : 12,
+                color   : 'rgba(255, 255, 255, 1)'
+            }
+        },
+
+        yaxis: {
+            showgrid: false,
+            zeroline: false,
+            showline: false,
+            showticklabels: false
+        },
+        // autosize: false,
+
+        margin: {
+            autoexpand: true,
+            l: 100,
+        },
+
+        annotations: [
+            {
+                xref: 'paper',
+                yref: 'paper',
+                x: 0.5,
+                y: -0.1,
+                xanchor: 'center',
+                yanchor: 'top',
+                text: 'Source: Pew Research Center & Storytelling with data',
+                showarrow: false,
+                font: {
+                    family: 'Arial',
+                    size: 12,
+                    color: 'rgba(255, 255, 255, 1)'
+            }
+            }
+        ]
+    };
+
+
+    for( var i = 0 ; i < xData.length ; i++ ) {
+        var result = {
+            xref    : 'paper',
+            x       : 0.05,
+            y       : yData[i][0],
+            xanchor : 'right',
+            yanchor : 'middle',
+            text    : labels[i] + ' ' + yData[i][0] +'%',
+            font    : {
+                family  : 'Arial',
+                size    : 14,
+                color   : 'white',
+            },
+            showarrow: false,
+        };
+
+        let lastIndex = yData[i].length - 1;
+        var result2 = {
+            xref    : 'paper',
+            x       : 0.95,
+            y       : yData[i][lastIndex],
+            xanchor : 'left',
+            yanchor : 'middle',
+            text    : yData[i][lastIndex] +'%',
+            font    : {
+                family  : 'Arial',
+                size    : 14,
+                color   : 'white'
+            },
+            showarrow : false
+        };
+
+        addedLayout.annotations.push(result, result2);
+    }
+
+    const layout = deepMergeImmutable(defaultLayout, addedLayout);
+
+
+    // Plot configuration
+    const config = {
+        responsive      : true,
+        displayModeBar  : true,
+        modeBarButtons  : [
+            ['toImage', 'pan2d', 'resetViews']
+        ]   
+    };
+    // Create the plot
+
+    Plotly.newPlot('slopegraph-container', data, layout, config);    
 }
 
 
@@ -302,6 +480,7 @@ function updateDashboard() {
     createSummaryTable(observerFish);
     createTrophicDiversity(observerFish);
     createScatterPlotSample();
+    createSlopGraphSample();
 }
 
 
