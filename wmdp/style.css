@@ -201,7 +201,8 @@ th, td {
 
 th {
     background-color: #121212;
-    font-weight: bold;
+    font-weight:lighter;
+    font-size:small;
 }
 
 td {

@@ -73,7 +73,6 @@ function updateMetrics(data) {
 }
 
 
-
 function createSummaryTable(data) {
     const summary = {};
     data.forEach(d => {
@@ -121,7 +120,7 @@ function createSummaryTable(data) {
             <tbody>
     `;
 
-    tableData.slice(0, 20).forEach(row => {
+    tableData.slice(0, 6).forEach(row => {
         tableHtml += `
             <tr>
                 <td>${row.family}</td>
@@ -140,7 +139,7 @@ function createSummaryTable(data) {
 }
 
 
-// Create trophic diversity chart
+// Create bar chart example
 function createTrophicDiversity(data) {
     const trophicCounts = {};
     data.forEach(d => {
@@ -174,33 +173,37 @@ function createTrophicDiversity(data) {
     };
 
     const layout = {
-        template: 'plotly_dark',
-        paper_bgcolor: chart_bg,
-        plot_bgcolor: chart_bg,
-        height: 400,
-        margin: { t: 20, b: 90, l: 60, r: 20 },
-        xaxis: { 
-            // title: {
-            //     text: 'Trophic Level',
-            //     font: { color: '#ffffff' }  // Add this
-            // },
-            tickfont: { color: '#ffffff' }
+        template        : 'plotly_dark',
+        paper_bgcolor   : chart_bg,
+        plot_bgcolor    : chart_bg,
+        height          : 400,
+        margin          : { t: 20, b: 90, l: 60, r: 20 },
+        xaxis           : { 
+            tickfont: { 
+                color: '#ffffff' 
+            }
         },
         yaxis: { 
             title: {
                 text: 'Number of Species',
-                font: { color: '#ffffff' }  // Add this
+                font: { 
+                    color: '#ffffff' 
+                }
             },
-            tickfont: { color: '#ffffff' }
+            tickfont: { 
+                color: '#ffffff' 
+            }
         },
         legend: {
-            font: { color: '#ffffff' }
+            font: { 
+                color: '#ffffff' 
+            }
         }
     };
 
     let trophic_config = {
-        responsive: true,
-        modeBarButtons: [
+        responsive      : true,
+        modeBarButtons  : [
             ['toImage', 'pan2d', 'resetViews']
         ]    
     }
@@ -209,7 +212,85 @@ function createTrophicDiversity(data) {
 }
 
 
+// create scatter plot example
+function createScatterPlotSample(data) {
+           const x = [];
+            const y = [];
+            
+            for (let i = 0; i < 100; i++) {
+                x.push(Math.random() * 100); // Random x between 0 and 100
+                y.push(Math.random() * 100); // Random y between 0 and 100
+            }
+            
+            // Create the scatter plot data
+            const trace = {
+                x: x,
+                y: y,
+                mode: 'markers',
+                type: 'scatter',
+                name: 'Random Points',
+                marker: {
+                    color: 'rgb(31, 119, 180)',
+                    size: 8,
+                    opacity: 0.7
+                }
+            };
+            
 
+            const layout = {
+                template        : 'plotly_dark',
+                paper_bgcolor   : chart_bg,
+                plot_bgcolor    : chart_bg,
+                height          : 400,
+                margin          : { t: 20, b: 90, l: 60, r: 20 },
+
+                xaxis           : { 
+                    title: {
+                        text: 'X Axis',
+                        font: { 
+                            color: '#ffffff' 
+                        }
+                    },
+                    range   : [-5, 105],
+                    tickfont: { 
+                        color: '#ffffff' 
+                    }
+                },
+
+                yaxis: { 
+                    range   : [-5, 105],
+                    title: {
+                        text   : 'Y Axis',
+                        font    : { 
+                            color: '#ffffff' 
+                        }
+                    },
+                    tickfont    : { 
+                        color   : '#ffffff' 
+                    }
+                },
+                
+                legend: {
+                    font: { 
+                        color: '#ffffff' 
+                    }
+                },
+                showlegend: false,
+                hovermode: 'closest'
+            };
+            
+            // Plot configuration
+            const config = {
+                responsive      : true,
+                displayModeBar  : true,
+                modeBarButtons  : [
+                    ['toImage', 'pan2d', 'resetViews']
+                ]   
+            };
+            
+            // Create the plot
+            Plotly.newPlot('scatter-plot-container', [trace], layout, config);
+}
 
 
 // ----------------------------------------------------------------------------- Update dashboard
@@ -218,6 +299,7 @@ function updateDashboard() {
     updateMetrics(filteredData);
     createSummaryTable(filteredData);
     createTrophicDiversity(filteredData);
+    createScatterPlotSample();
 }
 
 
