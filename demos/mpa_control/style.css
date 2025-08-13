@@ -5,7 +5,7 @@
     right: 20px; 
     color: white; 
     font-size: 15px; 
-    font-family: 'Arial', 'Helvetica';
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', system-ui, sans-serif;
     line-height: 1.4em;
     pointer-events: none; 
     z-index: 99;
@@ -14,7 +14,7 @@
 body {
     background-color: #121212;
     color: #ffffff;
-    font-family: Arial, Helvetica, sans-serif;
+    font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', 'Roboto', 'Oxygen', 'Ubuntu', 'Cantarell', system-ui, sans-serif;
     margin: 0;
     padding: 20px;
 }
@@ -31,7 +31,17 @@ body {
 
 .header h1 {
     color: #6897c8;
-    margin-bottom: 20px;
+    margin-bottom: 10px;
+    font-size: 30px;
+    font-weight:normal;
+}
+
+.header h2 {
+    color: #6897c8;
+    margin-top: 0px;
+    margin-bottom: 10px;
+    font-size: 25px;
+    font-weight:normal;
 }
 
 .controls {
