@@ -42,7 +42,6 @@ function loadSiteFishData() {
 
 // const observerFish      = loadObserveFishData();
 // const siteFish          = loadSiteFishData();
-const defaultLayout     = loadDefaultLayout("../layout.json");
 
 
 // ----------------------------------------------------------------------------- INITIALIZE FILTERS
@@ -85,7 +84,7 @@ function filterData() {
 
 // ----------------------------------------------------------------------------- CREATE & UPDATE PLOT
 // create scatter plot example
-function createScatterPlotSample_1() {
+function createMultiTrace() {
     let trace1 = {
         x       : [1, 2, 3, 4],
         y       : [10, 15, 13, 17],
@@ -120,14 +119,7 @@ function createScatterPlotSample_1() {
         }
     };
     
-    
-    const addedLayout = {
-        height          : 400,
-        showlegend: false,
-        hovermode: 'closest'
-    }
-    const layout = {...defaultLayout, ...addedLayout};                        
-
+    const layout = loadLayouts("./layouts.json", "multi_trace");
 
     // Plot configuration
     const config = {
@@ -141,11 +133,11 @@ function createScatterPlotSample_1() {
     // Create the plot
     const dataset = [trace1, trace2, trace3];
 
-    Plotly.newPlot('scatter-plot-container-1', dataset, layout, config);
+    Plotly.newPlot('multi-trace-container', dataset, layout, config);
 }
 
 
-function createScatterPlotSample_2() {
+function createColorAssignment() {
     var trace1 = {
         x: [52698, 43117],
         y: [53, 31],
@@ -203,26 +195,10 @@ function createScatterPlotSample_2() {
     };
     
     const addedLayout = {
-        height          : 400,
-        showlegend  : true,
-        hovermode   : 'closest',
-        xaxis: {
-            title: {
-                text: 'GDP per Capita'
-            },
-            showgrid: true,
-            zeroline: false
-        },
-        yaxis: {
-            title: {
-                text: 'Percent'
-            },
-            showline: false
-        }
+
     }
 
-    const layout = deepMergeImmutable(defaultLayout, addedLayout);
-
+    const layout = loadLayouts("./layouts.json", "color_assignment");
 
     // Plot configuration
     const config = {
@@ -236,12 +212,12 @@ function createScatterPlotSample_2() {
     // Create the plot
     const dataset = [trace1, trace2, trace3, trace4];
 
-    Plotly.newPlot('scatter-plot-container-2', dataset, layout, config);
+    Plotly.newPlot('color-assignment-container', dataset, layout, config);
 }
 
 
 
-function createScatterPlotSample_3() {
+function createInterpolation() {
     var trace1 = {
         x: [1, 2, 3, 4, 5],
         y: [1, 3, 2, 3, 1],
@@ -301,19 +277,8 @@ function createScatterPlotSample_3() {
         type: 'scatter'
     };
 
-    var data = [trace1, trace2, trace3, trace4, trace5, trace6];
-    
-    const addedLayout = {
-        legend: {
-            y: 0.5,
-            traceorder: 'reversed',
-            font: {size: 16},
-            yref: 'paper'
-        }
-    }
-
-    const layout = deepMergeImmutable(defaultLayout, addedLayout);
-
+    var data        = [trace1, trace2, trace3, trace4, trace5, trace6];
+    const layout    = loadLayouts("./layouts.json", "interpolation");
 
     // Plot configuration
     const config = {
@@ -327,11 +292,11 @@ function createScatterPlotSample_3() {
     // Create the plot
     const dataset = [trace1, trace2, trace3, trace4];
 
-    Plotly.newPlot('scatter-plot-container-3', dataset, layout, config);
+    Plotly.newPlot('interpolation-container', dataset, layout, config);
 }
 
 
-function createScatterPlotSample_4() {
+function createSlopeGraph() {
 
     var xData = [
         [2001, 2002, 2003, 2004, 2005, 2006, 2007, 2008, 2009, 2010, 2011, 2013],
@@ -384,63 +349,10 @@ function createScatterPlotSample_4() {
         data.push(result, result2);
     }
 
+    const layout = loadLayouts("./layouts.json", "slope_graph");
 
-    const addedLayout = {
-        showlegend  : false,
-        height      : 400,
-        // width       : 900,
-
-        xaxis: {
-            showline        : true,
-            showgrid        : false,
-            showticklabels  : true,
-            linecolor   : 'rgba(255, 255, 255, 1)',
-            linewidth   : 2,
-            tickmode    : 'linear',
-            ticks       : 'outside',
-            tickcolor   : 'rgba(255, 255, 255, 1)',
-            tickwidth   : 2,
-            ticklen     : 5,
-            tickfont: {
-                family  : 'Arial',
-                size    : 12,
-                color   : 'rgba(255, 255, 255, 1)'
-            }
-        },
-
-        yaxis: {
-            showgrid: false,
-            zeroline: false,
-            showline: false,
-            showticklabels: false
-        },
-        // autosize: false,
-
-        margin: {
-            autoexpand: true,
-            l: 100,
-        },
-
-        annotations: [
-            {
-                xref: 'paper',
-                yref: 'paper',
-                x: 0.5,
-                y: -0.1,
-                xanchor: 'center',
-                yanchor: 'top',
-                text: 'Source: Pew Research Center & Storytelling with data',
-                showarrow: false,
-                font: {
-                    family: 'Arial',
-                    size: 12,
-                    color: 'rgba(255, 255, 255, 1)'
-            }
-            }
-        ]
-    };
-
-
+    // programmatically add layout properties
+    // for the annotation
     for( var i = 0 ; i < xData.length ; i++ ) {
         var result = {
             xref    : 'paper',
@@ -473,11 +385,8 @@ function createScatterPlotSample_4() {
             showarrow : false
         };
 
-        addedLayout.annotations.push(result, result2);
+        layout.annotations.push(result, result2);
     }
-
-    const layout = deepMergeImmutable(defaultLayout, addedLayout);
-
 
     // Plot configuration
     const config = {
@@ -489,11 +398,11 @@ function createScatterPlotSample_4() {
     };
     // Create the plot
 
-    Plotly.newPlot('scatter-plot-container-4', data, layout, config);
+    Plotly.newPlot('slope-graph-container', data, layout, config);
 }
 
 
-function createScatterPlotSample_5() {
+function createConditionalTrace() {
     const range     = [];
     const values    = [];
     const mcolors   = [];
@@ -518,42 +427,7 @@ function createScatterPlotSample_5() {
         }
     };
 
-    const addedLayout = {
-        height      : 400,
-        showlegend  : false,
-        hovermode   : 'closest',
-
-        yaxis: {
-            showgrid: false,
-            zeroline: false,
-            showline: false,
-            showticklabels: false
-        },
-
-        xaxis: {
-            showgrid: false,
-            zeroline: false,
-            showline: false,
-            showticklabels: false
-        },
-
-        shapes: [
-            {
-                type: 'line',
-                x0: 0,
-                y0: 0,
-                x1: 2 * Math.PI,
-                y1: 0,
-                line: {
-                    color: '#158438ff',
-                    width: 1
-                },
-                name:"Zero"
-            }
-        ],
-    }
-    const layout = {...defaultLayout, ...addedLayout};                        
-
+    const layout = loadLayouts("./layouts.json", "conditional_trace");
 
     // Plot configuration
     const config = {
@@ -564,16 +438,86 @@ function createScatterPlotSample_5() {
     // Create the plot
     const dataset = [trace1];
 
-    Plotly.newPlot('scatter-plot-container-5', dataset, layout, config);
+    Plotly.newPlot('conditional-trace-container', dataset, layout, config);
+}
+
+
+function createBandedPlot3() {
+    const data = generateStochasticSineData(0.15);
+    
+    // Create 95% and 68% confidence intervals
+    const upper95 = data.y.map(y => y + 0.5);
+    const lower95 = data.y.map(y => y - 0.5);
+    const upper68 = data.y.map(y => y + 0.25);
+    const lower68 = data.y.map(y => y - 0.25);
+    
+    const traces = [
+        // 95% CI
+        {
+            x: data.x,
+            y: upper95,
+            fill: 'tonexty',
+            fillcolor: 'rgba(31,119,180,0)',
+            line: { color: 'transparent' },
+            name: '95% CI',
+            showlegend: false,
+            hoverinfo: 'skip'
+        },
+        {
+            x: data.x,
+            y: lower95,
+            fill: 'tonexty',
+            fillcolor: 'rgba(31,119,180,0.1)',
+            line: { color: 'transparent' },
+            name: '95% CI',
+            legendgroup: '95%',
+            hoverinfo: 'skip'
+        },
+
+        // 68% CI
+        {
+            x: data.x,
+            y: upper68,
+            fill: 'tonexty',
+            fillcolor: 'rgba(31,119,180,0)',
+            line: { color: 'transparent' },
+            name: '68% CI',
+            showlegend: false,
+            hoverinfo: 'skip'
+        },
+        {
+            x: data.x,
+            y: lower68,
+            fill: 'tonexty',
+            fillcolor: 'rgba(31,119,180,0.2)',
+            line: { color: 'transparent' },
+            name: '68% CI',
+            legendgroup: '68%',
+            hoverinfo: 'skip'
+        },
+
+        // Main line
+        {
+            x: data.x,
+            y: data.y,
+            line: { color: 'rgb(31,119,180)', width: 1 },
+            name: 'Mean',
+            hovertemplate: 'Mean: %{y:.2f}<extra></extra>'
+        }
+    ];
+    
+    const layout = loadLayouts("./layouts.json", "banded_plot");
+    Plotly.newPlot('banded-plot-container', traces, layout);
 }
 
 // ----------------------------------------------------------------------------- UPDATE VISUALIZATIONS
 function updateDashboard() {
-    createScatterPlotSample_1();
-    createScatterPlotSample_2();
-    createScatterPlotSample_3();
-    createScatterPlotSample_4();
-    createScatterPlotSample_5();
+    createMultiTrace();
+    createColorAssignment();
+    createInterpolation();
+    createSlopeGraph();
+    createConditionalTrace();
+    createBandedPlot3();
 }
 
 
