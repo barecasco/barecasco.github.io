@@ -1,0 +1,216 @@
+{
+    "default"     : {
+        "template"        : "plotly_dark",
+        "paper_bgcolor"   : "#1a1a1a",
+        "plot_bgcolor"    : "#1a1a1a",
+        "hovermode"       : "closest",
+        "showlegend"      : false,
+        "height"          : 400,
+
+        "margin"  : {
+            "t"     : 20,
+            "b"     : 90,
+            "l"     : 60,
+            "r"     : 30
+        },
+
+        "title" : {
+            "font"      : {
+                "color" : "#ffffff"
+            }
+        },
+
+        "xaxis": {
+            "title": {
+                "text": "x values",
+                "font": {
+                    "color": "#ffffff"
+                }
+            },
+            "tickfont": {
+                "color": "#ffffff"
+            },
+            "gridcolor": "#313131"
+        },
+
+        "yaxis": {
+            "title": {
+                "text": "y values",
+                "font": {
+                    "color": "#ffffff"
+                }
+            },
+            "tickfont": {
+                "color": "#ffffff"
+            },
+            "gridcolor": "#313131"
+        } 
+
+    },
+
+    "multi_trace" :{},
+
+    "color_assignment" : {
+        "showlegend"  : true,
+        "hovermode"   : "closest",
+        "xaxis": {
+            "title": {
+                "text": "GDP per Capita"
+            },
+            "showgrid": true,
+            "zeroline": false
+        },
+        "yaxis": {
+            "title": {
+                "text": "Percent"
+            },
+            "showline": false
+        }
+    },
+
+    "interpolation" : {
+        "legend": {
+            "y": 0.5,
+            "traceorder": "reversed",
+            "font": {"size": 16},
+            "yref": "paper"
+        }
+    },
+
+    "slope_graph" : {
+        "xaxis": {
+            "showline"        : true,
+            "showgrid"        : false,
+            "showticklabels"  : true,
+            "title"       : "",
+            "linecolor"   : "rgba(255, 255, 255, 1)",
+            "linewidth"   : 2,
+            "tickmode"    : "linear",
+            "ticks"       : "outside",
+            "tickcolor"   : "rgba(255, 255, 255, 1)",
+            "tickwidth"   : 2,
+            "ticklen"     : 5,
+            "tickfont": {
+                "family"  : "Arial",
+                "size"    : 12,
+                "color"   : "rgba(255, 255, 255, 1)"
+            }
+        },
+
+        "yaxis": {
+            "showgrid": false,
+            "zeroline": false,
+            "showline": false,
+            "title"    : "",
+            "showticklabels": false
+        },
+
+        "margin": {
+            "autoexpand": true,
+            "l": 100
+        },
+
+        "annotations": [
+            {
+                "xref": "paper",
+                "yref": "paper",
+                "x": 0.5,
+                "y": -0.1,
+                "xanchor": "center",
+                "yanchor": "top",
+                "text": "Source: Pew Research Center & Storytelling with data",
+                "showarrow": false,
+                "font": {
+                    "family": "Arial",
+                    "size": 12,
+                    "color": "rgba(255, 255, 255, 1)"
+            }
+            }
+        ]
+    },
+
+    "conditional_trace" : {
+        "yaxis": {
+            "showgrid": false,
+            "zeroline": false,
+            "showline": false,
+            "showticklabels": false
+        },
+
+        "xaxis": {
+            "showgrid": false,
+            "zeroline": false,
+            "showline": false,
+           "showticklabels": false
+        },
+
+        "shapes": [
+            {
+                "type": "line",
+                "x0": 0,
+                "y0": 0,
+                "x1": 6.29,
+                "y1": 0,
+                "line": {
+                    "color": "#158438ff",
+                    "width": 1
+                },
+                "name":"Zero"
+            }
+        ]        
+    },
+
+    "banded_plot" : {
+        "template"        : "plotly_dark",
+        "paper_bgcolor"   : "#1a1a1a",
+        "plot_bgcolor"    : "#1a1a1a",
+        "hovermode"       : "x unified",
+        "height"          : 400,
+
+        "margin"  : {
+            "t"     : 20,
+            "b"     : 90,
+            "l"     : 60,
+            "r"     : 30
+        },
+
+        "title" : {
+            "font"      : {
+                "color" : "#ffffff"
+            }
+        },
+
+        "xaxis": {
+            "title": {
+                "text": "x values",
+                "font": {
+                    "color": "#ffffff"
+                }
+            },
+            "tickfont": {
+                "color": "#ffffff"
+            },
+            "gridcolor": "#313131"
+        },
+
+        "yaxis": {
+            "title": {
+                "text": "y values",
+                "font": {
+                    "color": "#ffffff"
+                }
+            },
+            "tickfont": {
+                "color": "#ffffff"
+            },
+            "gridcolor": "#313131"
+        },
+
+        "legend": {
+            "font": { 
+                "color": "#ffffff" 
+            }
+        }
+    }
+
+}

@@ -41,7 +41,6 @@ function loadSiteFishData() {
 
 const observerFish  = loadObserveFishData();
 const siteFish      = loadSiteFishData();
-const defaultLayout = loadDefaultLayout();
 
 
 
@@ -194,17 +193,7 @@ function createTrophicDiversity(data) {
     };
 
 
-
-    const addedLayout = {
-        height          : 400,
-        yaxis: { 
-            title: {
-                text: 'Number of Species',
-            },
-        },
-    };
-
-    const layout = {...defaultLayout, ...addedLayout}
+    const layout = loadLayouts("./layouts.json", "trophic_diversity");
 
     let trophic_config = {
         responsive      : true,
@@ -274,26 +263,8 @@ function createScatterPlotSample() {
         type: 'scatter'
     };
     
-    const addedLayout = {
-        height          : 400,
-        showlegend  : false,
-        hovermode   : 'closest',
-        xaxis: {
-            title: {
-                text: 'GDP per Capita'
-            },
-            showgrid: true,
-            zeroline: false
-        },
-        yaxis: {
-            title: {
-                text: 'Percent'
-            },
-            showline: false
-        }
-    }
 
-    const layout = deepMergeImmutable(defaultLayout, addedLayout);
+    const layout = loadLayouts("./layouts.json", "scatter_plot");
 
 
     // Plot configuration
@@ -366,61 +337,7 @@ function createSlopGraphSample() {
     }
 
 
-    const addedLayout = {
-        showlegend  : false,
-        height      : 600,
-        // width       : 900,
-
-        xaxis: {
-            showline        : true,
-            showgrid        : false,
-            showticklabels  : true,
-            linecolor   : 'rgba(255, 255, 255, 1)',
-            linewidth   : 2,
-            tickmode    : 'linear',
-            ticks       : 'outside',
-            tickcolor   : 'rgba(255, 255, 255, 1)',
-            tickwidth   : 2,
-            ticklen     : 5,
-            tickfont: {
-                family  : 'Arial',
-                size    : 12,
-                color   : 'rgba(255, 255, 255, 1)'
-            }
-        },
-
-        yaxis: {
-            showgrid: false,
-            zeroline: false,
-            showline: false,
-            showticklabels: false
-        },
-        // autosize: false,
-
-        margin: {
-            autoexpand: true,
-            l: 100,
-        },
-
-        annotations: [
-            {
-                xref: 'paper',
-                yref: 'paper',
-                x: 0.5,
-                y: -0.1,
-                xanchor: 'center',
-                yanchor: 'top',
-                text: 'Source: Pew Research Center & Storytelling with data',
-                showarrow: false,
-                font: {
-                    family: 'Arial',
-                    size: 12,
-                    color: 'rgba(255, 255, 255, 1)'
-            }
-            }
-        ]
-    };
-
+    const layout = loadLayouts("./layouts.json", "slope_graph")
 
     for( var i = 0 ; i < xData.length ; i++ ) {
         var result = {
@@ -454,10 +371,8 @@ function createSlopGraphSample() {
             showarrow : false
         };
 
-        addedLayout.annotations.push(result, result2);
+        layout.annotations.push(result, result2);
     }
-
-    const layout = deepMergeImmutable(defaultLayout, addedLayout);
 
 
     // Plot configuration

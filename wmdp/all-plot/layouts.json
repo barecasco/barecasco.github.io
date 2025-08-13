@@ -1,0 +1,137 @@
+{
+    "default" : {
+        "template"        : "plotly_dark",
+        "paper_bgcolor"   : "#1a1a1a",
+        "plot_bgcolor"    : "#1a1a1a",
+        "height"  : 400,
+        
+        "margin"  : {
+            "t"     : 20,
+            "b"     : 90,
+            "l"     : 60,
+            "r"     : 30
+        },
+
+        "title" : {
+            "font"    : {
+                "color" : "#ffffff"
+            }
+        },
+
+        "xaxis"       : {
+            "title"     : {
+                "font"    : {
+                    "color" : "#ffffff"
+                }
+            },
+            "tickfont"  : {
+                "color"   : "#ffffff"
+            },
+            "gridcolor" : "#313131"
+        },
+
+        "yaxis"         : {
+            "title"     : {
+                "font"  : {
+                    "color" : "#ffffff"
+                }
+            },
+            "tickfont"  : {
+                "color": "#ffffff"
+            },
+            "gridcolor" : "#313131"
+        },
+
+       "legend"        : {
+            "font"      : { 
+                "color" : "#ffffff" 
+            }
+        }
+    },
+
+    "trophic_diversity": {
+        "yaxis"         : {
+            "title"     : {
+                "text"  : "Number of Species",
+                "font"  : {
+                    "color" : "#ffffff"
+                }
+            },
+            "tickfont"  : {
+                "color": "#ffffff"
+            },
+            "gridcolor" : "#313131"
+        }
+    },
+
+    "scatter_plot" : {
+        "hovermode"   : "closest",
+        "xaxis": {
+            "title": {
+                "text": "GDP per Capita"
+            },
+            "showgrid": true,
+            "zeroline": false
+        },
+        "yaxis": {
+            "title": {
+                "text": "Percent"
+            },
+            "showline": false
+        }        
+    }, 
+
+    "slope_graph": {
+        "showlegend"  : false,
+        "height"      : 600,
+
+        "xaxis": {
+            "showline"        : true,
+            "showgrid"        : false,
+            "showticklabels"  : true,
+            "linecolor"   : "rgba(255, 255, 255, 1)",
+            "linewidth"   : 2,
+            "tickmode"    : "linear",
+            "ticks"       : "outside",
+            "tickcolor"   : "rgba(255, 255, 255, 1)",
+            "tickwidth"   : 2,
+            "ticklen"     : 5,
+            "tickfont": {
+                "family"  : "Arial",
+                "size"    : 12,
+                "color"   : "rgba(255, 255, 255, 1)"
+            }
+        },
+
+        "yaxis": {
+            "showgrid": false,
+            "zeroline": false,
+            "showline": false,
+            "showticklabels": false
+        },
+
+        "margin": {
+            "autoexpand": true,
+            "l": 100
+        },
+
+        "annotations": [
+            {
+                "xref": "paper",
+                "yref": "paper",
+                "x": 0.5,
+                "y": -0.1,
+                "xanchor": "center",
+                "yanchor": "top",
+                "text": "Source: Pew Research Center & Storytelling with data",
+                "showarrow": false,
+                "font": {
+                    "family": "Arial",
+                    "size": 12,
+                    "color": "rgba(255, 255, 255, 1)"
+                }
+            }
+        ]        
+    }
+
+}

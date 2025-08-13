@@ -1,0 +1,86 @@
+<!--
+ Author: Agra Barecasco
+ Contact: barecasco@gmail.com
+ -->
+
+<!DOCTYPE html>
+<html lang="en">
+
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <link rel="stylesheet" href="style.css">
+
+    <title>Plotly.js x Three.js Dashboard Demo</title>
+</head>
+
+
+<body>
+    <div id="text-auth-overlay">
+        Agra Barecasco
+    </div>
+
+    <div class="container">
+
+        <!-- Header -->
+        <div class="header">
+            <h1>Plotly.js x Three.js Dashboard Demo</h1>
+        </div>
+
+
+        <!-- Controls -->
+        <!-- <div class="controls">
+            <h3>Filters</h3>
+            <div class="filter-row">
+                <div class="filter-group">
+                    <label>Trophic Level:</label>
+                    <select id="trophic-filter">
+                        <option value="all">All</option>
+                    </select>
+                </div>
+            </div>
+        </div> -->
+
+
+        <!-- Scatter plot row -->
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h4>Monte-Carlo Circle Area Estimation</h4>
+                <div id="description">
+                    <p>
+            This Monte Carlo simulation estimates the area of a circle (radius 0.3, area 0.2827)
+            inscribed within a unit square (1 x 1).
+            It achieves this by randomly generating points within the square and
+            calculating the ratio of points falling inside the circle to the total
+            number of points.  By increasing the number of generated points
+            the simulation demonstrates the convergence of the estimated area
+            toward the circle's true area, illustrating a fundamental application
+            of Monte Carlo methods.
+                    </p>
+                </div>
+            </div>
+            <div class="chart-container chart-60">
+                <h4>Monte-Carlo Circle Area Estimation</h4>
+                <div class="plot-container">
+                    <div id="main-screen"></div>
+                </div>
+
+                <div class="row-1">
+                    <label for="numberInput">N shots (10-3000)</label>
+                    <input type="number" id="mc-number-input" name="numberInput" min="10" max="3000" value="10">
+                    <button id="mc-reshoot-button">Reshoot</button>
+                </div>
+            </div>
+        </div>
+
+
+    </div>
+
+    <script src="../utils.js"></script>
+    <script src="mc_circle.js"></script>
+</body>
+
+
+</html>
