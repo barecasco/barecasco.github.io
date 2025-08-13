@@ -38,7 +38,7 @@ body {
     background-color: #1a1a1a;
     padding: 20px;
     /* border-radius: 8px; */
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     /* border: 1px solid #333; */
 }
 
@@ -49,7 +49,7 @@ body {
 
 .filter-row {
     display: flex;
-    gap: 20px;
+    gap: 15px;
     flex-wrap: wrap;
 }
 
@@ -75,8 +75,8 @@ body {
 
 .metrics-row {
     display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
 }
 
@@ -104,8 +104,8 @@ body {
 
 .chart-row {
     display: flex;
-    gap: 20px;
-    margin-bottom: 20px;
+    gap: 10px;
+    margin-bottom: 10px;
     flex-wrap: wrap;
 }
 
