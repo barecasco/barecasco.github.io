@@ -54,10 +54,10 @@ body {
 
 
 .controls {
-    background-color: #1a1a1a;
+    background-color: #121212;
     padding: 20px;
     /* border-radius: 8px; */
-    margin-bottom: 20px;
+    margin-bottom: 10px;
     /* border: 1px solid #333; */
 }
 
@@ -101,7 +101,7 @@ body {
 
 .metric-card {
     flex: 1;
-    background-color: #1a1a1a;
+    background-color: #121212;
     padding: 20px;
     text-align: center;
     align-items: center;
@@ -129,7 +129,7 @@ body {
 }
 
 .chart-container {
-    background-color: #1a1a1a;
+    background-color: #121212;
     padding-bottom: 15px;
     padding-top: 15px;
     padding-left: 15px;
@@ -140,13 +140,13 @@ body {
 }
 
 .chart-container-map {
-    background-color: rgb(38,38,38);
+    background-color: #121212;
     /* border-radius: 8px; */
     /* background-color: rgb(38,38,38); */
-    padding-bottom: 15px;
-    padding-top: 15px;
-    padding-left: 15px;
-    padding-right: 20px;
+    padding-bottom: 20px;
+    padding-top: 20px;
+    padding-left: 20px;
+    padding-right: 25px;
 }
 
 .chart-container h3 {
@@ -158,17 +158,6 @@ body {
     flex: 0.5;
     min-width: 400px;
 }
-
-.chart-55 {
-    flex: 1.1;
-    min-width: 500px;
-}
-
-.chart-45 {
-    flex: 0.7;
-    min-width: 500px;
-}
-
 
 .chart-40 {
     flex: 1;
@@ -207,13 +196,13 @@ th, td {
 }
 
 th {
-    background-color: #121212;
+    background-color: #1a1a1a;
     font-weight:lighter;
     font-size:small;
 }
 
 td {
-    background-color: #1a1a1a;
+    background-color: #121212;
     font-size:0.8em;
 }
 
@@ -232,24 +221,32 @@ td {
 }
 
 /* ------------------------------------------------------------------------------------- */
-/* monte carlo circle */
+/* monte carlos */
 /* ------------------------------------------------------------------------------------- */
+
+
 .plot-container {
-    width: 400px;
-    height: 400px;
+    /* width: 400px; */
     margin: 0 auto;
     margin-bottom: 25px;
-    aspect-ratio: 1;
+    /* aspect-ratio: 1; */
+}
+
+#orbs-container {
+    margin: auto;
+    width: 500px;
+    height: 350px;
+    position: relative;
 }
 
 .row-1 {
-    max-width: 600px;
+    /* max-width: 600px; */
     margin: auto;
     padding-top: 20px;
     padding-bottom: 15px;
     padding-left: 20px;
     padding-right: 20px;
-    background-color: #1a1a1a; /* Darker background for rows */
+    background-color: #121212; /* Darker background for rows */
     border-radius: 8px; /* Rounded corners */
     display: flex;
     justify-content: center;

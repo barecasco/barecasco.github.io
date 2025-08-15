@@ -11,9 +11,17 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <script src="https://cdn.plot.ly/plotly-2.35.2.min.js"></script>
+    <script type="importmap">
+        {
+            "imports": {
+                "three": "https://cdn.jsdelivr.net/npm/three@latest/build/three.module.js",
+                "three/addons/": "https://cdn.jsdelivr.net/npm/three@latest/examples/jsm/"
+            }
+        }
+    </script>
     <link rel="stylesheet" href="style.css">
 
-    <title>Plotly.js x Three.js Dashboard Demo</title>
+    <title>Plotly.js + Three.js Dashboard Demo</title>
 </head>
 
 
@@ -26,51 +34,193 @@
 
         <!-- Header -->
         <div class="header">
-            <h1>Plotly.js x Three.js Dashboard Demo</h1>
+            <h1>Plotly.js + Three.js Dashboard Demo</h1>
         </div>
 
 
+
         <!-- Controls -->
-        <!-- <div class="controls">
+        <div class="controls">
             <h3>Filters</h3>
             <div class="filter-row">
+                <div class="filter-group">
+                    <label>MPA/Control:</label>
+                    <select id="mpa-control-filter">
+                        <option value="all">All</option>
+                    </select>
+                </div>
+                <div class="filter-group">
+                    <label>Year:</label>
+                    <select id="year-filter">
+                        <option value="all">All</option>
+                    </select>
+                </div>
                 <div class="filter-group">
                     <label>Trophic Level:</label>
                     <select id="trophic-filter">
                         <option value="all">All</option>
                     </select>
                 </div>
+                <div class="filter-group">
+                    <label>Family:</label>
+                    <select id="family-filter">
+                        <option value="all">All</option>
+                    </select>
+                </div>
             </div>
-        </div> -->
+        </div>
 
-
-        <!-- Scatter plot row -->
+        
         <div class="chart-row">
             <div class="chart-container chart-40">
-                <h4>Monte-Carlo Circle Area Estimation</h4>
+                <h4>Three.js Map Visualization</h4>
                 <div id="description">
                     <p>
-            This Monte Carlo simulation estimates the area of a circle (radius 0.3, area 0.2827)
-            inscribed within a unit square (1 x 1).
-            It achieves this by randomly generating points within the square and
-            calculating the ratio of points falling inside the circle to the total
-            number of points.  By increasing the number of generated points
-            the simulation demonstrates the convergence of the estimated area
-            toward the circle's true area, illustrating a fundamental application
-            of Monte Carlo methods.
+                        Plotly.js offers comprehensive mapping capabilities 
+                        with support for various geographic projections.
+                    </p>
+                </div>
+            </div>
+            <div class="chart-container-map chart-60">
+                <!-- <h3>Site Locations</h3> -->
+                <div id="site-map"></div>
+            </div>
+        </div>
+
+
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h4>Three.js Animation Demo</h4>
+                <div id="description">
+                    <p>
+                        This Three.js component demonstrates animated 3D elements within a dashboard context. Three.js can be particularly useful when your visualization requirements involve complex animations or 3D interactions that extend beyond Plotly's capabilities.
                     </p>
                 </div>
             </div>
             <div class="chart-container chart-60">
-                <h4>Monte-Carlo Circle Area Estimation</h4>
-                <div class="plot-container">
-                    <div id="main-screen"></div>
+                <div id="orbs-container"></div>
+            </div>
+        </div>
+        
+
+        <!-- metric row -->
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h4>Simple Text Visualization</h4>
+                <div id="metric-text-description">
+                    <p>
+                        When presenting key metrics or summary statistics, simple numerical displays can be highly effective. This approach allows viewers to quickly grasp essential information without the complexity of charts, which may introduce unnecessary visual interpretation layers.
+                    </p>
                 </div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="total-observations">0</div>
+                <div class="metric-label">Total Observations</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="total-species">0</div>
+                <div class="metric-label">Unique Species</div>
+            </div>
+            <div class="metric-card">
+                <div class="metric-value" id="total-sites">0</div>
+                <div class="metric-label">Survey Sites</div>
+            </div>
+        </div>
+
+        
+        <!-- table row -->
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h4>Data Tables</h4>
+                <div id="metric-text-description">
+                    <p>
+                        Tables serve diverse audiences well, allowing readers to explore specific data points relevant to their interests. They facilitate detailed examination through row-by-row and column-by-column reading patterns, enabling precise comparisons between individual data values.
+                    </p>
+                </div>
+            </div>
+        <div class="table-container chart-60">
+            <h4>Filtered Data Summary</h4>
+            <div id="summary-table"></div>
+        </div>
+        </div>
+
+
+        <!-- Bar chart row -->
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h4>Bar Chart Visualization</h4>
+                <div id="bar-chart-description">
+                    <p>
+                        Bar charts provide clear visual comparison of categories through their straightforward design. Readers can readily identify the highest and lowest values while making meaningful comparisons across different categories through visual length comparison.
+                    </p>
+                </div>
+            </div>
+            <div class="chart-container chart-60">
+                <h4>Species Diversity by Trophic Level</h4>
+                <div id="trophic-diversity"></div>
+            </div>
+        </div>
+
+        <!-- Slopegraph row -->
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h4>Slope Graph Analysis</h4>
+                <div id="bar-chart-description">
+                    <p>
+                        Slope graphs effectively display changes between two time points or conditions. They provide clear visualization of increases, decreases, or relative changes across multiple categories, making trends and comparative performance readily apparent.
+                    </p>
+                </div>
+            </div>
+            <div class="chart-container chart-60">
+                <h4>Slopegraph</h4>
+                <div id="slopegraph-container"></div>
+            </div>
+        </div>
+
+        <!-- Monte carlo simulation snippet -->
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h4>Monte Carlo Circle Area Estimation</h4>
+                <div id="description">
+                    <p>
+                        This Monte Carlo simulation estimates the area of a circle (radius 0.3, theoretical area 0.2827) inscribed within a unit square. The method involves generating random points within the square and calculating the proportion that fall within the circle. As the number of sample points increases, the estimated area typically converges toward the true mathematical value, demonstrating a practical application of Monte Carlo methodology.
+                    </p>
+                </div>
+            </div>
+            <div class="chart-container chart-60">
 
                 <div class="row-1">
-                    <label for="numberInput">N shots (10-3000)</label>
-                    <input type="number" id="mc-number-input" name="numberInput" min="10" max="3000" value="10">
+                    <label for="mcNumberInput">N shots (10-3000)</label>
+                    <input type="number" id="mc-number-input" name="mcNumberInput" min="10" max="3000" value="10">
                     <button id="mc-reshoot-button">Reshoot</button>
+                </div>
+                
+                <div class="plot-container">
+                    <div id="shots-plot"></div>
+                </div>
+
+            </div>
+        </div>
+
+
+        <!-- Monte carlo analysis snippet -->
+        <div class="chart-row">
+            <div class="chart-container chart-40">
+                <h4>Monte Carlo Convergence Analysis</h4>
+                <div id="description">
+                    <p>
+                        This simulation explores the convergence behavior of Monte Carlo estimation by repeating the circle area calculation multiple times with varying sample sizes. By plotting both the mean estimate and its variability against the number of random points used, we can observe how estimation accuracy and precision improve with larger sample sizes.
+                    </p>
+                </div>
+            </div>
+            <div class="chart-container chart-60">
+                <div class="row-1">
+                    <label for="mcsNumberInput">Scattering repeats (10-300)</label>
+                    <input type="number" id="mcs-number-input" name="mcsNumberInput" min="10" max="300" value="10">
+                    <button id="simulate-button">Simulate</button>    
+                </div>
+                <div class="plot-container">
+                    <div id="disperse-plot"></div>
                 </div>
             </div>
         </div>
@@ -79,7 +229,11 @@
     </div>
 
     <script src="../utils.js"></script>
+    <script src="main.js"></script>
     <script src="mc_circle.js"></script>
+    <script src="mcs_circle.js"></script>
+    <script type="module" src="orbs.js"></script>
+
 </body>
 
 

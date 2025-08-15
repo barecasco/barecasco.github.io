@@ -10,7 +10,7 @@ const text_ldiff  = 0.07;
 const font_family = 'Arial, Helvetica, sans-serif';
 
 const reshot_button = document.getElementById('mc-reshoot-button');
-const nshot_input   = document.getElementById('mc-number-input');
+const nshot_input   = document.getElementById("mc-number-input");
 
 // Number of points
 let numPoints = 10;
@@ -21,11 +21,11 @@ const displayConfig = {
 };
 
 var layout = {
-    autosize: true,
+    height: "400px",
     showlegend: false,
     dragmode: false,
-    plot_bgcolor: "#1a1a1a",       // dark plot background
-    paper_bgcolor: "#1a1a1a",      // dark overall background
+    plot_bgcolor: "#121212",       // dark plot background
+    paper_bgcolor: "#121212",      // dark overall background
     font: {
         family: font_family,
         color: "#EEE"           // light font color
@@ -123,7 +123,7 @@ function isPointInCircle(x, y, cx, cy, r) {
 }
 
 
-function getInputNumber() {
+function getMcInputNumber() {
     const n_input = parseInt(nshot_input.value, 10);
     let res       = n_input;
     
@@ -165,7 +165,7 @@ function update_layout(numPoints, numHits, estimated_area, true_area) {
         {
             text: 'Est. area: ' + String(numHits) + "/" + String(numPoints) + " x 1" + " = " + String(estimated_area.toFixed(4)),
             x: 0.5,
-            y: 0.0,
+            y: -0.05,
             xanchor: 'center',
             yref: 'paper',
             xref: 'paper',
@@ -176,7 +176,7 @@ function update_layout(numPoints, numHits, estimated_area, true_area) {
                 color: "white",
                 size: 12
             },
-            bgcolor: '#1a1a1a',
+            bgcolor: '#121212',
             // bordercolor: '#c7c7c7',
             // borderwidth: 2,
             // borderpad: 4,     
@@ -187,7 +187,7 @@ function update_layout(numPoints, numHits, estimated_area, true_area) {
 }
 
 function init_plot() {
-    numPoints           = getInputNumber();
+    numPoints           = getMcInputNumber();
     const randomPoints  = generateRandomPoints(numPoints);
 
     const inCircles     = [];
@@ -225,12 +225,12 @@ function init_plot() {
 
     layout.annotations = update_layout(numPoints, inCircles.length, estimated_area, true_area);
 
-    Plotly.newPlot("main-screen", [mc_shots, mc_hits], layout, displayConfig);
+    Plotly.newPlot("shots-plot", [mc_shots, mc_hits], layout, displayConfig);
 }
 
 
 function replot() {
-    numPoints           = getInputNumber();
+    numPoints           = getMcInputNumber();
     const randomPoints = generateRandomPoints(numPoints);
 
     const inCircles     = [];
@@ -267,7 +267,7 @@ function replot() {
 
     layout.annotations = update_layout(numPoints, inCircles.length, estimated_area, true_area);
 
-    Plotly.animate('main-screen', 
+    Plotly.animate('shots-plot', 
         {
             data    : [mc_shots, mc_hits],
             traces  : [0,1],
@@ -298,5 +298,5 @@ reshot_button.addEventListener('click', () => {
 
 window.addEventListener('resize', function() {
     console.log("resizing");
-    // Plotly.Plots.resize('main-screen');
+    Plotly.Plots.resize('shots-plot');
 });
