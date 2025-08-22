@@ -59,6 +59,7 @@ function filterData() {
     const family = document.getElementById('family-filter').value;
 
     let filtered = observeFish.slice();
+    filtered = filtered.filter(d => d['ngo'] === "CI");
 
     if (mpaControl !== 'all') {
         filtered = filtered.filter(d => d['control/mpa'] === mpaControl);
