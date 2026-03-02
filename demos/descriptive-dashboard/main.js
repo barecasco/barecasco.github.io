@@ -79,15 +79,13 @@ function populateSelect(selectId, values) {
 }
 
 
-
-
 // ----------------------------------------------------------------------------- FILTER DATA FUNCTION
 // Filter data function
 function filterData() {
-    const mpaControl = document.getElementById('mpa-control-filter').value;
-    const year = document.getElementById('year-filter').value;
-    const trophic = document.getElementById('trophic-filter').value;
-    const family = document.getElementById('family-filter').value;
+    const mpaControl    = document.getElementById('mpa-control-filter').value;
+    const year          = document.getElementById('year-filter').value;
+    const trophic       = document.getElementById('trophic-filter').value;
+    const family        = document.getElementById('family-filter').value;
 
     let filtered = observerFish.slice();
 
@@ -108,7 +106,6 @@ function filterData() {
 }
 
 
-
 // ----------------------------------------------------------------------------- CREATE & UPDATE PLOT
 function updateMetrics(data) {
     const totalObs      = data.length;
@@ -119,7 +116,6 @@ function updateMetrics(data) {
     document.getElementById('total-species').textContent        = uniqueSpecies.toLocaleString();
     document.getElementById('total-sites').textContent          = totalSites.toLocaleString();
 }
-
 
 function createSummaryTable(data) {
     const summary = {};
