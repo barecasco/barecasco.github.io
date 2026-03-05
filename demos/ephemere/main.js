@@ -167,6 +167,7 @@ viewer.screenSpaceEventHandler.setInputAction(click => {
     const picked = viewer.scene.pick(click.position);
     if (Cesium.defined(picked) && picked.id) {
         const entity = picked.id;
+        console.log(entity.id);
         if (!lockedEntities.includes(entity.id)) {
             crossHair.position = entity.position;
             console.log(crossHair.position);
@@ -1044,7 +1045,7 @@ function processDeploymentCoordinatesData(latlonData) {
     });
 
      // Draw the route polyline
-    viewer.entities.add({
+    const routeEnt = viewer.entities.add({
         name: 'Ship Route',
         polyline: {
             positions: Cesium.Cartesian3.fromDegreesArrayHeights(waypoints),
@@ -1056,7 +1057,7 @@ function processDeploymentCoordinatesData(latlonData) {
             clampToGround: false
         }
     });
-
+    lockedEntities.push(routeEnt.id);
     console.log(`Successfully loaded ${waypoints.length} waypoints and drew ship route`);   
     console.log("Successfully loaded deployment coordinates data");
 }
@@ -1115,9 +1116,14 @@ function recalculateOccurAbundEntities(deployNames, exclusiveSpecies) {
 // this means I need to be capable of extracting from the json object
 // continue later.
 async function processAreaData(data) {
-    const ent = await viewer.dataSources.add(data);
-    lockedEntities.push(ent.id);
-    existingMpaEntities.push(ent);
+    const dataSource = await viewer.dataSources.add(data);
+    const entities = dataSource.entities.values;
+    
+    entities.forEach(entity => {
+        lockedEntities.push(entity.id);
+        existingMpaEntities.push(entity);
+    });
+    
 }
 
 

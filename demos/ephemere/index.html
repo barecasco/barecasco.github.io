@@ -117,7 +117,7 @@
     .badge {
       font-family: var(--sans);
       font-size: 9px;
-      letter-spacing: 1.5px;
+      letter-spacing: 1.2px;
       padding: 4px 10px;
       border-radius: 4px;
       text-transform: uppercase;
@@ -356,7 +356,7 @@
 
     /* Species List */
     #speciesList {
-      max-height: 300px;
+      max-height: 200px;
       overflow-y: auto;
       border: 1px solid rgba(255, 255, 255, 0.07);
       border-radius: 8px;
@@ -697,18 +697,12 @@
 
   <!-- ── Top Bar ── -->
   <div id="topbar">
-    <div class="brand">
-      <div class="brand-icon">
-        <img src="/demos/ephemere/images/ki.ico" style="width:25px; height:25px; object-fit:contain; flex-shrink:0;" />
+    <div class="top-left">
+        <div>
+          <div class="badge"><b>This Visualization uses Fictitious Data</b></div>
+            <!-- <div class="brand-title">BRUV<span>IO</span></div> -->
+        <!-- <div class="brand-sub"></div> -->
       </div>
-      <div>
-        <div class="brand-title">ARS<span>VIRIDIUM</span></div>
-        <div class="brand-sub">Descriptive Geospatial</div>
-      </div>
-    </div>
-    <div class="top-right">
-      <!-- <div class="badge live">● LIVE</div> -->
-      <div class="badge"><b>This Visualization uses Fictitious Data</b></div>
     </div>
   </div>
 
@@ -760,7 +754,7 @@
       <div class="toggle-row">
         <div class="toggle-label">
           <span class="dot" style="background:#1ed278"></span>
-          Rel. Abundance &amp; Species Count
+          Total Max-N &amp; Unique Count
         </div>
         <label class="toggle-switch">
           <input type="checkbox" id="toggleOccurAbund" onchange="countFilters()">
@@ -890,11 +884,11 @@
     <br>
     <div class="legend-item">
         <img src="/demos/ephemere/images/rect1.png" style="width:24px; height:24px; object-fit:contain; flex-shrink:0;" />
-        Relative Abundance
+        Total Max-N
     </div>
     <div class="legend-item">
         <img src="/demos/ephemere/images/rect2.png" style="width:24px; height:22px; object-fit:contain; flex-shrink:0;" />
-        Species Count
+        Unique Count
     </div>
   </div>
 
