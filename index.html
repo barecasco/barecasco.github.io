@@ -51,7 +51,7 @@
   .description-self { 
     padding: 20px;
     margin: 0 0 30px 0;
-    background-color: #272727;
+    background-color: #121212;
     border-radius: 8px;
     font-size: 15px;
     display: grid;
@@ -102,39 +102,21 @@
     line-height: 145%;
   }
 
-  .carousel-container {
+  /* Shelf grid layout */
+  .shelf-grid {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 20px;
     margin: 20px 0;
   }
 
-  .carousel-track {
-    display: flex;
-    gap: 20px;
-    overflow-x: auto;
-    padding: 10px 0;
-    scroll-behavior: smooth;
-  }
-
-  .carousel-track::-webkit-scrollbar {
-    height: 8px;
-  }
-
-  .carousel-track::-webkit-scrollbar-track {
-    background: #212121;
-    border-radius: 4px;
-  }
-
-  .carousel-track::-webkit-scrollbar-thumb {
-    background: #515466;
-    border-radius: 4px;
-  }
-
   .demo-item {
-    flex: 0 0 250px;
     background-color: #212121;
     border-radius: 8px;
     border: 1px solid #333333;
     overflow: hidden;
     transition: border-color 0.3s ease;
+    cursor: pointer;
   }
 
   .demo-item:hover {
@@ -190,14 +172,13 @@
     margin: 0;
   }
 
-  .more-coming {
-    color: #888888;
-    font-style: italic;
-    font-size: 13px;
-    margin-top: 15px;
+  /* Responsive design */
+  @media (max-width: 900px) {
+    .shelf-grid {
+      grid-template-columns: repeat(3, 1fr);
+    }
   }
 
-  /* Responsive design */
   @media (max-width: 768px) {
     .container {
       padding: 10px;
@@ -217,9 +198,15 @@
       max-width: 100%;
       padding: 15px;
     }
-    
-    .demo-item {
-      flex: 0 0 220px;
+
+    .shelf-grid {
+      grid-template-columns: repeat(2, 1fr);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .shelf-grid {
+      grid-template-columns: 1fr;
     }
   }
 </style>
@@ -235,14 +222,14 @@
     <div class="container">
       <div class="description-self">
         <div class="column">
-          <h3 style="text-align: left;">"To see the forest for the trees. Problems can be simpler just by changing how we see them."</h3>
+          <h3 style="text-align: left;">"To see the forest through the trees."</h3>
           <br>
           <p>
             I am currently exploring the combined power of beyond-dashboard visualizations 
             and simulation approaches to deliver highly interpretable solutions for 
             business challenges. My study involves approaching solutions from both simulation 
-            and visualization perspectives, exploring as many angles as possible. Here are some 
-            examples that showcase my learning journey, starting with the simpler ones. 
+            and visualization perspectives, exploring as many angles as possible. 
+            Here are some examples that showcase my learning journey, starting with the simpler ones. 
             I'm enjoying creating these, and I hope to continue adding to them.
           </p>
         </div>
@@ -259,235 +246,165 @@
       </div>
     </div>
   
+
+    <!-- Simulations & Visualizations section -->
     <div class="container">
       <div class="section-card">
-        <div class="title"><h3>Plotly</h3></div>
         <div class="description">
-          <div class="carousel-container">
-            <div class="carousel-track" id="plotly-carousel">
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/dashboard-thumbnail.png" alt="Plotly.js Dashboard Demo" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/mpa_control/index.html" class="demo-title">Plotly.js Dashboard Demo</a>
-                  <p class="demo-description">A regular dashboard example leveraging the power of Plotly.js, which can be statically served and interactive.</p>
-                </div>
+          <div class="shelf-grid">
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/dashboard-thumbnail.png" alt="Plotly.js Dashboard Demo" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
               </div>
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/mc-circle-thumbnail.png" alt="Monte Carlo Area Estimation" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/mc_circle/index.html" class="demo-title">Monte Carlo Area Estimation</a>
-                  <p class="demo-description">Interactive simulation showing how random sampling can estimate π using geometric probability.</p>
-                </div>
+              <div class="demo-content">
+                <a href="demos/mpa_control/index.html" class="demo-title">A dark dashboard</a>
+                <p class="demo-description">A regular dashboard example leveraging the power of Plotly, which can be statically served and interactive.</p>
               </div>
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/mc-sim-thumbnail.png" alt="Monte Carlo Convergence" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/mc_circle_convergence/index.html" class="demo-title">Monte Carlo Convergence Simulation</a>
-                  <p class="demo-description">Visualizing how Monte Carlo methods converge to true values with increasing sample size.</p>
-                </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/ephemere-thumbnail.png" alt="Cesium.js Demo" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
               </div>
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/discrete-flow-thumbnail.png" alt="Refinery Simulation" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/discrete_flow/index.html" class="demo-title">Refinery Delivery Schedule Simulation</a>
-                  <p class="demo-description">Discrete event simulation for delivery optimization scenarios.</p>
-                </div>
+              <div class="demo-content">
+                <a href="demos/ephemere/index.html" class="demo-title">Geospatial Dashboard</a>
+                <p class="demo-description">A 3D geospatial dashboard with multi-state display for a single site.</p>
               </div>
-              
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/upset-plot-thumbnail.png" alt="UpSet Plot" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/upset_plot/index.html" class="demo-title">Upset Plot</a>
-                  <p class="demo-description">An UpSet plot is a data visualization technique used to display intersections between multiple sets, similar to a Venn diagram but for data with many sets.</p>
-                </div>
-              </div>
+            </div>
 
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/parallel-coords-thumbnail.png" alt="Parallel Coordinates" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/parallel_axes/index.html" class="demo-title">Parallel Coordinates</a>
-                  <p class="demo-description">Multi-dimensional data visualization technique for exploring relationships between variables.</p>
-                </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/mc-circle-thumbnail.png" alt="Monte Carlo Area Estimation" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
               </div>
-
+              <div class="demo-content">
+                <a href="demos/mc_circle/index.html" class="demo-title">Monte Carlo Area Estimation</a>
+                <p class="demo-description">Interactive simulation showing how random sampling can estimate π using geometric probability.</p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/mc-sim-thumbnail.png" alt="Monte Carlo Convergence" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/mc_circle_convergence/index.html" class="demo-title">Monte Carlo Convergence Simulation</a>
+                <p class="demo-description">Visualizing how Monte Carlo methods converge to true values with increasing sample size.</p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/discrete-flow-thumbnail.png" alt="Refinery Simulation" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/discrete_flow/index.html" class="demo-title">Refinery Delivery Schedule Simulation</a>
+                <p class="demo-description">Discrete event simulation for delivery optimization scenarios.</p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/upset-plot-thumbnail.png" alt="UpSet Plot" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/upset_plot/index.html" class="demo-title">Upset Plot</a>
+                <p class="demo-description">An UpSet plot is a data visualization technique used to display intersections between multiple sets, similar to a Venn diagram but for data with many sets.</p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/parallel-coords-thumbnail.png" alt="Parallel Coordinates" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/parallel_axes/index.html" class="demo-title">Parallel Coordinates</a>
+                <p class="demo-description">Multi-dimensional data visualization technique for exploring relationships between variables.</p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/threebody-thumbnail.png" alt="Three-body problem" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/threebody/index.html" class="demo-title">Three-body problem</a>
+                <p class="demo-description">A simulation on three-body problem.</p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/orbs-thumbnail.png" alt="Glowing Orbs" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/orbs/index.html" class="demo-title">Glowing Orbs</a>
+                <p class="demo-description">Can be used for zoning out at work.</p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/sph-thumbnail.png" alt="SPH Simulation" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/sph/index.html" class="demo-title">Smoothed Particle Hydrodynamics</a>
+                <p class="demo-description">A computational method that models fluid dynamics by representing fluids as a collection of discrete particles.</p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/followme-thumbnail.png" alt="Follow the Shape" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/cv_follow_shape/index.html" class="demo-title">Follow the Shape</a>
+                <p class="demo-description">Interactive canvas experience where shapes respond dynamically to user input and movement patterns.</p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/mandelbrot-thumbnail.png" alt="Plot" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/plot_art/mandelbrot.png" class="demo-title">Mandelbrot</a>
+                <p class="demo-description">
+                  The Mandelbrot plot is a fractal generated by repeatedly applying a simple mathematical equation to complex numbers. Drawn using gnuplot.
+                </p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/overfit-thumbnail.png" alt="Plot" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/plot_art/overfit_journey.png" class="demo-title">2D Curve Fitting</a>
+                <p class="demo-description">
+                  A visualization of curve fitting on a 2D scatter dataset. 
+                  The plot shows multiple curves with different fit parameters,
+                  drawn using gnuplot.
+                </p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/3d-curve-fit-thumbnail.png" alt="Plot" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/plot_art/3d_curve_fit.png" class="demo-title">3D Curve Fitting</a>
+                <p class="demo-description">
+                  A visualization of curve fitting on a 3D scatter dataset, drawn using gnuplot.
+                </p>
+              </div>
+            </div>
+            <div class="demo-item">
+              <div class="demo-thumbnail">
+                <img src="images/annot-thumbnail.png" alt="Plot" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
+              </div>
+              <div class="demo-content">
+                <a href="demos/plot_art/bounding_box.png" class="demo-title">Bounding Boxes</a>
+                <p class="demo-description">
+                  A bounding box visualization that soothes the eyes. Drawn using opencv-python.
+                </p>
+              </div>
             </div>
           </div>
         </div>
       </div>
     </div>
-  
-    <div class="container">
-      <div class="section-card">
-        <div class="title"><h3>Three.js</h3></div>
-        <div class="description">
-          <div class="carousel-container">
-            <div class="carousel-track" id="threejs-carousel">
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/threebody-thumbnail.png" alt="Three-body problem" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/threebody/index.html" class="demo-title">Three-body problem</a>
-                  <p class="demo-description">A simulation on three-body problem.</p>
-                </div>
-              </div>
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/orbs-thumbnail.png" alt="Glowing Orbs" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/orbs/index.html" class="demo-title">Glowing Orbs</a>
-                  <p class="demo-description">Can be used for zoning out at work.</p>
-                </div>
-              </div>
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/sph-thumbnail.png" alt="SPH Simulation" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/sph/index.html" class="demo-title">Smoothed Particle Hydrodynamics</a>
-                  <p class="demo-description">It is a computational method that models fluid dynamics by representing fluids as a collection of discrete particles.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-  <div class="container">
-      <div class="section-card">
-        <div class="title"><h3>HTML5 Canvas</h3></div>
-        <div class="description">
-          <div class="carousel-container">
-            <div class="carousel-track" id="canvas-carousel">
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/followme-thumbnail.png" alt="Follow the Shape" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/cv_follow_shape/index.html" class="demo-title">Follow the Shape</a>
-                  <p class="demo-description">Interactive canvas experience where shapes respond dynamically to user input and movement patterns.</p>
-                </div>
-              </div>
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
-  <div class="container">
-      <div class="section-card">
-        <!-- <div class="title"><h4></h4></div> -->
-        <div class="description">Plots that I find beautiful. Details are intentionally omitted.
-          <div class="carousel-container">
-            <div class="carousel-track" id="canvas-carousel">
-              
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/mandelbrot-thumbnail.png" alt="Plot" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/plot_art/mandelbrot.png" class="demo-title">Mandelbrot</a>
-                  <p class="demo-description">
-                    The Mandelbrot plot is a fractal generated by repeatedly applying a simple mathematical equation to complex numbers. Drawn using gnuplot.
-                  </p>
-                </div>
-              </div>
-
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/overfit-thumbnail.png" alt="Plot" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/plot_art/overfit_journey.png" class="demo-title">2D Curve Fitting</a>
-                  <p class="demo-description">
-                    A visualization of curve fitting on a 2D scatter dataset. 
-                    The plot shows multiple curves with different fit parameters,
-                    drawn using gnuplot.
-                  </p>
-                </div>
-              </div>
-
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/3d-curve-fit-thumbnail.png" alt="Plot" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/plot_art/3d_curve_fit.png" class="demo-title">3D Curve Fitting</a>
-                  <p class="demo-description">
-                    A visualization of curve fitting on a 3D scatter dataset, drawn using gnuplot.
-                  </p>
-                </div>
-              </div>
-
-              <div class="demo-item">
-                <div class="demo-thumbnail">
-                  <img src="images/annot-thumbnail.png" alt="Plot" onerror="this.parentElement.classList.add('placeholder'); this.style.display='none';">
-                </div>
-                <div class="demo-content">
-                  <a href="demos/plot_art/bounding_box.png" class="demo-title">Bounding Boxes</a>
-                  <p class="demo-description">
-                    A bounding box visualization that soothes the eyes. Drawn using opencv-python.
-                  </p>
-                </div>
-              </div>
-
-            </div>
-          </div>
-        </div>
-      </div>
-    </div>
-
-
   </section>
 
   <script>
-    // Simple carousel functionality
-    const tracks = document.querySelectorAll('.carousel-track');
-    
-    tracks.forEach(track => {
-      // Touch/drag scrolling for mobile
-      let isDown = false;
-      let startX;
-      let scrollLeft;
-
-      track.addEventListener('mousedown', (e) => {
-        isDown = true;
-        startX = e.pageX - track.offsetLeft;
-        scrollLeft = track.scrollLeft;
-      });
-
-      track.addEventListener('mouseleave', () => {
-        isDown = false;
-      });
-
-      track.addEventListener('mouseup', () => {
-        isDown = false;
-      });
-
-      track.addEventListener('mousemove', (e) => {
-        if (!isDown) return;
-        e.preventDefault();
-        const x = e.pageX - track.offsetLeft;
-        const walk = (x - startX) * 2;
-        track.scrollLeft = scrollLeft - walk;
-      });
-    });
-
     // Click to open demo links
     const demoItems = document.querySelectorAll('.demo-item');
     demoItems.forEach(item => {

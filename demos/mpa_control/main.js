@@ -392,7 +392,7 @@ function createSiteMap(data) {
 
     const layout = {
         title: {
-            text: 'Site Locations',
+            text: 'Random Site Locations',
             x: 0.001,          
             y: 0.995,   
             xanchor: 'left', 
@@ -400,7 +400,7 @@ function createSiteMap(data) {
             font: {
                 family: 'Arial, sans-serif',
                 size: 19,
-                weight: 'bold',
+                weight: 'normal',
                 color: '#ffffff'
             }
         },

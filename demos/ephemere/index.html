@@ -2,7 +2,7 @@
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Ars Viridium</title>
+  <title>Geospatial Dashboard 1</title>
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.138/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.138/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
   <style>
@@ -681,7 +681,7 @@
 <body>
 
 <div id="cesiumContainer"></div>
-<script type="module" src="/main.js"></script>
+<script type="module" src="/demos/ephemere/main.js"></script>
 
 <div id="flashOverlay"></div>
 
@@ -699,7 +699,7 @@
   <div id="topbar">
     <div class="brand">
       <div class="brand-icon">
-        <img src="/images/ki.ico" style="width:25px; height:25px; object-fit:contain; flex-shrink:0;" />
+        <img src="/demos/ephemere/images/ki.ico" style="width:25px; height:25px; object-fit:contain; flex-shrink:0;" />
       </div>
       <div>
         <div class="brand-title">ARS<span>VIRIDIUM</span></div>
@@ -815,24 +815,24 @@
       <div class="section-title">Substrate Type</div>
       <div class="chips-grid">
         <div class="chip-item substrate">
-          <input type="checkbox" id="sub-lv1" value="lv1 sand/silt" checked onchange="countFilters()">
-          <label for="sub-lv1">lv1 sand/silt</label>
+          <input type="checkbox" id="sub-lv1" value="sand/silt" checked onchange="countFilters()">
+          <label for="sub-lv1">sand/silt</label>
         </div>
         <div class="chip-item substrate">
-          <input type="checkbox" id="sub-lv2" value="lv2 rubble reef" checked onchange="countFilters()">
-          <label for="sub-lv2">lv2 rubble reef</label>
+          <input type="checkbox" id="sub-lv2" value="rubble reef" checked onchange="countFilters()">
+          <label for="sub-lv2">rubble reef</label>
         </div>
         <div class="chip-item substrate">
-          <input type="checkbox" id="sub-lv3" value="lv3 alternate reef" checked onchange="countFilters()">
-          <label for="sub-lv3">lv3 alternate reef</label>
+          <input type="checkbox" id="sub-lv3" value="alternate reef" checked onchange="countFilters()">
+          <label for="sub-lv3">alternate reef</label>
         </div>
         <div class="chip-item substrate">
-          <input type="checkbox" id="sub-lv4" value="lv4 moderate reef" checked onchange="countFilters()">
-          <label for="sub-lv4">lv4 moderate reef</label>
+          <input type="checkbox" id="sub-lv4" value="moderate reef" checked onchange="countFilters()">
+          <label for="sub-lv4">moderate reef</label>
         </div>
         <div class="chip-item substrate">
-          <input type="checkbox" id="sub-lv5" value="lv5 healthy reef" checked onchange="countFilters()">
-          <label for="sub-lv5">lv5 healthy reef</label>
+          <input type="checkbox" id="sub-lv5" value="healthy reef" checked onchange="countFilters()">
+          <label for="sub-lv5">healthy reef</label>
         </div>
       </div>
     </div>
@@ -889,11 +889,11 @@
     </div>
     <br>
     <div class="legend-item">
-        <img src="/images/rect1.png" style="width:24px; height:24px; object-fit:contain; flex-shrink:0;" />
+        <img src="/demos/ephemere/images/rect1.png" style="width:24px; height:24px; object-fit:contain; flex-shrink:0;" />
         Relative Abundance
     </div>
     <div class="legend-item">
-        <img src="/images/rect2.png" style="width:24px; height:22px; object-fit:contain; flex-shrink:0;" />
+        <img src="/demos/ephemere/images/rect2.png" style="width:24px; height:22px; object-fit:contain; flex-shrink:0;" />
         Species Count
     </div>
   </div>

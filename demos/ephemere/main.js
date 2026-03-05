@@ -3,10 +3,10 @@ Cesium.Ion.defaultAccessToken = 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJqdGkiOi
 
 
 // ── GLOBAL VARS ──────────────────────────────────────────────────────────────────────────────────────────────────────
-const flareUrlDeploymentCoordinates = "/data/deployment-coordinates.json"
-const flareUrlMpaData               = "/data/area-data.geojson"
-const flareUrlWaypoint              = "/data/ship-waypoints.json"
-const flareUrlDeploymentSpecies     = "/data/deployment-species.json"
+const flareUrlDeploymentCoordinates = "/demos/ephemere/data/deployment-coordinates.json"
+const flareUrlMpaData               = "/demos/ephemere/data/area-data.geojson"
+const flareUrlWaypoint              = "/demos/ephemere/data/ship-waypoints.json"
+const flareUrlDeploymentSpecies     = "/demos/ephemere/data/deployment-species.json"
 const deploymentEntities    = {};
 let enabledDeployments      = [];
 
@@ -277,7 +277,7 @@ function applyFilters() {
         species   : Array.from(selectedSpecies),
     };
 
-    console.log(filters);
+    // console.log(filters);
     // ── YOUR JS LOGIC HOOK ──
     // depth selections 10, 30, all
     const depth_string   = filters.depth;
@@ -781,7 +781,7 @@ async function loadDeploymentCoordinatesData() {
 // Function to load and display area data from server
 async function loadAreaData() {
     try {
-        const dataSource = await Cesium.GeoJsonDataSource.load('/data/area-data.geojson', {
+        const dataSource = await Cesium.GeoJsonDataSource.load('/demos/ephemere/data/area-data.geojson', {
             stroke: Cesium.Color.BLACK,
             fill: Cesium.Color.DODGERBLUE.withAlpha(0.05),
             strokeWidth: 1,
@@ -792,6 +792,22 @@ async function loadAreaData() {
         alert('Failed to load data. Please check that the server is running and check the console for details.');
     }
 }
+
+
+// async function loadAreaData() {
+//     try {
+//         const response = await fetch(flareUrlMpaData);
+//         if (!response.ok) {
+//             throw new Error(`HTTP error! status: ${response.status}`);
+//         }
+//         const data = await response.json();
+//         return data;
+//     } catch (error) {
+//         console.error('Error loading area data:', error);
+//         alert('Failed to load area data. Please check that the server is running and see console for details.');
+//     }
+
+// }
 
 
 async function loadSpeciesData() {
@@ -1034,8 +1050,8 @@ function processDeploymentCoordinatesData(latlonData) {
             positions: Cesium.Cartesian3.fromDegreesArrayHeights(waypoints),
             width: 0.5,
             material: new Cesium.PolylineDashMaterialProperty({
-                color: Cesium.Color.SKYBLUE,
-                dashLength: 7.0
+                color: Cesium.Color.SKYBLUE.withAlpha(0.3),
+                dashLength: 7.0,
             }),
             clampToGround: false
         }
@@ -1093,81 +1109,16 @@ function recalculateOccurAbundEntities(deployNames, exclusiveSpecies) {
     // }
 }
 
-
-function processAreaData(dataSource) {
-    const ent = viewer.dataSources.add(dataSource);
+// fixed-01
+// aparently dataSource is a promise, I need to rephrease the text using 
+// standard promise handler like the other function. 
+// this means I need to be capable of extracting from the json object
+// continue later.
+async function processAreaData(data) {
+    const ent = await viewer.dataSources.add(data);
     lockedEntities.push(ent.id);
-    // viewer.zoomTo(dataSource);
+    existingMpaEntities.push(ent);
 }
-
-
-// function processAreaData(areaData) {
-//     console.log(`Processing ${areaData.length} MPA records...`);
-//     const COLOR_MAP = {
-//         'Proposed': Cesium.Color.YELLOW.withAlpha(0.15),
-//         'Existing': Cesium.Color.DODGERBLUE.withAlpha(0.2)
-//     };
-//     const OUTLINE_COLOR = Cesium.Color.BLACK;
-
-//     let polygonCount = 0;
-
-//     // Process each MPA record
-//     areaData.forEach(record => {
-//         const { provinsi, mpaType, polygons } = record;
-
-//         // Add each polygon to the viewer
-//         polygons.forEach(polyCoords => {
-//         if (polyCoords.length > 2 && mpaType == "MPA Existing") {
-//         // if (polyCoords.length > 2) {
-//             const positions = polyCoords.map(coord => 
-//                 Cesium.Cartesian3.fromDegrees(coord.longitude, coord.latitude)
-//             );
-
-//             // Usage
-//             const center = getPolygonCentroid(polyCoords);
-//             const centerPosition = Cesium.Cartesian3.fromDegrees(center.longitude, center.latitude);
-
-
-//             const color = COLOR_MAP[mpaType] || Cesium.Color.GRAY.withAlpha(0.3);
-
-//             let fillEnt = viewer.entities.add({
-//                 name: mpaType,
-//                 position: centerPosition,
-//                 description: `
-//                 <div style="font-size:11px; ">
-//                 <table style="border-collapse: separate; border-spacing: 10px 5px; padding-bottom:10px;" >
-//                     <tr><td> MPA type</td><td>${mpaType} </td></tr>
-//                     <tr><td> Province</td><td>${provinsi} </td></tr>
-//                 </table>
-//                 </div>
-//                 `,
-//                 polygon: {
-//                     hierarchy: new Cesium.PolygonHierarchy(positions),
-//                     material: color,
-//                 }
-//             });
-
-//             // Separate entity for the outline
-//             let lineEnt = viewer.entities.add({
-//                 polyline: {
-//                     positions : [...positions, positions[0]], // close the loop
-//                     width     : 1,
-//                     material  : OUTLINE_COLOR,
-//                     clampToGround: true, // if your polygon is on the ground
-//                 }
-//             });
-//             lockedEntities.push(lineEnt.id);
-//             if (mpaType == "Existing") {
-//                 existingMpaEntities.push(fillEnt);
-//                 existingMpaEntities.push(lineEnt);
-//             }
-//             polygonCount++;
-//         }
-//         });
-//     });
-
-//     console.log(`Successfully loaded ${polygonCount} polygons from ${areaData.length} records`);
-// }
 
 
 function buildSpeciesList(filter = '') {
@@ -1351,6 +1302,7 @@ window.showAllOccurAbundEntities = showAllOccurAbundEntities;
 
 
 function showAllExistingMpaEntities(bool) {
+    // console.log(existingMpaEntities);
     for (let ent of existingMpaEntities) {
         ent.show = bool;
     }
@@ -1416,10 +1368,11 @@ async function main() {
     areaData        = promAreaData;
     speciesData     = promSpeciesData;
 
-
     processSpeciesData(speciesData);
     processDeploymentCoordinatesData(latlonData);
-    processAreaData(areaData);
+
+    // fix-02
+    await processAreaData(areaData);
 
     // Fly to Sumatra region
     viewer.camera.setView({
