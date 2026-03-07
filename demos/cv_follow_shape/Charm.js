@@ -6,8 +6,8 @@ var Charm    			= function (new_config) {
 	var config			= {
 		canvasPosType	: "absolute",
 		containerSize	: "auto",
-		canvasWidth		: 1024,
-		canvasHeight	: 768,
+		canvasWidth		: 768,
+		canvasHeight	: 1024,
 		canvasLeft		: "0px",
 		canvasTop		: "0px",
 		canvasZindex	: 0,

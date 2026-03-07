@@ -50,8 +50,8 @@ function App (charm) {
 		currentScene = 1;
 		console.log("============================= SCENE", sceneIterator);
 		create_quiz_generator();
-		app.create_snapdots_field(cf.canvasWidth/2 + 100, 140, 5, 5, 60);
-		app.create_quizdot_field(cf.canvasWidth/2-240 - 100, 140, 5, 5, 60);
+		app.create_snapdots_field(cf.canvasWidth *0.47, 300, 5, 5, 85);
+		app.create_quizdot_field(cf.canvasWidth * 0.09, 140, 5, 5, 49);
 		sceneIterator++;
 		setTimeout(scenes[sceneIterator], 1000);
 	}
@@ -103,8 +103,8 @@ function App (charm) {
 		}
 
 		var exp_text_specs = {
-			x       	: 83, // the number is obtained from q.centerize()
-			y       	: cf.canvasHeight - 120,
+			x       	: cf.canvasWidth/2, // the number is obtained from q.centerize()
+			y       	: cf.canvasHeight * 0.15,
 			fonts		: ["15pt Arial"],
 			colors		: ['#dfdfdf'],
 			lines		: [0, 1, 2, 3],
@@ -764,8 +764,8 @@ function App (charm) {
 	}
 
 	function create_run_button () {
-		var xpos = cf.canvasWidth - 115;
-		var ypos = cf.canvasHeight - 90;
+		var xpos = cf.canvasWidth - 120;
+		var ypos = cf.canvasHeight * 0.9;
 		var startx = 75;
 
 		var specs 				= {
@@ -827,10 +827,10 @@ function App (charm) {
 	}
 
 	function create_arrow_inputs() {
-		var spacing = 72;
-		var arrow_buttons = [];
-		var ypos = cf.canvasHeight - 125;
-		var startx = 500;
+		var spacing         = 100;
+		var arrow_buttons   = [];
+		var ypos = cf.canvasHeight * 0.86;
+		var startx = cf.canvasWidth * 0.1;
 
 		for (var i = 0; i < 8; i++) {
 			if (i < 4) {
@@ -860,8 +860,8 @@ function App (charm) {
 			var button 				= cm.createSprite(specs);
 			var tf 					= button.transform;
 			var sp 					= button.sprite;
-			tf.scaleX = 0.5;
-			tf.scaleY = 0.5;
+			tf.scaleX = 0.6;
+			tf.scaleY = 0.6;
 			tf.rotation = rotation;
 			arrow_buttons.push(button);
 			var direction_index = arrow_buttons.length - 1;
@@ -906,8 +906,8 @@ function App (charm) {
 			var button 				= cm.createSprite(specs);
 			var tf 					= button.transform;
 			var sp 					= button.sprite;
-			tf.scaleX = 0.5;
-			tf.scaleY = 0.5;
+			tf.scaleX = 0.6;
+			tf.scaleY = 0.6;
 			tf.rotation = rotation;
 			arrow_buttons.push(button);
 			var direction_index = arrow_buttons.length - 1;
@@ -952,8 +952,8 @@ function App (charm) {
 			var button 				= cm.createSprite(specs);
 			var tf 					= button.transform;
 			var sp 					= button.sprite;
-			tf.scaleX = 0.5;
-			tf.scaleY = 0.5;
+			tf.scaleX = 0.6;
+			tf.scaleY = 0.6;
 			tf.rotation = rotation;
 			arrow_buttons.push(button);
 			var direction_index = arrow_buttons.length - 1;
