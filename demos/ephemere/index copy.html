@@ -1,22 +1,21 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Geospatial Dashboard</title>
+  <title>Geospatial Dashboard 1</title>
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.138/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.138/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
   <style>
-    /* ── Variables (Toned down to Grayscale) ── */
+    /* ── Variables ── */
     :root {
-      --bg:      #080808;
-      --surface: rgba(30, 30, 30, 0.9);
-      --border:  rgba(255, 255, 255, 0.07);
-      --accent1: #ffffff; /* Was teal */
-      --accent2: #a0a0a0; /* Was blue */
-      --accent3: #808080; /* Was amber */
-      --accent4: #606060; /* Was pink */
-      --accent5: #505050; /* Was green */
+      --bg:      #050505;
+      --surface: rgba(15, 15, 15, 0.95);
+      --border:  rgba(255, 255, 255, 0.1);
+      --accent1: #ffffff; /* Replaces Teal */
+      --accent2: #2a7fff;
+      --accent3: #f4a124;
+      --accent4: #e03e6a;
+      --accent5: #518e5c;
       --text:    #d1dce8;
       --muted:   #a8acaf;
       --sans:    'Arial', monospace;
@@ -51,7 +50,7 @@
     #flashOverlay {
       position: absolute;
       inset: 0;
-      background: rgba(255, 255, 255, 0.04);
+      background: rgba(5, 212, 184, 0.04);
       pointer-events: none;
       opacity: 0;
       transition: opacity 0.4s;
@@ -64,12 +63,13 @@
     #topbar {
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 30px;
+      height: 52px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 24px;
-      background: rgba(8, 12, 15, 0.95); /* Gradient removed */
+      background: linear-gradient(to bottom, rgba(4,12,18,0.96), transparent);
+      /* border-bottom: 1px solid #5f686f00; */
       pointer-events: auto;
     }
 
@@ -78,7 +78,7 @@
 
     .brand-icon {
       width: 33px; height: 33px;
-      border: 1.5px solid var(--accent3);
+      border: 1.5px solid var(--accent5);
       border-radius: 6px;
       display: flex;
       align-items: center;
@@ -91,7 +91,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(255, 255, 255, 0.05); /* Gradient removed */
+      background: linear-gradient(135deg, rgba(5,212,184,0.15), transparent);
     }
 
     .brand-title {
@@ -100,7 +100,7 @@
       letter-spacing: 0.5px;
       color: var(--text);
     }
-    .brand-title span { color: var(--accent1); }
+    .brand-title span { color: var(--accent5); }
 
     .brand-sub {
       font-family: var(--sans);
@@ -126,9 +126,9 @@
       background: rgba(255, 255, 255, 0.03);
     }
     .badge.live {
-      border-color: rgba(255, 255, 255, 0.3);
+      border-color: rgba(5, 212, 184, 0.4);
       color: var(--accent1);
-      background: rgba(255, 255, 255, 0.07);
+      background: rgba(5, 212, 184, 0.07);
       animation: blink 2.5s ease-in-out infinite;
     }
     @keyframes blink {
@@ -142,8 +142,8 @@
     #filterPanel {
       position: absolute;
       top: 64px; left: 16px;
-      width: 320px;
-      max-height: calc(100vh - 78px);
+      width: 300px;
+      max-height: calc(100vh - 80px);
       overflow-y: auto;
       overflow-x: hidden;
       background: var(--surface);
@@ -180,8 +180,8 @@
       font-family: var(--sans);
       font-size: 10px;
       color: var(--accent1);
-      background: rgba(255, 255, 255, 0.1);
-      border: 1px solid rgba(255, 255, 255, 0.25);
+      background: rgba(5, 212, 184, 0.1);
+      border: 1px solid rgba(5, 212, 184, 0.25);
       padding: 2px 7px;
       border-radius: 10px;
     }
@@ -209,7 +209,7 @@
       display: inline-block;
       width: 3px; height: 3px;
       border-radius: 50%;
-      background: var(--accent2);
+      background: var(--accent1);
     }
 
     /* Toggle Row */
@@ -251,8 +251,8 @@
       transition: all 0.25s;
     }
     .toggle-switch input:checked + .toggle-track {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.4);
+      background: rgba(5, 212, 184, 0.25);
+      border-color: rgba(5, 212, 184, 0.5);
     }
 
     .toggle-thumb {
@@ -266,7 +266,7 @@
     .toggle-switch input:checked ~ .toggle-track .toggle-thumb {
       left: 19px;
       background: var(--accent1);
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 8px rgba(5, 212, 184, 0.6);
     }
 
     /* Depth Radio */
@@ -290,9 +290,9 @@
       transition: all 0.2s;
     }
     .depth-opt input:checked + label {
-      border-color: var(--accent1);
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--accent1);
+      border-color: var(--accent2);
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--accent2);
     }
     .depth-opt label:hover {
       border-color: rgba(255, 255, 255, 0.15);
@@ -322,7 +322,7 @@
       color: var(--text);
     }
     .chip-item.substrate input:checked + label {
-      border-color: rgba(255, 255, 255, 0.5);
+      border-color: rgba(255, 255, 255, 0.6);
       background: rgba(255, 255, 255, 0.1);
       color: var(--accent1);
     }
@@ -344,7 +344,7 @@
     }
     .panel-select { height: 230px; padding: 4px; }
     .panel-input  { padding: 8px 30px 8px 10px; }
-    .panel-input:focus  { border-color: rgba(255, 255, 255, 0.3); }
+    .panel-input:focus  { border-color: rgba(255, 255, 255, 0.4); }
 
     .panel-hint {
       font-family: var(--sans);
@@ -356,7 +356,7 @@
 
     /* Species List */
     #speciesList {
-      max-height: 190px;
+      max-height: 200px;
       overflow-y: auto;
       border: 1px solid rgba(255, 255, 255, 0.07);
       border-radius: 8px;
@@ -392,19 +392,20 @@
       font-size: 9px;
     }
     .species-option.selected .species-checkbox {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.4);
-      color: var(--accent1);
+      background: rgba(42, 127, 255, 0.2);
+      border-color: rgba(42, 127, 255, 0.6);
+      color: var(--accent2);
     }
 
     .species-name {
       font-family: var(--sans);
       font-size: 11px;
+      /* letter-spacing:1px; */
       color: #cfd6db;
       transition: color 0.15s;
       line-height: 1.3;
     }
-    .species-option.selected .species-name { color: var(--accent1); }
+    .species-option.selected .species-name { color: var(--accent2); }
     .species-name .match-highlight {
       color: var(--accent1);
       font-weight: 600;
@@ -433,11 +434,11 @@
       cursor: pointer;
       letter-spacing: 1px;
       padding: 3px 8px;
-      border: 1px solid rgba(255, 255, 255, 0.3);
+      border: 1px solid rgba(5, 212, 184, 0.3);
       border-radius: 4px;
       transition: background 0.2s;
     }
-    .species-clear:hover { background: rgba(255, 255, 255, 0.08); }
+    .species-clear:hover { background: rgba(5, 212, 184, 0.08); }
 
     /* Search wrapper */
     .search-wrap { position: relative; margin-bottom: 8px; }
@@ -467,8 +468,8 @@
       padding: 11px 0;
       border-radius: 9px;
       border: none;
-      background: #e0e0e0; /* Gradient removed */
-      color: #000000;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: var(--bg);
       font-family: var(--sans);
       font-size: 11px;
       font-weight: 600;
@@ -486,12 +487,12 @@
       background: rgba(255, 255, 255, 0);
       transition: background 0.2s;
     }
-    #applyBtn:hover::before { background: rgba(255, 255, 255, 0.2); }
+    #applyBtn:hover::before { background: rgba(255, 255, 255, 0.12); }
     #applyBtn:active         { transform: scale(0.98); }
     #applyBtn.applied {
-      background: #333333;
+      background: linear-gradient(135deg, rgba(5,212,184,0.3), rgba(42,127,255,0.3));
       color: var(--accent1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(5, 212, 184, 0.4);
     }
 
     .apply-hint {
@@ -510,8 +511,8 @@
       position: absolute;
       top: 50px; right: 16px;
       width: 400px;
-      background: rgba(10, 10, 10, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      background: rgba(6, 18, 28, 0.95);
+      border: 1px solid rgba(5, 212, 184, 0.25);
       border-radius: 14px;
       backdrop-filter: blur(20px);
       pointer-events: auto;
@@ -524,7 +525,7 @@
       align-items: center;
       padding: 12px 16px;
       border-bottom: 1px solid rgba(255, 255, 255, 0.07);
-      background: rgba(255, 255, 255, 0.06);
+      background: rgba(5, 212, 184, 0.06);
     }
     #popup-title {
       font-family: var(--sans);
@@ -571,7 +572,10 @@
       text-transform: uppercase;
     }
     .bruv-val            { color: var(--text); font-weight: 600; }
-    .bruv-val.teal, .bruv-val.amber, .bruv-val.blue, .bruv-val.pink { color: var(--text); }
+    .bruv-val.teal       { color: var(--accent1); }
+    .bruv-val.amber      { color: var(--accent3); }
+    .bruv-val.blue       { color: var(--accent2); }
+    .bruv-val.pink       { color: var(--accent4); }
 
     /* Popup table */
     .bruv-table {
@@ -582,13 +586,13 @@
       margin-top: 8px;
     }
     .bruv-table thead tr {
-      background: rgba(255, 255, 255, 0.05);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(5, 212, 184, 0.08);
+      border-bottom: 1px solid rgba(5, 212, 184, 0.2);
     }
     .bruv-table thead th {
       padding: 7px 10px;
       text-align: left;
-      color: var(--muted);
+      color: var(--accent1);
       letter-spacing: 1.5px;
       text-transform: uppercase;
       font-size: 9px;
@@ -609,7 +613,7 @@
     ════════════════════════════════ */
     #legend {
       position: absolute;
-      bottom: 16px; right: 16px;
+      bottom: 30px; right: 15px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -657,7 +661,7 @@
       position: absolute;
       bottom: 0; left: 0; right: 0;
       padding: 8px 20px;
-      background: rgba(8, 12, 15, 0.9); /* Gradient removed */
+      background: linear-gradient(to top, rgba(4,12,18,0.9), transparent);
       display: flex;
       align-items: center;
       gap: 20px;
@@ -670,7 +674,7 @@
       color: var(--muted);
       text-transform: uppercase;
     }
-    .coord-item b          { color: rgba(255, 255, 255, 0.6); margin-left: 4px; }
+    .coord-item b          { color: rgba(5, 212, 184, 0.7); margin-left: 4px; }
     .coord-item.coord-copy { margin-left: auto; }
   </style>
 </head>
@@ -693,17 +697,13 @@
 
   <!-- ── Top Bar ── -->
   <div id="topbar">
-    <!-- ── Coord Bar ── -->
-    <div id="coordBar">
-      <div class="coord-item"><b>This Visualization uses Fictitious Data</b></div>
-      <div class="coord-item">LAT <b id="coordLat">—</b></div>
-      <div class="coord-item">LNG <b id="coordLng">—</b></div>
-      <!-- <div class="coord-item">ALT <b id="coordAlt">—</b></div> -->
-      <div class="coord-item coord-copy">Agra Barecasco</div>
+    <div class="top-left">
+        <div>
+          <div class="badge"><b>This Visualization uses Fictitious Data</b></div>
+            <!-- <div class="brand-title">BRUV<span>IO</span></div> -->
+        <!-- <div class="brand-sub"></div> -->
+      </div>
     </div>
-
-
-  
   </div>
 
   <!-- ── Filter Panel ── -->
@@ -724,7 +724,7 @@
           Upwelling marker
         </div>
         <label class="toggle-switch">
-          <input type="checkbox" id="toggleUpwelling" checked onchange="countFilters()">
+          <input type="checkbox" id="toggleUpwelling" onchange="countFilters()">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </label>
       </div>
@@ -735,7 +735,7 @@
           EBSA marker
         </div>
         <label class="toggle-switch">
-          <input type="checkbox" id="toggleEBSA" checked onchange="countFilters()">
+          <input type="checkbox" id="toggleEBSA" onchange="countFilters()">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </label>
       </div>
@@ -757,7 +757,7 @@
           Total Max-N &amp; Unique Count
         </div>
         <label class="toggle-switch">
-          <input type="checkbox" id="toggleOccurAbund" checked onchange="countFilters()">
+          <input type="checkbox" id="toggleOccurAbund" onchange="countFilters()">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </label>
       </div>
@@ -883,15 +883,22 @@
     </div>
     <br>
     <div class="legend-item">
-        <img src="/demos/ephemere/images/rect1.png" style="width:30px; height:30px; object-fit:contain; flex-shrink:0;" />
+        <img src="/demos/ephemere/images/rect1.png" style="width:24px; height:24px; object-fit:contain; flex-shrink:0;" />
         Total Max-N
     </div>
     <div class="legend-item">
-        <img src="/demos/ephemere/images/rect2.png" style="width:28px; height:28px; object-fit:contain; flex-shrink:0;" />
+        <img src="/demos/ephemere/images/rect2.png" style="width:24px; height:22px; object-fit:contain; flex-shrink:0;" />
         Unique Count
     </div>
   </div>
 
+  <!-- ── Coord Bar ── -->
+  <div id="coordBar">
+    <div class="coord-item">LAT <b id="coordLat">—</b></div>
+    <div class="coord-item">LNG <b id="coordLng">—</b></div>
+    <div class="coord-item">ALT <b id="coordAlt">—</b></div>
+    <div class="coord-item coord-copy">Agra Barecasco 2026</div>
+  </div>
 
 </div><!-- /#hud -->
 

@@ -167,10 +167,10 @@ viewer.screenSpaceEventHandler.setInputAction(click => {
     const picked = viewer.scene.pick(click.position);
     if (Cesium.defined(picked) && picked.id) {
         const entity = picked.id;
-        console.log(entity.id);
+        // console.log(entity.id);
         if (!lockedEntities.includes(entity.id)) {
             crossHair.position = entity.position;
-            console.log(crossHair.position);
+            // console.log(crossHair.position);
             crossHair.show     = true;
             openPopup(entity.name, entity.description?.getValue());
         }
@@ -189,7 +189,7 @@ handler.setInputAction(movement => {
         const carto = Cesium.Cartographic.fromCartesian(pos);
         document.getElementById('coordLat').textContent = Cesium.Math.toDegrees(carto.latitude).toFixed(4) + '°';
         document.getElementById('coordLng').textContent = Cesium.Math.toDegrees(carto.longitude).toFixed(4) + '°';
-        document.getElementById('coordAlt').textContent = (carto.height >= 0 ? carto.height.toFixed(0) : 0) + ' m';
+        // document.getElementById('coordAlt').textContent = (carto.height >= 0 ? carto.height.toFixed(0) : 0) + ' m';
     }
 }, Cesium.ScreenSpaceEventType.MOUSE_MOVE);
 
@@ -1380,13 +1380,19 @@ async function main() {
     // fix-02
     await processAreaData(areaData);
 
-    // Fly to Sumatra region
     viewer.camera.setView({
-        destination: Cesium.Cartesian3.fromDegrees(108.0, -3.0, 2000000),
-        duration: 3
+        destination: Cesium.Cartesian3.fromDegrees(109.0, -8.0, 500000),
+        orientation: {
+            heading: Cesium.Math.toRadians(0),    // left/right rotation (0 = north)
+            pitch: Cesium.Math.toRadians(-50),    // up/down angle (-90 = looking straight down)
+            roll: Cesium.Math.toRadians(0)        // tilt left/right
+        }
+
     });
 
+    countFilters();
     applyFilters();
+
 }
 
 main();

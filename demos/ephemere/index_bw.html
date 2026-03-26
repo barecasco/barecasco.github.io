@@ -1,22 +1,21 @@
-
 <!DOCTYPE html>
 <html lang="en">
 <head>
   <meta charset="UTF-8" />
-  <title>Geospatial Dashboard</title>
+  <title>Geospatial Dashboard 1</title>
     <script src="https://cesium.com/downloads/cesiumjs/releases/1.138/Build/Cesium/Cesium.js"></script>
     <link href="https://cesium.com/downloads/cesiumjs/releases/1.138/Build/Cesium/Widgets/widgets.css" rel="stylesheet">
   <style>
-    /* ── Variables (Toned down to Grayscale) ── */
+    /* ── Monochrome Variables (Strict Font-Size Retention) ── */
     :root {
-      --bg:      #080808;
-      --surface: rgba(30, 30, 30, 0.9);
-      --border:  rgba(255, 255, 255, 0.07);
-      --accent1: #ffffff; /* Was teal */
-      --accent2: #a0a0a0; /* Was blue */
-      --accent3: #808080; /* Was amber */
-      --accent4: #606060; /* Was pink */
-      --accent5: #505050; /* Was green */
+      --bg:      #050505;
+      --surface: rgba(15, 15, 15, 0.95);
+      --border:  rgba(255, 255, 255, 0.1);
+      --accent1: #ffffff; /* Replaces Teal */
+      --accent2: #e0e0e0; /* Replaces Blue */
+      --accent3: #bbbbbb; /* Replaces Amber */
+      --accent4: #888888; /* Replaces Pink */
+      --accent5: #ffffff; /* Replaces Green */
       --text:    #d1dce8;
       --muted:   #a8acaf;
       --sans:    'Arial', monospace;
@@ -64,12 +63,12 @@
     #topbar {
       position: absolute;
       top: 0; left: 0; right: 0;
-      height: 30px;
+      height: 52px;
       display: flex;
       align-items: center;
       justify-content: space-between;
       padding: 0 24px;
-      background: rgba(8, 12, 15, 0.95); /* Gradient removed */
+      background: linear-gradient(to bottom, rgba(0,0,0,0.96), transparent);
       pointer-events: auto;
     }
 
@@ -78,7 +77,7 @@
 
     .brand-icon {
       width: 33px; height: 33px;
-      border: 1.5px solid var(--accent3);
+      border: 1.5px solid var(--accent5);
       border-radius: 6px;
       display: flex;
       align-items: center;
@@ -91,7 +90,7 @@
       content: '';
       position: absolute;
       inset: 0;
-      background: rgba(255, 255, 255, 0.05); /* Gradient removed */
+      background: linear-gradient(135deg, rgba(255,255,255,0.15), transparent);
     }
 
     .brand-title {
@@ -100,7 +99,7 @@
       letter-spacing: 0.5px;
       color: var(--text);
     }
-    .brand-title span { color: var(--accent1); }
+    .brand-title span { color: var(--accent5); }
 
     .brand-sub {
       font-family: var(--sans);
@@ -126,7 +125,7 @@
       background: rgba(255, 255, 255, 0.03);
     }
     .badge.live {
-      border-color: rgba(255, 255, 255, 0.3);
+      border-color: rgba(255, 255, 255, 0.4);
       color: var(--accent1);
       background: rgba(255, 255, 255, 0.07);
       animation: blink 2.5s ease-in-out infinite;
@@ -142,8 +141,8 @@
     #filterPanel {
       position: absolute;
       top: 64px; left: 16px;
-      width: 320px;
-      max-height: calc(100vh - 78px);
+      width: 300px;
+      max-height: calc(100vh - 80px);
       overflow-y: auto;
       overflow-x: hidden;
       background: var(--surface);
@@ -209,7 +208,7 @@
       display: inline-block;
       width: 3px; height: 3px;
       border-radius: 50%;
-      background: var(--accent2);
+      background: var(--accent1);
     }
 
     /* Toggle Row */
@@ -251,8 +250,8 @@
       transition: all 0.25s;
     }
     .toggle-switch input:checked + .toggle-track {
-      background: rgba(255, 255, 255, 0.2);
-      border-color: rgba(255, 255, 255, 0.4);
+      background: rgba(255, 255, 255, 0.25);
+      border-color: rgba(255, 255, 255, 0.5);
     }
 
     .toggle-thumb {
@@ -266,7 +265,7 @@
     .toggle-switch input:checked ~ .toggle-track .toggle-thumb {
       left: 19px;
       background: var(--accent1);
-      box-shadow: 0 0 8px rgba(255, 255, 255, 0.4);
+      box-shadow: 0 0 8px rgba(255, 255, 255, 0.6);
     }
 
     /* Depth Radio */
@@ -290,9 +289,9 @@
       transition: all 0.2s;
     }
     .depth-opt input:checked + label {
-      border-color: var(--accent1);
-      background: rgba(255, 255, 255, 0.1);
-      color: var(--accent1);
+      border-color: var(--accent2);
+      background: rgba(255, 255, 255, 0.12);
+      color: var(--accent2);
     }
     .depth-opt label:hover {
       border-color: rgba(255, 255, 255, 0.15);
@@ -322,7 +321,7 @@
       color: var(--text);
     }
     .chip-item.substrate input:checked + label {
-      border-color: rgba(255, 255, 255, 0.5);
+      border-color: rgba(255, 255, 255, 0.6);
       background: rgba(255, 255, 255, 0.1);
       color: var(--accent1);
     }
@@ -340,11 +339,11 @@
       outline: none;
       transition: border-color 0.2s;
       scrollbar-width: thin;
-      scrollbar-color: #4a6070 transparent;
+      scrollbar-color: #444 transparent;
     }
     .panel-select { height: 230px; padding: 4px; }
     .panel-input  { padding: 8px 30px 8px 10px; }
-    .panel-input:focus  { border-color: rgba(255, 255, 255, 0.3); }
+    .panel-input:focus  { border-color: rgba(255, 255, 255, 0.4); }
 
     .panel-hint {
       font-family: var(--sans);
@@ -356,14 +355,13 @@
 
     /* Species List */
     #speciesList {
-      max-height: 190px;
+      max-height: 200px;
       overflow-y: auto;
       border: 1px solid rgba(255, 255, 255, 0.07);
       border-radius: 8px;
       scrollbar-width: thin;
-      scrollbar-color: #4a6070 transparent;
+      scrollbar-color: #444 transparent;
     }
-
 
     .species-option {
       display: flex;
@@ -392,9 +390,9 @@
       font-size: 9px;
     }
     .species-option.selected .species-checkbox {
-      background: rgba(255, 255, 255, 0.1);
-      border-color: rgba(255, 255, 255, 0.4);
-      color: var(--accent1);
+      background: rgba(255, 255, 255, 0.2);
+      border-color: rgba(255, 255, 255, 0.6);
+      color: var(--accent2);
     }
 
     .species-name {
@@ -404,7 +402,7 @@
       transition: color 0.15s;
       line-height: 1.3;
     }
-    .species-option.selected .species-name { color: var(--accent1); }
+    .species-option.selected .species-name { color: var(--accent2); }
     .species-name .match-highlight {
       color: var(--accent1);
       font-weight: 600;
@@ -425,7 +423,6 @@
       letter-spacing: 1px;
     }
 
-
     .species-clear {
       font-family: var(--sans);
       font-size: 9px;
@@ -445,7 +442,7 @@
       position: absolute;
       right: 8px; top: 50%;
       transform: translateY(-50%);
-      color: #4a6070;
+      color: #444;
       cursor: pointer;
       font-size: 12px;
       font-family: var(--sans);
@@ -467,8 +464,8 @@
       padding: 11px 0;
       border-radius: 9px;
       border: none;
-      background: #e0e0e0; /* Gradient removed */
-      color: #000000;
+      background: linear-gradient(135deg, var(--accent1), var(--accent2));
+      color: #000;
       font-family: var(--sans);
       font-size: 11px;
       font-weight: 600;
@@ -486,12 +483,12 @@
       background: rgba(255, 255, 255, 0);
       transition: background 0.2s;
     }
-    #applyBtn:hover::before { background: rgba(255, 255, 255, 0.2); }
+    #applyBtn:hover::before { background: rgba(255, 255, 255, 0.12); }
     #applyBtn:active         { transform: scale(0.98); }
     #applyBtn.applied {
-      background: #333333;
+      background: linear-gradient(135deg, rgba(255,255,255,0.3), rgba(200,200,200,0.3));
       color: var(--accent1);
-      border: 1px solid rgba(255, 255, 255, 0.2);
+      border: 1px solid rgba(255, 255, 255, 0.4);
     }
 
     .apply-hint {
@@ -511,7 +508,7 @@
       top: 50px; right: 16px;
       width: 400px;
       background: rgba(10, 10, 10, 0.95);
-      border: 1px solid rgba(255, 255, 255, 0.15);
+      border: 1px solid rgba(255, 255, 255, 0.25);
       border-radius: 14px;
       backdrop-filter: blur(20px);
       pointer-events: auto;
@@ -536,7 +533,7 @@
     #popup-close {
       background: none;
       border: none;
-      color: #4a6070;
+      color: #666;
       font-size: 14px;
       cursor: pointer;
       font-family: var(--sans);
@@ -551,7 +548,7 @@
       overflow-x: hidden;
       word-break: break-word;
       scrollbar-width: thin;
-      scrollbar-color: #4a6070 transparent;
+      scrollbar-color: #444 transparent;
     }
 
     /* Popup rows */
@@ -566,12 +563,12 @@
     }
     .bruv-row:last-child { border-bottom: none; }
     .bruv-key {
-      color: #4a6070;
+      color: #666;
       letter-spacing: 1px;
       text-transform: uppercase;
     }
     .bruv-val            { color: var(--text); font-weight: 600; }
-    .bruv-val.teal, .bruv-val.amber, .bruv-val.blue, .bruv-val.pink { color: var(--text); }
+    .bruv-val.teal, .bruv-val.amber, .bruv-val.blue, .bruv-val.pink { color: var(--accent1); }
 
     /* Popup table */
     .bruv-table {
@@ -582,13 +579,13 @@
       margin-top: 8px;
     }
     .bruv-table thead tr {
-      background: rgba(255, 255, 255, 0.05);
-      border-bottom: 1px solid rgba(255, 255, 255, 0.1);
+      background: rgba(255, 255, 255, 0.08);
+      border-bottom: 1px solid rgba(255, 255, 255, 0.2);
     }
     .bruv-table thead th {
       padding: 7px 10px;
       text-align: left;
-      color: var(--muted);
+      color: var(--accent1);
       letter-spacing: 1.5px;
       text-transform: uppercase;
       font-size: 9px;
@@ -598,7 +595,7 @@
     .bruv-table tbody tr:hover  { background: rgba(255, 255, 255, 0.03); }
     .bruv-table tbody td        { padding: 7px 10px; color: var(--text); }
     .bruv-table tbody td:first-child {
-      color: #4a6070;
+      color: #666;
       text-transform: uppercase;
       letter-spacing: 1px;
       font-size: 9px;
@@ -609,7 +606,7 @@
     ════════════════════════════════ */
     #legend {
       position: absolute;
-      bottom: 16px; right: 16px;
+      bottom: 30px; right: 15px;
       background: var(--surface);
       border: 1px solid var(--border);
       border-radius: 12px;
@@ -641,7 +638,7 @@
       width: 0; height: 0;
       border-left: 7px solid transparent;
       border-right: 7px solid transparent;
-      border-top: 12px solid;
+      border-top: 12px solid #fff;
       flex-shrink: 0;
     }
     .legend-bar {
@@ -657,7 +654,7 @@
       position: absolute;
       bottom: 0; left: 0; right: 0;
       padding: 8px 20px;
-      background: rgba(8, 12, 15, 0.9); /* Gradient removed */
+      background: linear-gradient(to top, rgba(0,0,0,0.9), transparent);
       display: flex;
       align-items: center;
       gap: 20px;
@@ -670,7 +667,7 @@
       color: var(--muted);
       text-transform: uppercase;
     }
-    .coord-item b          { color: rgba(255, 255, 255, 0.6); margin-left: 4px; }
+    .coord-item b          { color: rgba(255, 255, 255, 0.7); margin-left: 4px; }
     .coord-item.coord-copy { margin-left: auto; }
   </style>
 </head>
@@ -693,17 +690,11 @@
 
   <!-- ── Top Bar ── -->
   <div id="topbar">
-    <!-- ── Coord Bar ── -->
-    <div id="coordBar">
-      <div class="coord-item"><b>This Visualization uses Fictitious Data</b></div>
-      <div class="coord-item">LAT <b id="coordLat">—</b></div>
-      <div class="coord-item">LNG <b id="coordLng">—</b></div>
-      <!-- <div class="coord-item">ALT <b id="coordAlt">—</b></div> -->
-      <div class="coord-item coord-copy">Agra Barecasco</div>
+    <div class="top-left">
+        <div>
+          <div class="badge"><b>This Visualization uses Fictitious Data</b></div>
+      </div>
     </div>
-
-
-  
   </div>
 
   <!-- ── Filter Panel ── -->
@@ -720,29 +711,29 @@
 
       <div class="toggle-row">
         <div class="toggle-label">
-          <span class="dot" style="background:#ba69df"></span>
+          <span class="dot" style="background:#555"></span>
           Upwelling marker
         </div>
         <label class="toggle-switch">
-          <input type="checkbox" id="toggleUpwelling" checked onchange="countFilters()">
+          <input type="checkbox" id="toggleUpwelling" onchange="countFilters()">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </label>
       </div>
 
       <div class="toggle-row">
         <div class="toggle-label">
-          <span class="dot" style="background:#4479f4"></span>
+          <span class="dot" style="background:#888"></span>
           EBSA marker
         </div>
         <label class="toggle-switch">
-          <input type="checkbox" id="toggleEBSA" checked onchange="countFilters()">
+          <input type="checkbox" id="toggleEBSA" onchange="countFilters()">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </label>
       </div>
 
       <div class="toggle-row">
         <div class="toggle-label">
-          <span class="dot" style="background:#FFE4C4"></span>
+          <span class="dot" style="background:#aaa"></span>
           Survey Focus Area
         </div>
         <label class="toggle-switch">
@@ -753,11 +744,11 @@
 
       <div class="toggle-row">
         <div class="toggle-label">
-          <span class="dot" style="background:#1ed278"></span>
+          <span class="dot" style="background:#fff"></span>
           Total Max-N &amp; Unique Count
         </div>
         <label class="toggle-switch">
-          <input type="checkbox" id="toggleOccurAbund" checked onchange="countFilters()">
+          <input type="checkbox" id="toggleOccurAbund" onchange="countFilters()">
           <div class="toggle-track"><div class="toggle-thumb"></div></div>
         </label>
       </div>
@@ -870,28 +861,35 @@
   <div id="legend">
     <div class="legend-title">Map Legend</div>
     <div class="legend-item">
-      <div class="legend-marker" style="border-top-color:#7fee8e"></div>
+      <div class="legend-marker" style="border-top-color:#ffffff"></div>
       BRUV Station
     </div>
     <div class="legend-item">
-      <div class="legend-bar" style="background:#ba69df"></div>
+      <div class="legend-bar" style="background:#555"></div>
       Upwelling Marker
     </div>
     <div class="legend-item">
-      <div class="legend-bar" style="background:#4479f4"></div>
+      <div class="legend-bar" style="background:#888"></div>
       EBSA Marker
     </div>
     <br>
     <div class="legend-item">
-        <img src="/demos/ephemere/images/rect1.png" style="width:30px; height:30px; object-fit:contain; flex-shrink:0;" />
+        <img src="/demos/ephemere/images/rect1.png" style="width:24px; height:24px; object-fit:contain; flex-shrink:0; filter: grayscale(1);" />
         Total Max-N
     </div>
     <div class="legend-item">
-        <img src="/demos/ephemere/images/rect2.png" style="width:28px; height:28px; object-fit:contain; flex-shrink:0;" />
+        <img src="/demos/ephemere/images/rect2.png" style="width:24px; height:22px; object-fit:contain; flex-shrink:0; filter: grayscale(1);" />
         Unique Count
     </div>
   </div>
 
+  <!-- ── Coord Bar ── -->
+  <div id="coordBar">
+    <div class="coord-item">LAT <b id="coordLat">—</b></div>
+    <div class="coord-item">LNG <b id="coordLng">—</b></div>
+    <div class="coord-item">ALT <b id="coordAlt">—</b></div>
+    <div class="coord-item coord-copy">Agra Barecasco 2026</div>
+  </div>
 
 </div><!-- /#hud -->
 
