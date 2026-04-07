@@ -673,14 +673,14 @@ function App (charm) {
 	}
 
 	function create_arrow_slots() {
-		var spacing = 70;
-		var amount = 13;
+		var spacing = 60;
+		var amount = 12;
 		var slots = [];
 		var arrows = [];
 		var directions = [];
 		var current_slot_index = 0;
 		var ypos = cf.canvasHeight - 265;
-		var startx = 100;
+		var startx = 30;
 
 		for (var i = 0; i < amount; i++) {
 			let xpos = startx + i * spacing;
@@ -700,8 +700,8 @@ function App (charm) {
 				path            : "images/input.png",
 				x       		: xpos,
 				y       		: ypos,
-				scaleX : 0.5,
-				scaleY : 0.5,
+				scaleX : 0.45,
+				scaleY : 0.45,
 				anchorX : 60.5,
 				anchorY : 60.5
 			});
