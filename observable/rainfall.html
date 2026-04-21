@@ -1,0 +1,419 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1">
+<meta name="generator" content="Observable Framework v1.13.4">
+<title>Jakarta Rainfall Dashboard | Hello Framework</title>
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link rel="preload" as="style" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="preload" as="style" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="preload" as="style" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
+<link rel="stylesheet" type="text/css" href="https://fonts.googleapis.com/css2?family=Source+Serif+4:ital,opsz,wght@0,8..60,200..900;1,8..60,200..900&amp;display=swap" crossorigin>
+<link rel="stylesheet" type="text/css" href="./_observablehq/theme-air,near-midnight.b050d634.css">
+<link rel="stylesheet" type="text/css" href="./_observablehq/stdlib/inputs.f7bf0e12.css">
+<link rel="modulepreload" href="./_observablehq/client.002aa503.js">
+<link rel="modulepreload" href="./_observablehq/runtime.607a8173.js">
+<link rel="modulepreload" href="./_observablehq/stdlib.277aeab8.js">
+<link rel="modulepreload" href="./_npm/d3@7.9.0/66d82917.js">
+<link rel="modulepreload" href="./_observablehq/stdlib/inputs.31cd1366.js">
+<link rel="modulepreload" href="./_npm/@observablehq/plot@0.6.17/a96a6bbb.js">
+<link rel="modulepreload" href="./_npm/d3-dsv@3.0.1/9cffc2bd.js">
+<link rel="modulepreload" href="./_npm/htl@0.3.1/72f4716c.js">
+<link rel="modulepreload" href="./_npm/isoformat@0.2.1/18cbf477.js">
+<link rel="modulepreload" href="./_npm/d3-array@3.2.4/e93ca09f.js">
+<link rel="modulepreload" href="./_npm/d3-axis@3.0.0/0f2de24d.js">
+<link rel="modulepreload" href="./_npm/d3-brush@3.0.0/65eb105b.js">
+<link rel="modulepreload" href="./_npm/d3-chord@3.0.1/7ef8fb2e.js">
+<link rel="modulepreload" href="./_npm/d3-color@3.1.0/aeb57b94.js">
+<link rel="modulepreload" href="./_npm/d3-contour@4.0.2/1d2aed74.js">
+<link rel="modulepreload" href="./_npm/d3-delaunay@6.0.4/87adea64.js">
+<link rel="modulepreload" href="./_npm/d3-dispatch@3.0.1/9ba9c7f3.js">
+<link rel="modulepreload" href="./_npm/d3-drag@3.0.0/4202580c.js">
+<link rel="modulepreload" href="./_npm/d3-ease@3.0.1/cdd7e898.js">
+<link rel="modulepreload" href="./_npm/d3-fetch@3.0.1/b4e2ad9a.js">
+<link rel="modulepreload" href="./_npm/d3-force@3.0.0/5e804d15.js">
+<link rel="modulepreload" href="./_npm/d3-format@3.1.2/3785bf2d.js">
+<link rel="modulepreload" href="./_npm/d3-geo@3.1.1/40599fb3.js">
+<link rel="modulepreload" href="./_npm/d3-hierarchy@3.1.2/e49e792c.js">
+<link rel="modulepreload" href="./_npm/d3-interpolate@3.0.1/8d1e5425.js">
+<link rel="modulepreload" href="./_npm/d3-path@3.1.0/20d3f133.js">
+<link rel="modulepreload" href="./_npm/d3-polygon@3.0.1/7553081f.js">
+<link rel="modulepreload" href="./_npm/d3-quadtree@3.0.1/0dfd751c.js">
+<link rel="modulepreload" href="./_npm/d3-random@3.0.1/3c90ee06.js">
+<link rel="modulepreload" href="./_npm/d3-scale@4.0.2/720b7f0a.js">
+<link rel="modulepreload" href="./_npm/d3-scale-chromatic@3.1.0/ba24c2e7.js">
+<link rel="modulepreload" href="./_npm/d3-selection@3.0.0/4d94e5b7.js">
+<link rel="modulepreload" href="./_npm/d3-shape@3.2.0/6d3a6726.js">
+<link rel="modulepreload" href="./_npm/d3-time@3.1.0/9f03c579.js">
+<link rel="modulepreload" href="./_npm/d3-time-format@4.1.0/07c9626f.js">
+<link rel="modulepreload" href="./_npm/d3-timer@3.0.1/b58a267d.js">
+<link rel="modulepreload" href="./_npm/d3-transition@3.0.1/004da2ac.js">
+<link rel="modulepreload" href="./_npm/d3-zoom@3.0.0/b5786b3f.js">
+<link rel="modulepreload" href="./_npm/interval-tree-1d@1.0.4/53fe8176.js">
+<link rel="modulepreload" href="./_npm/internmap@2.0.3/e08981d9.js">
+<link rel="modulepreload" href="./_npm/delaunator@5.1.0/d4ec0aa1.js">
+<link rel="modulepreload" href="./_npm/binary-search-bounds@2.0.5/cbf6ba23.js">
+<link rel="modulepreload" href="./_npm/robust-predicates@3.0.3/42820bfa.js">
+<link rel="icon" href="./_file/observable.1af93621.png" type="image/png" sizes="32x32">
+<script type="module">
+
+import {define} from "./_observablehq/client.002aa503.js";
+import {registerFile} from "./_observablehq/stdlib.277aeab8.js";
+
+registerFile("./data/precipitation.csv", {"name":"./data/precipitation.csv","mimeType":"text/csv","path":"./_file/data/precipitation.bb6512bf.csv","lastModified":1776225655900,"size":56836});
+
+define({id: "56c19875", inputs: ["FileAttachment"], outputs: ["raw"], body: async (FileAttachment) => {
+const raw = await FileAttachment("./data/precipitation.csv").csv({ typed: true });
+return {raw};
+}});
+
+define({id: "f67391f7", inputs: ["raw","d3"], outputs: ["valid","totalDays","avgPrecip","maxPrecip","rainyDays","avgTemp","avgHumidity"], body: (raw,d3) => {
+// Filter out fill values and compute summary stats
+const valid = raw.filter(d => d.precipitation_mm !== null && d.precipitation_mm >= 0);
+
+const totalDays   = valid.length;
+const avgPrecip   = d3.mean(valid, d => d.precipitation_mm);
+const maxPrecip   = d3.max(valid,  d => d.precipitation_mm);
+const rainyDays   = valid.filter(d => d.precipitation_mm > 1).length;
+const avgTemp     = d3.mean(valid.filter(d => d.temp_c !== null), d => d.temp_c);
+const avgHumidity = d3.mean(valid.filter(d => d.humidity_pct !== null), d => d.humidity_pct);
+return {valid,totalDays,avgPrecip,maxPrecip,rainyDays,avgTemp,avgHumidity};
+}});
+
+define({id: "907105a8", mode: "inline", inputs: ["totalDays","display"], body: async (totalDays,display) => {
+display(await(
+totalDays
+))
+}});
+
+define({id: "311b5c3c", mode: "inline", inputs: ["avgPrecip","display"], body: async (avgPrecip,display) => {
+display(await(
+avgPrecip?.toFixed(1)
+))
+}});
+
+define({id: "07106277", mode: "inline", inputs: ["maxPrecip","display"], body: async (maxPrecip,display) => {
+display(await(
+maxPrecip?.toFixed(0)
+))
+}});
+
+define({id: "82cf60d9", mode: "inline", inputs: ["rainyDays","display"], body: async (rainyDays,display) => {
+display(await(
+rainyDays
+))
+}});
+
+define({id: "1da9a44d", mode: "inline", inputs: ["avgTemp","display"], body: async (avgTemp,display) => {
+display(await(
+avgTemp?.toFixed(1)
+))
+}});
+
+define({id: "a2160d3c", mode: "inline", inputs: ["avgHumidity","display"], body: async (avgHumidity,display) => {
+display(await(
+avgHumidity?.toFixed(0)
+))
+}});
+
+define({id: "6c575b86", inputs: ["Plot","width","valid","display"], body: async (Plot,width,valid,display) => {
+display(await(
+Plot.plot({
+    width: width, // Automatically scales to the width of the card
+    height: 300,
+    marginLeft: 50,
+    // Note: Manual fontFamily is removed to inherit the Framework's clean system font
+    x: { type: "utc", label: null },
+    y: { label: "↑ mm/day", grid: true },
+    marks: [
+      Plot.areaY(valid, {
+        x: d => new Date(d.date),
+        y: "precipitation_mm",
+        fill: "var(--theme-foreground-focus)", // Uses the theme's primary color
+        fillOpacity: 0.1,
+        curve: "basis"
+      }),
+      Plot.lineY(valid, {
+        x: d => new Date(d.date),
+        y: "precipitation_mm",
+        stroke: "var(--theme-foreground-focus)",
+        strokeWidth: 1.5,
+        curve: "basis"
+      }),
+      Plot.ruleY([0])
+    ]
+})
+))
+}});
+
+define({id: "e6339e46", inputs: ["d3","valid"], outputs: ["monthlyAvg","monthNames"], body: (d3,valid) => {
+const monthlyAvg = d3.rollups(
+  valid,
+  v => d3.mean(v, d => d.precipitation_mm),
+  d => +d.month
+).map(([month, avg]) => ({ month, avg })).sort((a,b) => a.month - b.month);
+
+const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+return {monthlyAvg,monthNames};
+}});
+
+define({id: "a6fb6db3", inputs: ["Plot","monthNames","monthlyAvg","display"], body: async (Plot,monthNames,monthlyAvg,display) => {
+display(await(
+Plot.plot({
+  height: 240,
+  marginLeft: 50,
+  style: { fontFamily: "DM Sans, sans-serif", fontSize: 12 },
+  x: { tickFormat: i => monthNames[i - 1], label: null },
+  y: { label: "avg mm/day", grid: true },
+  marks: [
+    Plot.barY(monthlyAvg, {
+      x: "month",
+      y: "avg",
+      fill: d => d.avg > 10 ? "#1a6cf6" : "#5fa8ff",
+      rx: 4
+    }),
+    Plot.ruleY([0]),
+    Plot.text(monthlyAvg, {
+      x: "month",
+      y: "avg",
+      text: d => d.avg.toFixed(1),
+      dy: -8,
+      fontSize: 10,
+      fill: "#0a2e6e"
+    })
+  ]
+})
+))
+}});
+
+define({id: "b9844ba4", inputs: ["valid"], outputs: ["scatter"], body: (valid) => {
+const scatter = valid.filter(d => d.temp_c !== null && d.humidity_pct !== null);
+return {scatter};
+}});
+
+define({id: "026f59d0", inputs: ["Plot","scatter","display"], body: async (Plot,scatter,display) => {
+display(await(
+Plot.plot({
+  height: 300,
+  marginLeft: 50,
+  style: { fontFamily: "DM Sans, sans-serif", fontSize: 12 },
+  color: {
+    type: "linear",
+    domain: [0, 30, 80],
+    range: ["#d4e2ff", "#3b9eff", "#0a2e6e"],
+    label: "Precipitation (mm)",
+    legend: true
+  },
+  x: { label: "Temperature (°C)", grid: true },
+  y: { label: "Relative Humidity (%)", grid: true },
+  marks: [
+    Plot.dot(scatter, {
+      x: "temp_c",
+      y: "humidity_pct",
+      fill: "precipitation_mm",
+      r: 2.5,
+      fillOpacity: 0.5
+    })
+  ]
+})
+))
+}});
+
+define({id: "f25e2e9c", inputs: ["d3","valid","Plot","display"], outputs: ["annualTotals","vimg"], body: (d3,valid,Plot,display) => {
+const annualTotals = d3.rollups(
+    valid,
+    v => d3.sum(v, d => d.precipitation_mm),
+    d => d.year
+  ).map(([year, total]) => ({ year, total })).sort((a, b) => a.year - b.year);
+
+const vimg = Plot.plot({
+    height    : 220,
+    marginLeft: 60,
+    style     : { fontFamily: "DM Sans, sans-serif", fontSize: 12 },
+    x : { label: null, tickFormat: d => d },
+    y : { label: "Total mm", grid: true },
+    marks: [
+      Plot.barY(annualTotals, {
+        x: "year",
+        y: "total",
+        fill: "#1a6cf6",
+        rx: 6
+      }),
+      Plot.ruleY([0]),
+      Plot.text(annualTotals, {
+        x: "year",
+        y: "total",
+        text: d => Math.round(d.total).toLocaleString() + " mm",
+        dy: -10,
+        fontSize: 11,
+        fontWeight: 600,
+        fill: "#0a2e6e"
+      })
+    ]
+  })
+
+display(vimg)
+return {annualTotals,vimg};
+}});
+
+define({id: "9f97aaa0", inputs: ["Inputs","raw","display"], body: async (Inputs,raw,display) => {
+display(await(
+Inputs.table(raw.slice(0, 50), {
+  columns: ["date", "precipitation_mm", "temp_c", "humidity_pct"],
+  header: {
+    date: "Date",
+    precipitation_mm: "Precip (mm)",
+    temp_c: "Temp (°C)",
+    humidity_pct: "Humidity (%)"
+  },
+  width: { date: 120 }
+})
+))
+}});
+
+</script>
+</head>
+<body>
+<input id="observablehq-sidebar-toggle" type="checkbox" title="Toggle sidebar">
+<label id="observablehq-sidebar-backdrop" for="observablehq-sidebar-toggle"></label>
+<nav id="observablehq-sidebar">
+  <ol>
+    <label id="observablehq-sidebar-close" for="observablehq-sidebar-toggle"></label>
+    <li class="observablehq-link"><a href="./">Hello Framework</a></li>
+  </ol>
+  <ol>
+    <li class="observablehq-link"><a href="./example-dashboard">Example dashboard</a></li>
+    <li class="observablehq-link"><a href="./example-report">Example report</a></li>
+    <li class="observablehq-link observablehq-link-active"><a href="./rainfall">Jakarta Rainfall Dashboard</a></li>
+    <li class="observablehq-link"><a href="./weather">Weather</a></li>
+  </ol>
+</nav>
+<script>{const e=document.querySelector("#observablehq-sidebar"),o=document.querySelector("#observablehq-sidebar-toggle"),r=sessionStorage.getItem("observablehq-sidebar");r?o.checked=r==="true":o.indeterminate=!0;for(const t of document.querySelectorAll("#observablehq-sidebar summary")){const s=t.parentElement;switch(sessionStorage.getItem(`observablehq-sidebar:${t.textContent}`)){case"true":s.open=!0;break;case"false":s.classList.contains("observablehq-section-active")||(s.open=!1);break}}addEventListener("beforeunload",()=>sessionStorage.setItem("observablehq-sidebar-scrolly",`${e.scrollTop}`));const a=sessionStorage.getItem("observablehq-sidebar-scrolly");a!=null&&(e.style.cssText="overflow: hidden;",e.scrollTop=+a,e.style.cssText="");}</script>
+<div id="observablehq-center">
+<aside id="observablehq-toc" data-selector="h1:not(:first-of-type)[id], h2:first-child[id], :not(h1) + h2[id]">
+<nav>
+<div>Contents</div>
+<ol>
+<li class="observablehq-secondary-link"><a href="#daily-precipitation-time-series">🌧 Daily Precipitation Time Series</a></li>
+<li class="observablehq-secondary-link"><a href="#average-daily-precipitation-mm-grouped-by-calendar-month">📊 Average daily precipitation (mm) grouped by calendar month</a></li>
+<li class="observablehq-secondary-link"><a href="#temperature-humidity-relationship">🌡 Temperature × Humidity Relationship</a></li>
+<li class="observablehq-secondary-link"><a href="#annual-rainfall-totals">📅 Annual Rainfall Totals</a></li>
+<li class="observablehq-secondary-link"><a href="#raw-data-preview">🗂 Raw Data Preview</a></li>
+</ol>
+</nav>
+</aside>
+<main id="observablehq-main" class="observablehq">
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  LOAD DATA (runs once, cached by Framework)                   -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="observablehq observablehq--block"><!--:56c19875:--></div>
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  CONTEXT PARAGRAPHS                                            -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h1 id="jakarta-rainfall-and-climate-patterns" tabindex="-1"><a class="observablehq-header-anchor" href="#jakarta-rainfall-and-climate-patterns">Jakarta Rainfall<br><em>&amp; Climate Patterns</em></a></h1>
+<p>Four years of satellite-derived daily precipitation, temperature, and humidity
+data for Jakarta, Indonesia — sourced directly from NASA's POWER API.
+<span>📍 6.2°S, 106.8°E — Jakarta</span>
+<span>📅 2020 – 2023</span>
+<span>🛰 NASA POWER / MERRA-2</span></p>
+<h3 id="about-the-data-source" tabindex="-1"><a class="observablehq-header-anchor" href="#about-the-data-source">About the Data Source</a></h3>
+<p>NASA's Prediction Of Worldwide Energy Resources (<strong>POWER</strong>) project provides
+surface meteorological and solar energy parameters derived from the
+<strong>MERRA-2</strong> reanalysis model. The dataset covers the globe at 0.5° × 0.625°
+resolution and is updated with roughly a 4-day latency, making it one of the most
+accessible and reliable climate datasets for research and application development.</p>
+<h3 id="why-jakarta" tabindex="-1"><a class="observablehq-header-anchor" href="#why-jakarta">Why Jakarta?</a></h3>
+<p>Jakarta sits in a <strong>tropical monsoon climate</strong> (Köppen Aw), making it
+an ideal study site for precipitation dynamics. The city experiences two
+distinct seasons — a wet season from November to March driven by the
+northwest monsoon, and a drier period from May to September — with
+annual rainfall typically exceeding 1,800 mm. Understanding these patterns
+is critical for flood preparedness and urban planning.</p>
+<h3 id="parameters-explained" tabindex="-1"><a class="observablehq-header-anchor" href="#parameters-explained">Parameters Explained</a></h3>
+<p><strong>PRECTOTCORR</strong> is the bias-corrected total precipitation (mm/day),
+adjusted against ground-based observations. <strong>T2M</strong> is 2-metre air temperature
+in °C, representing surface-level conditions. <strong>RH2M</strong> is relative humidity (%)
+at 2 metres — all three are daily aggregates from the MERRA-2 atmospheric reanalysis.
+Values of <code>-999</code> indicate missing data and are excluded from calculations.</p>
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  COMPUTED STATS                                                -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<div class="observablehq observablehq--block"><!--:f67391f7:--></div>
+<div class="grid grid-cols-2 lg-grid-cols-3">
+  <div class="card">
+    <h2>Days of Data</h2>
+    <span class="big"><observablehq-loading></observablehq-loading><!--:907105a8:--></span>
+  </div>
+  <div class="card">
+    <h2>Avg Daily Precip</h2>
+    <span class="big"><observablehq-loading></observablehq-loading><!--:311b5c3c:--></span>
+    <span class="muted">mm</span>
+  </div>
+  <div class="card">
+    <h2>Peak Daily Precip</h2>
+    <span class="big"><observablehq-loading></observablehq-loading><!--:07106277:--></span>
+    <span class="muted">mm</span>
+  </div>
+  <div class="card">
+    <h2>Rainy Days</h2>
+    <span class="big"><observablehq-loading></observablehq-loading><!--:82cf60d9:--></span>
+    <span class="muted">&gt;1mm</span>
+  </div>
+  <div class="card">
+    <h2>Avg Temperature</h2>
+    <span class="big"><observablehq-loading></observablehq-loading><!--:1da9a44d:--></span>
+    <span class="muted">°C</span>
+  </div>
+  <div class="card">
+    <h2>Avg Humidity</h2>
+    <span class="big"><observablehq-loading></observablehq-loading><!--:a2160d3c:--></span>
+    <span class="muted">%</span>
+  </div>
+</div>
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  CHART 1 — Daily precipitation time series                    -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2 id="daily-precipitation-time-series" tabindex="-1"><a class="observablehq-header-anchor" href="#daily-precipitation-time-series">🌧 Daily Precipitation Time Series</a></h2>
+<p>Daily rainfall (mm) · 2020–2023</p>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:6c575b86:--></div>
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  CHART 2 — Monthly average precipitation bar chart            -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2 id="average-daily-precipitation-mm-grouped-by-calendar-month" tabindex="-1"><a class="observablehq-header-anchor" href="#average-daily-precipitation-mm-grouped-by-calendar-month">📊 Average daily precipitation (mm) grouped by calendar month</a></h2>
+<div class="observablehq observablehq--block"><!--:e6339e46:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:a6fb6db3:--></div>
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  CHART 3 — Temperature vs Humidity scatter                    -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2 id="temperature-humidity-relationship" tabindex="-1"><a class="observablehq-header-anchor" href="#temperature-humidity-relationship">🌡 Temperature × Humidity Relationship</a></h2>
+<p>Each dot = one day · colour = precipitation intensity</p>
+<div class="observablehq observablehq--block"><!--:b9844ba4:--></div>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:026f59d0:--></div>
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  CHART 4 — Annual totals                                      -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2 id="annual-rainfall-totals" tabindex="-1"><a class="observablehq-header-anchor" href="#annual-rainfall-totals">📅 Annual Rainfall Totals</a></h2>
+<p>Total precipitation per year (mm)</p>
+<div class="observablehq observablehq--block"><!--:f25e2e9c:--></div>
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  RAW DATA TABLE (first 20 rows)                               -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<h2 id="raw-data-preview" tabindex="-1"><a class="observablehq-header-anchor" href="#raw-data-preview">🗂 Raw Data Preview</a></h2>
+<div class="observablehq observablehq--block"><observablehq-loading></observablehq-loading><!--:9f97aaa0:--></div>
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<!--  SOURCE FOOTER                                                -->
+<!-- ═══════════════════════════════════════════════════════════════ -->
+<hr>
+<div class="source-footer">
+  <span>📡 Source: NASA POWER API · power.larc.nasa.gov</span>
+  <span>📐 Parameter: PRECTOTCORR (bias-corrected) · Community: AG</span>
+  <span>🔄 Data cached at build time by Observable Framework</span>
+</div></main>
+<footer id="observablehq-footer">
+<nav><a rel="prev" href="./example-report"><span>Example report</span></a><a rel="next" href="./weather"><span>Weather</span></a></nav>
+<div>Built with <a href="https://observablehq.com/" target="_blank" rel="noopener noreferrer">Observable</a> on <a title="2026-04-21T08:47:32">Apr 21, 2026</a>.</div>
+</footer>
+</div>
+</body>
+</html>
